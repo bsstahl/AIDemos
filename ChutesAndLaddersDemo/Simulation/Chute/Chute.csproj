@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2B3459BB-A828-4EBF-AFEE-6CA4B608981E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Chute</RootNamespace>
+    <AssemblyName>Chute</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Demo4aExtensions.cs" />
+    <Compile Include="Demo3cExtensions.cs" />
+    <Compile Include="Demo2bExtensions.cs" />
+    <Compile Include="Demo2aExtensions.cs" />
+    <Compile Include="Demo1aExtensions.cs" />
+    <Compile Include="Demo3bExtensions.cs" />
+    <Compile Include="Demo3aExtensions.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SupplementalDemoExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ChutesAndLadders.Common\ChutesAndLadders.Common.csproj">
+      <Project>{509f91ec-de2f-4ffc-af2e-0bfbcf417ac4}</Project>
+      <Name>ChutesAndLadders.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.GamePlay\ChutesAndLadders.GamePlay.csproj">
+      <Project>{3ac0693d-617e-45db-9eb3-92f10bab86cb}</Project>
+      <Name>ChutesAndLadders.GamePlay</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.AgressivelyBad\ChutesAndLadders.Strategy.AgressivelyBad.csproj">
+      <Project>{a515b094-2f00-49f4-b287-24faab14fd53}</Project>
+      <Name>ChutesAndLadders.Strategy.AgressivelyBad</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Genetic\ChutesAndLadders.Strategy.Genetic.csproj">
+      <Project>{f9a23b6e-fc6c-402d-b608-867fd022889e}</Project>
+      <Name>ChutesAndLadders.Strategy.Genetic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.GreedyRules\ChutesAndLadders.Strategy.GreedyRules.csproj">
+      <Project>{153aafcc-16d9-4245-baa4-84143e1480dc}</Project>
+      <Name>ChutesAndLadders.Strategy.GreedyRules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Greedy\ChutesAndLadders.Strategy.Greedy.csproj">
+      <Project>{a24f4314-a60c-40eb-b131-5c687b5a31ad}</Project>
+      <Name>ChutesAndLadders.Strategy.Greedy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Linear\ChutesAndLadders.Strategy.Linear.csproj">
+      <Project>{8f54f805-5f7a-4083-a066-2bbd5aa2b80a}</Project>
+      <Name>ChutesAndLadders.Strategy.Linear</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Rules\ChutesAndLadders.Strategy.Rules.csproj">
+      <Project>{a1e9ec6f-4d32-42df-a2b4-12fffe61dfff}</Project>
+      <Name>ChutesAndLadders.Strategy.Rules</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.ShortestPath\ChutesAndLadders.Strategy.ShortestPath.csproj">
+      <Project>{c4427f1c-daae-49a7-a63d-4b10350db363}</Project>
+      <Name>ChutesAndLadders.Strategy.ShortestPath</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.TakeAllLadders\ChutesAndLadders.Strategy.TakeAllLadders.csproj">
+      <Project>{b7ad01eb-67d1-4ba6-94d6-01f8f191db0e}</Project>
+      <Name>ChutesAndLadders.Strategy.TakeAllLadders</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
