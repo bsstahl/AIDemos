@@ -12,7 +12,7 @@ namespace Chute
     {
         public static void Demo3b_GeneticEvolution(this GameBoard board)
         {
-            const int maxGenerations = 500;
+            const int maxGenerations = 300;
             const int simulationsPerGeneration = 1200;
             const double misspellingRate = 0.05;
 
