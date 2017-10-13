@@ -110,6 +110,10 @@ namespace HybridConferenceScheduler
 
             var presenterUnfavoredTimeslots = new List<Tuple<Presenter, int>>();
 
+            // This list is built separately so it maintains the order
+            // in which the requests were submitted.  It could also be built
+            // by negating the list of preferred timeslots for each presenter
+
             // Prefers the last 2 sessions of the day
             presenterUnfavoredTimeslots.Add(presenterMaxNodland, 1);
             presenterUnfavoredTimeslots.Add(presenterMaxNodland, 2);
