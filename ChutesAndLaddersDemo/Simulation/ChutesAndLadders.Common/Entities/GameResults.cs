@@ -8,10 +8,12 @@ namespace ChutesAndLadders.Entities
 {
     public class GameResults
     {
+        public Guid UniqueGameId { get; set; }
         public int GameId { get; set; }
         public Player Winner { get; set; }
         public IEnumerable<Player> Players { get; set; }
         public int Turns { get; set; }
+        public IEnumerable<GameAction> GameActions { get; set; }
 
 
         public override string ToString()

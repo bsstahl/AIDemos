@@ -32,7 +32,7 @@ namespace Chute
             int generationCount = 0;
             while (generationCount < maxGenerations)
             {
-                players = engine.RunSimulations(players, simulationsPerGeneration).ToArray();
+                players = engine.RunSimulations(players, simulationsPerGeneration).Players.ToArray();
 
                 // Create the next generation of Players/Strategies
                 // by evolving based on the strategies of the top 2 players

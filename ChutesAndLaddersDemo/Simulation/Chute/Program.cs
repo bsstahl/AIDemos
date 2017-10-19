@@ -17,7 +17,7 @@ namespace Chute
 
             #region Demo 1
 
-            board.Demo1a_GreedyAlgorithm();
+            // board.Demo1a_GreedyAlgorithm();
 
             #endregion
 
@@ -49,6 +49,8 @@ namespace Chute
 
             // board.SupplementalDemo_SingleGame();
             // board.SupplementalDemo_Player1Advantage();
+
+            board.GameActionOutput_SmallSample();
 
             #endregion
         }

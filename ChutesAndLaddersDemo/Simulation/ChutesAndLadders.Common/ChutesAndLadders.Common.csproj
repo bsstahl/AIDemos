@@ -41,12 +41,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\GameAction.cs" />
     <Compile Include="Entities\GameBoard.cs" />
     <Compile Include="Entities\GameResults.cs" />
     <Compile Include="Entities\GameSituation.cs" />
     <Compile Include="Entities\GameSpace.cs" />
     <Compile Include="Entities\Path.cs" />
     <Compile Include="Entities\Player.cs" />
+    <Compile Include="Entities\SimulationResults.cs" />
     <Compile Include="Entities\Spinner.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Interfaces\IGameStrategy.cs" />

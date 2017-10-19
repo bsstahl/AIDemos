@@ -18,6 +18,7 @@ namespace ChutesAndLadders.GamePlay
 
         public GameResults Play(IEnumerable<Player> players, int gameId, int startingPoint, bool outputResults = false, byte constantSpinValue = 0)
         {
+            Guid uniqueGameId = Guid.NewGuid();
             bool gameOver = false;
             int turns = 0;
 
@@ -28,6 +29,7 @@ namespace ChutesAndLadders.GamePlay
                 player.BoardLocation = startingPoint;
 
             // Start the game loop
+            var actions = new List<GameAction>();
             while (!gameOver)
             {
                 foreach (var player in players)
@@ -52,6 +54,16 @@ namespace ChutesAndLadders.GamePlay
                             if (!legalEndpoints.Contains(result))
                                 throw new InvalidOperationException();
                             player.BoardLocation = result;
+                            actions.Add(new GameAction()
+                            {
+                                UniqueGameId = uniqueGameId,
+                                BoardLocation = situation.BoardLocation,
+                                PlayerId = player.Id,
+                                PlayerNumber = players.IndexOf(player) + 1,
+                                PlayerLocations = situation.PlayerLocations.Clone(),
+                                Spin = situation.Spin,
+                                SelectedMove = result
+                            });
                         }
                         else if (legalEndpoints.ResultsInWin())
                         {
@@ -72,12 +84,24 @@ namespace ChutesAndLadders.GamePlay
                 turns++;
             }
 
+            // Define whether or not each move was part of a winning strategy
+            var winner = players.Single(p => p.BoardLocation == 100);
+            foreach (var action in actions)
+            {
+                if (action.PlayerId == winner.Id)
+                    action.PlayerWonGame = true;
+                else
+                    action.PlayerWonGame = false;
+            }
+
             return new GameResults()
             {
+                UniqueGameId = uniqueGameId,
                 GameId = gameId,
-                Winner = players.Single(p => p.BoardLocation == 100),
+                Winner = winner,
                 Players = players,
-                Turns = turns
+                Turns = turns,
+                GameActions = actions
             };
         }
 

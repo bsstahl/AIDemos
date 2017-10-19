@@ -18,12 +18,15 @@ namespace ChutesAndLadders.GamePlay
         GameBoard _board = new GameBoard();
 
 
-        public IEnumerable<Player> RunSimulations(Player[] players, int maxExecutionCount, bool outputResults = false)
+        public SimulationResults RunSimulations(Player[] players, int maxExecutionCount, bool outputResults = false)
         {
+            if (maxExecutionCount < players.Count())
+                throw new ArgumentException("You must execute the simulation at least once per player");
+
             double executionsPerPlayer = maxExecutionCount / players.Count();
             int executions = Convert.ToInt32(Math.Round(executionsPerPlayer));
 
-            var tasks = new Task<IEnumerable<Player>>[players.Count()];
+            var tasks = new Task<SimulationResults>[players.Count()];
             for (int i = 0; i < players.Count(); i++)
             {
                 tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(players.DeepCopy().ToArray(), executions));
@@ -35,10 +38,14 @@ namespace ChutesAndLadders.GamePlay
             int totalGames = 0;
             foreach (var player in players)
             {
-                var thisPlayerInstances = tasks.Select(t => t.Result.Where(p => p.Id == player.Id).Single());
+                var thisPlayerInstances = tasks.Select(t => t.Result.Players.Where(p => p.Id == player.Id).Single());
                 player.WinCount = thisPlayerInstances.Sum(p => p.WinCount);
                 totalGames += player.WinCount;
             }
+
+            var gameActions = new List<GameAction>();
+            foreach (var task in tasks)
+                gameActions.AddRange(task.Result.GameActions);
 
             if (outputResults)
             {
@@ -48,7 +55,11 @@ namespace ChutesAndLadders.GamePlay
                 Console.WriteLine();
             }
 
-            return players;
+            return new SimulationResults()
+            {
+                Players = players,
+                GameActions = gameActions
+            };
         }
 
     }

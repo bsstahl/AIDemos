@@ -86,6 +86,10 @@
       <Project>{8f54f805-5f7a-4083-a066-2bbd5aa2b80a}</Project>
       <Name>ChutesAndLadders.Strategy.Linear</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Random\ChutesAndLadders.Strategy.Random.csproj">
+      <Project>{7cdea867-5797-4da4-b92e-93f84d444410}</Project>
+      <Name>ChutesAndLadders.Strategy.Random</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ChutesAndLadders.Strategy.Rules\ChutesAndLadders.Strategy.Rules.csproj">
       <Project>{a1e9ec6f-4d32-42df-a2b4-12fffe61dfff}</Project>
       <Name>ChutesAndLadders.Strategy.Rules</Name>

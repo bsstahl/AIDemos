@@ -18,7 +18,7 @@ namespace ChutesAndLadders.GamePlay
         GameBoard _board;
 
 
-        public Simulation(int maxStartingLocation):this(new GameBoard(), maxStartingLocation) { }
+        public Simulation(int maxStartingLocation) : this(new GameBoard(), maxStartingLocation) { }
 
         internal Simulation(GameBoard board, int maxStartingLocation)
         {
@@ -26,9 +26,10 @@ namespace ChutesAndLadders.GamePlay
             _board = board;
         }
 
-        public IEnumerable<Player> Run(Player[] players, int executionCount)
+        public SimulationResults Run(Player[] players, int executionCount)
         {
             int tryCount = 0;
+            var gameActions = new List<GameAction>();
             while (tryCount < executionCount)
             {
                 int startAt = (new Random()).Next(_maxStartingLocation + 1);
@@ -37,9 +38,14 @@ namespace ChutesAndLadders.GamePlay
                 tryCount++;
                 results.Winner.WinCount++;
                 results.Winner.Strategy.WinCount++;
+                gameActions.AddRange(results.GameActions);
             }
 
-            return players;
+            return new SimulationResults()
+            {
+                Players = players,
+                GameActions = gameActions
+            };
         }
 
 

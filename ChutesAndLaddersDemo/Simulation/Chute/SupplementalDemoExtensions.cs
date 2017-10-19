@@ -60,8 +60,27 @@ namespace Chute
             var engine = new Simulation(maxStartingLocation);
             var results = engine.Run(players, gameCount);
 
-            foreach (var player in results)
+            foreach (var player in results.Players)
                 Console.WriteLine($"{player.Name} ({player.Strategy.Name}) won {player.WinCount} of the {gameCount} games.");
         }
+
+        public static void GameActionOutput_SmallSample(this GameBoard board)
+        {
+            var randomStrategy = new ChutesAndLadders.Strategy.Random.Engine();
+
+            var player1 = new Player("Player 1", randomStrategy);
+            var player2 = new Player("Player 2", randomStrategy);
+            var player3 = new Player("Player 3", randomStrategy);
+            var player4 = new Player("Player 4", randomStrategy);
+            var player5 = new Player("Player 5", randomStrategy);
+            var player6 = new Player("Player 6", randomStrategy);
+            var players = new Player[] { player1, player2, player3, player4, player5, player6 };
+
+            var engine = new SimulationCollection();
+            var results = engine.RunSimulations(players, 6000);
+
+            System.IO.File.WriteAllText(@".\GameActions.csv", results.GameActions.Output());
+        }
+
     }
 }
