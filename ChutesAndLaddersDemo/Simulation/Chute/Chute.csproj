@@ -52,6 +52,7 @@
     <Compile Include="Demo3aExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DataGenerationExtensions.cs" />
     <Compile Include="SupplementalDemoExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

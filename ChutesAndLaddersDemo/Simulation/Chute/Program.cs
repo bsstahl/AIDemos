@@ -43,12 +43,15 @@ namespace Chute
             // board.Demo4a_ShortestPath();
 
             #endregion
-
-
+            
             #region Supplemental Demos
 
             // board.SupplementalDemo_SingleGame();
             // board.SupplementalDemo_Player1Advantage();
+
+            #endregion
+
+            #region Data Generation
 
             // board.GameActionOutput_SmallSample();
 

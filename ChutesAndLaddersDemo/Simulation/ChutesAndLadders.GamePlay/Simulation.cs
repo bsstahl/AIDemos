@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ChutesAndLadders.GamePlay
 {
     /// <summary>
-    /// Runs multiple games to determine which strategy & player-position 
+    /// Runs multiple games to determine which strategy and player-position 
     /// combination results in the most wins for that player.
     /// </summary>
     public class Simulation
@@ -26,10 +26,9 @@ namespace ChutesAndLadders.GamePlay
             _board = board;
         }
 
-        public SimulationResults Run(Player[] players, int executionCount)
+        public SimulationResults Run(Player[] players, int executionCount, string gameActionFilePath = null)
         {
             int tryCount = 0;
-            var gameActions = new List<GameAction>();
             while (tryCount < executionCount)
             {
                 int startAt = (new Random()).Next(_maxStartingLocation + 1);
@@ -38,13 +37,15 @@ namespace ChutesAndLadders.GamePlay
                 tryCount++;
                 results.Winner.WinCount++;
                 results.Winner.Strategy.WinCount++;
-                gameActions.AddRange(results.GameActions);
+
+                // Write-out GameActions to the appropriate file
+                if (!string.IsNullOrWhiteSpace(gameActionFilePath))
+                    System.IO.File.AppendAllText(gameActionFilePath, results.GameActions.Output());
             }
 
             return new SimulationResults()
             {
-                Players = players,
-                GameActions = gameActions
+                Players = players
             };
         }
 

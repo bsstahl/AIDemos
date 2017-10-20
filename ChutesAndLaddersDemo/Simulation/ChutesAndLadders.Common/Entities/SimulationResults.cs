@@ -9,6 +9,5 @@ namespace ChutesAndLadders.Entities
     public class SimulationResults
     {
         public IEnumerable<Player> Players { get; set; }
-        public IEnumerable<GameAction> GameActions { get; set; }
     }
 }

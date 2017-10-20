@@ -18,7 +18,7 @@ namespace ChutesAndLadders.GamePlay
         GameBoard _board = new GameBoard();
 
 
-        public SimulationResults RunSimulations(Player[] players, int maxExecutionCount, bool outputResults = false)
+        public SimulationResults RunSimulations(Player[] players, int maxExecutionCount, bool outputResults = false, string outputGameActionsFolder = null)
         {
             if (maxExecutionCount < players.Count())
                 throw new ArgumentException("You must execute the simulation at least once per player");
@@ -29,7 +29,14 @@ namespace ChutesAndLadders.GamePlay
             var tasks = new Task<SimulationResults>[players.Count()];
             for (int i = 0; i < players.Count(); i++)
             {
-                tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(players.DeepCopy().ToArray(), executions));
+                if (!string.IsNullOrWhiteSpace(outputGameActionsFolder))
+                {
+                    string gameActionFilePath = System.IO.Path.Combine(outputGameActionsFolder, $"GameActions_Player{i+1}First.csv");
+                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(players.DeepCopy().ToArray(), executions, gameActionFilePath));
+                }
+                else
+                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(players.DeepCopy().ToArray(), executions));
+
                 players = players.Rotate();
             }
 
@@ -43,10 +50,6 @@ namespace ChutesAndLadders.GamePlay
                 totalGames += player.WinCount;
             }
 
-            var gameActions = new List<GameAction>();
-            foreach (var task in tasks)
-                gameActions.AddRange(task.Result.GameActions);
-
             if (outputResults)
             {
                 Console.WriteLine($"Total Games: {totalGames}");
@@ -57,8 +60,7 @@ namespace ChutesAndLadders.GamePlay
 
             return new SimulationResults()
             {
-                Players = players,
-                GameActions = gameActions
+                Players = players
             };
         }
 
