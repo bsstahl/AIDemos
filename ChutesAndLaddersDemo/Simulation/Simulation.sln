@@ -33,6 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OptimizationStrategies", "O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChutesAndLadders.Strategy.Random", "ChutesAndLadders.Strategy.Random\ChutesAndLadders.Strategy.Random.csproj", "{7CDEA867-5797-4DA4-B92E-93F84D444410}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{764A3C08-2274-4C1F-BD26-1F6544A574C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChutesAndLadders.Tools.ReplaceGuids", "ChutesAndLadders.Tools.ReplaceGuids\ChutesAndLadders.Tools.ReplaceGuids.csproj", "{F8494074-30BA-438D-A2DC-5C961CD0A71A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,10 @@ Global
 		{7CDEA867-5797-4DA4-B92E-93F84D444410}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CDEA867-5797-4DA4-B92E-93F84D444410}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CDEA867-5797-4DA4-B92E-93F84D444410}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8494074-30BA-438D-A2DC-5C961CD0A71A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8494074-30BA-438D-A2DC-5C961CD0A71A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8494074-30BA-438D-A2DC-5C961CD0A71A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8494074-30BA-438D-A2DC-5C961CD0A71A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +109,7 @@ Global
 		{F9A23B6E-FC6C-402D-B608-867FD022889E} = {A616DC6B-888D-4780-9831-29B7C3B52FE4}
 		{C4427F1C-DAAE-49A7-A63D-4B10350DB363} = {054ED0D4-5E10-47DD-B492-5A2AFDA815F6}
 		{7CDEA867-5797-4DA4-B92E-93F84D444410} = {06B6AB56-6275-45F5-9F5E-90ECDAD9AFB1}
+		{F8494074-30BA-438D-A2DC-5C961CD0A71A} = {764A3C08-2274-4C1F-BD26-1F6544A574C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B2A4F840-6028-419D-8481-0F4900C59601}
