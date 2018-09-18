@@ -35,7 +35,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChutesAndLadders.Strategy.R
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{764A3C08-2274-4C1F-BD26-1F6544A574C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChutesAndLadders.Tools.ReplaceGuids", "ChutesAndLadders.Tools.ReplaceGuids\ChutesAndLadders.Tools.ReplaceGuids.csproj", "{F8494074-30BA-438D-A2DC-5C961CD0A71A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChutesAndLadders.Tools.ReplaceGuids", "ChutesAndLadders.Tools.ReplaceGuids\ChutesAndLadders.Tools.ReplaceGuids.csproj", "{F8494074-30BA-438D-A2DC-5C961CD0A71A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
