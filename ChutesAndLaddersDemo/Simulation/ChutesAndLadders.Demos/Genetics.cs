@@ -1,34 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ChutesAndLadders.Builders;
 using ChutesAndLadders.Entities;
 using ChutesAndLadders.GamePlay;
+using ChutesAndLadders.Interfaces;
+using System;
+using System.Linq;
 
-namespace Chute
+namespace ChutesAndLadders.Demos
 {
-    public static class Demo3cExtensions
+    public class Genetics
     {
-        public static void Demo3c_GeneticSuperiority(this GameBoard board)
+
+        public static void Evolution(int maxGenerations, int simulationsPerGeneration, double misspellingRate)
         {
-            var greedyStrategy = new ChutesAndLadders.Strategy.Greedy.Engine();
-            var linearStrategy = new ChutesAndLadders.Strategy.Linear.Engine();
+            var basicGeneticStrategy = new ChutesAndLadders.Strategy.Genetic.Engine();
 
-            var geneticStrategy = new ChutesAndLadders.Strategy.Rules.Engine("Best Found");
-            geneticStrategy.AddBestStrategyRules();
-
-            var player1 = new Player("Player 1", greedyStrategy);
-            var player2 = new Player("Player 2", linearStrategy);
-            var player3 = new Player("Player 3", geneticStrategy);
-            var players = new Player[] { player1, player2, player3 };
+            var players = new PlayerCollectionBuilder()
+                .Add("Player 1", basicGeneticStrategy.Evolve(misspellingRate))
+                .Add("Player 2", basicGeneticStrategy.Evolve(misspellingRate))
+                .Add("Player 3", basicGeneticStrategy.Evolve(misspellingRate))
+                .Add("Player 4", basicGeneticStrategy.Evolve(misspellingRate))
+                .Add("Player 5", basicGeneticStrategy.Evolve(misspellingRate))
+                .Add("Player 6", basicGeneticStrategy.Evolve(misspellingRate))
+                .Build();
 
             var engine = new SimulationCollection();
-            engine.RunSimulations(players, 100000, true);
+
+            int mostWins = 0;
+            int generationCount = 0;
+            while (generationCount < maxGenerations)
+            {
+                players = engine.RunSimulations(players, simulationsPerGeneration).Players.ToArray();
+
+                // Create the next generation of Players/Strategies
+                // by evolving based on the strategies of the top 2 players
+                var bestPlayers = players.OrderByDescending(p => p.WinCount).Take(2);
+                if (bestPlayers.First().WinCount > mostWins)
+                {
+                    mostWins = bestPlayers.First().WinCount;
+                    Console.WriteLine($"Generation {generationCount} (most wins {mostWins}):");
+                }
+
+                var bestStrategy = bestPlayers.First().Strategy;
+                var runnerUpStrategy = bestPlayers.Last().Strategy;
+
+                players = new PlayerCollectionBuilder()
+                    .Add("Player 1", bestStrategy)
+                    .Add("Player 2", runnerUpStrategy)
+                    .Add("Player 3", (bestStrategy as Strategy.Genetic.Engine).Evolve())
+                    .Add("Player 4", (bestStrategy as Strategy.Genetic.Engine).Evolve())
+                    .Add("Player 5", (bestStrategy as Strategy.Genetic.Engine).Evolve())
+                    .Add("Player 6", (runnerUpStrategy as Strategy.Genetic.Engine).Evolve())
+                    .Build();
+
+                generationCount++;
+            }
+
+
+            // Run the original (linear) strategy against the best one found genetically
+            var rootStrategy = new ChutesAndLadders.Strategy.Genetic.Engine("GeneticRoot");
+            var finalStrategy = players.OrderByDescending(p => p.WinCount).First().Strategy as Strategy.Genetic.Engine;
+
+            new SimulationCollectionBuilder()
+                .AddPlayer("Player 1", finalStrategy)
+                .AddPlayer("Player 2", finalStrategy)
+                .AddPlayer("Player 3", finalStrategy)
+                .AddPlayer("Player 4", rootStrategy)
+                .AddPlayer("Player 5", rootStrategy)
+                .AddPlayer("Player 6", rootStrategy)
+                .MaxExecutionCount(simulationsPerGeneration)
+                .OutputResults(true)
+                .Run();
+
+            Console.WriteLine($"{finalStrategy.Name} rules:");
+            Console.WriteLine(finalStrategy.ContrastWith(rootStrategy));
         }
 
-        public static void AddBestStrategyRules(this ChutesAndLadders.Strategy.Rules.Engine strategy)
+        public static ChutesAndLadders.Strategy.Rules.Engine GetBestStrategy()
         {
+            var strategy = new ChutesAndLadders.Strategy.Rules.Engine("Best Found");
             strategy.AddRule(0, 3, 39);
             strategy.AddRule(0, 4, 40);
             strategy.AddRule(0, 5, 14);
@@ -197,6 +246,38 @@ namespace Chute
             strategy.AddRule(94, 2, 75);
             strategy.AddRule(94, 4, 77);
             strategy.AddRule(98, 1, 78);
+            return strategy;
         }
+
+        public static void Analysis()
+        {
+            int maxOptions = 0;
+            int totalConditions = 0;
+            int totalConditionalOptions = 0;
+
+            var board = new GameBoard();
+            for (int startingPoint = 0; startingPoint < 100; startingPoint++)
+            {
+                for (byte spin = 1; spin < 7; spin++)
+                {
+                    var endPoints = board.GetLegalEndpoints(startingPoint, spin);
+                    int currentOptions = endPoints.Count();
+                    if ((currentOptions > 1) && (!endPoints.Contains(100)))
+                    {
+                        totalConditions++;
+                        totalConditionalOptions += currentOptions;
+                        if (currentOptions > maxOptions)
+                            maxOptions = currentOptions;
+                        Console.WriteLine($"{startingPoint},{spin},{currentOptions}");
+                    }
+                }
+            }
+
+            Console.WriteLine($"Max Options: {maxOptions}");
+            Console.WriteLine($"Total Conditions: {totalConditions}");
+            Console.WriteLine($"Total Conditional Options: {totalConditionalOptions}");
+        }
+
+
     }
 }

@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ChutesAndLadders.Common\ChutesAndLadders.Common.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Demos\ChutesAndLadders.Demos.csproj" />
     <ProjectReference Include="..\ChutesAndLadders.GamePlay\ChutesAndLadders.GamePlay.csproj" />
     <ProjectReference Include="..\ChutesAndLadders.Strategy.AgressivelyBad\ChutesAndLadders.Strategy.AgressivelyBad.csproj" />
     <ProjectReference Include="..\ChutesAndLadders.Strategy.Genetic\ChutesAndLadders.Strategy.Genetic.csproj" />

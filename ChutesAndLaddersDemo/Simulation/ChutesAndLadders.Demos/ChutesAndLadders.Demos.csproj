@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChutesAndLadders.Common\ChutesAndLadders.Common.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.GamePlay\ChutesAndLadders.GamePlay.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Genetic\ChutesAndLadders.Strategy.Genetic.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Random\ChutesAndLadders.Strategy.Random.csproj" />
+  </ItemGroup>
+
+</Project>

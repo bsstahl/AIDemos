@@ -12,7 +12,7 @@ namespace ChutesAndLadders.Strategy.Rules
     {
         RulesCollection _rules = new RulesCollection();
 
-        public string Name { get; private set; }
+        public string Name { get; protected set; }
 
         public int WinCount { get; set; }
 
