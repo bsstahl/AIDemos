@@ -1,0 +1,23 @@
+﻿<table>
+    <tr>
+        <td><label for="maxSimulations">Max Simulations:</label></td>
+        <td><input id="maxSimulations" type="number" bind=@MaxSimulations /></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button class="btn btn-primary" onclick="@RunSimulation">Go</button>
+        </td>
+    </tr>
+</table>
+
+@functions {
+[Parameter] int MaxSimulations { get; set; }
+[Parameter] Func<int, Task> RunMethod { get; set; }
+
+async Task RunSimulation(UIMouseEventArgs e)
+{
+    this.StateHasChanged();
+    await RunMethod.Invoke(this.MaxSimulations);
+}
+
+}

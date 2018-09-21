@@ -1,0 +1,15 @@
+﻿@page "/greedy"
+@inject Services.GreedySimulationState state
+
+<h1>Greedy Algorithm</h1>
+
+<GreedySettings RunMethod="@state.RunSimulation" MaxSimulations="25" />
+
+@functions {
+
+    protected override void OnInit()
+    {
+        state.OnChange += StateHasChanged;
+    }
+
+}

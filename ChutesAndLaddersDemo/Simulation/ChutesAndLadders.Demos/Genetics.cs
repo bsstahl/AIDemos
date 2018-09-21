@@ -4,13 +4,21 @@ using ChutesAndLadders.GamePlay;
 using ChutesAndLadders.Interfaces;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ChutesAndLadders.Demos
 {
     public class Genetics
     {
 
-        public static void Evolution(int maxGenerations, int simulationsPerGeneration, double misspellingRate)
+        public static async Task EvolutionAsync(int maxGenerations, int simulationsPerGeneration,
+            double misspellingRate, Func<int, int, int, Task> updateDelegate = null)
+        {
+            await Task.Run(() => Evolution(maxGenerations, simulationsPerGeneration, misspellingRate, updateDelegate));
+        }
+
+        public static void Evolution(int maxGenerations, int simulationsPerGeneration, 
+            double misspellingRate, Func<int, int, int, Task> updateDelegate = null)
         {
             var basicGeneticStrategy = new ChutesAndLadders.Strategy.Genetic.Engine();
 
@@ -27,8 +35,10 @@ namespace ChutesAndLadders.Demos
 
             int mostWins = 0;
             int generationCount = 0;
+            int evolutionCount = 0;
             while (generationCount < maxGenerations)
             {
+                generationCount++;
                 players = engine.RunSimulations(players, simulationsPerGeneration).Players.ToArray();
 
                 // Create the next generation of Players/Strategies
@@ -38,7 +48,11 @@ namespace ChutesAndLadders.Demos
                 {
                     mostWins = bestPlayers.First().WinCount;
                     Console.WriteLine($"Generation {generationCount} (most wins {mostWins}):");
+                    evolutionCount++;
                 }
+
+                if (updateDelegate != null)
+                    updateDelegate.Invoke(generationCount, mostWins, evolutionCount);
 
                 var bestStrategy = bestPlayers.First().Strategy;
                 var runnerUpStrategy = bestPlayers.Last().Strategy;
@@ -51,8 +65,6 @@ namespace ChutesAndLadders.Demos
                     .Add("Player 5", (bestStrategy as Strategy.Genetic.Engine).Evolve())
                     .Add("Player 6", (runnerUpStrategy as Strategy.Genetic.Engine).Evolve())
                     .Build();
-
-                generationCount++;
             }
 
 

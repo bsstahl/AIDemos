@@ -1,0 +1,33 @@
+﻿<table>
+    <tr>
+        <td><label for="maxGenerations">Max Generations:</label></td>
+        <td><input id="maxGenerations" type="number" bind=@maxGenerations /></td>
+    </tr>
+    <tr>
+        <td>Simulations per Generation:</td>
+        <td><input type="number" bind="@simulationsPerGeneration" /></td>
+    </tr>
+    <tr>
+        <td>Misspelling Rate:</td>
+        <td><input type="number" bind="@misspellingRate" /></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button class="btn btn-primary" onclick="@RunSimulation">Go</button>
+        </td>
+    </tr>
+</table>
+
+@functions {
+    [Parameter] int maxGenerations { get; set; }
+    [Parameter] int simulationsPerGeneration { get; set; }
+    [Parameter] double misspellingRate { get; set; }
+    [Parameter] Func<int, int, double, Task> RunMethod { get; set; }
+
+    async Task RunSimulation(UIMouseEventArgs e)
+    {
+        this.StateHasChanged();
+        await RunMethod.Invoke(maxGenerations, simulationsPerGeneration, misspellingRate);
+    }
+
+}
