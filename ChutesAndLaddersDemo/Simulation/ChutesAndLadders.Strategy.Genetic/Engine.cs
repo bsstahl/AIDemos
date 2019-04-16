@@ -11,13 +11,14 @@ namespace ChutesAndLadders.Strategy.Genetic
     {
         const int _dnaStrandLength = 298;
         const double _defaultMisspellingRate = 0.10;
+        const double _crossoverRate = 0.5;
 
         internal Chromosome[] DNA { get; private set; }
 
         public Engine() : this(Guid.NewGuid().ToString()) { }
         public Engine(string name) : base(name)
         {
-            LoadLinearDNA();
+            LoadRandomDNA();
         }
 
         internal Engine(Engine parent) : this(parent, Guid.NewGuid().ToString(), _defaultMisspellingRate) { }
@@ -46,6 +47,15 @@ namespace ChutesAndLadders.Strategy.Genetic
         public Engine Evolve(string name, double misspellingRate)
         {
             return new Engine(this, name, misspellingRate);
+        }
+
+        public Engine CrossoverWith(Engine crossoverTarget)
+        {
+            var rnd = new Random();
+            for (int i = 0; i < _dnaStrandLength; i++)
+                if (rnd.NextDouble() < _crossoverRate)
+                    this.DNA[i] = crossoverTarget.DNA[i];
+            return this;
         }
 
         public string ContrastWith(Engine contrastTarget)
@@ -92,7 +102,7 @@ namespace ChutesAndLadders.Strategy.Genetic
             LoadRulesFromDNA();
         }
 
-        private void LoadLinearDNA()
+        public void LoadLinearDNA()
         {
             this.DNA = new Chromosome[_dnaStrandLength];
 
@@ -117,5 +127,56 @@ namespace ChutesAndLadders.Strategy.Genetic
 
             LoadRulesFromDNA();
         }
+
+        public void LoadRandomDNA()
+        {
+            this.DNA = new Chromosome[_dnaStrandLength];
+
+            var board = new Entities.GameBoard();
+            int index = 0;
+            for (int startingPoint = 0; startingPoint < 100; startingPoint++)
+            {
+                for (byte spin = 1; spin <= 6; spin++)
+                {
+                    var legalEndpoints = board.GetLegalEndpoints(startingPoint, spin);
+                    if ((legalEndpoints.Count() > 1) && (!legalEndpoints.Contains(100)))
+                    {
+                        int selectedEndpoint = legalEndpoints.GetRandom();
+                        System.Diagnostics.Debug.Assert(legalEndpoints.Contains(selectedEndpoint));
+                        this.DNA[index] = new Chromosome(startingPoint, spin, legalEndpoints, selectedEndpoint);
+                        index++;
+                    }
+                }
+            }
+
+            LoadRulesFromDNA();
+        }
+
+        public void LoadBestPathDNA()
+        {
+            this.DNA = new Chromosome[_dnaStrandLength];
+            var shortestPathStrategy = new ChutesAndLadders.Strategy.ShortestPath.Engine();
+
+            var board = new Entities.GameBoard();
+            int index = 0;
+            for (int startingPoint = 0; startingPoint < 100; startingPoint++)
+            {
+                for (byte spin = 1; spin <= 6; spin++)
+                {
+                    var legalEndpoints = board.GetLegalEndpoints(startingPoint, spin);
+                    if ((legalEndpoints.Count() > 1) && (!legalEndpoints.Contains(100)))
+                    {
+                        var situation = new Entities.GameSituation() { BoardLocation = startingPoint, Spin = spin, LegalMoves = legalEndpoints, PlayerLocations = new int[] { } };
+                        var selectedEndpoint = shortestPathStrategy.GetMove(situation);
+
+                        this.DNA[index] = new Chromosome(startingPoint, spin, legalEndpoints, selectedEndpoint);
+                        index++;
+                    }
+                }
+            }
+
+        LoadRulesFromDNA();
     }
+
+}
 }

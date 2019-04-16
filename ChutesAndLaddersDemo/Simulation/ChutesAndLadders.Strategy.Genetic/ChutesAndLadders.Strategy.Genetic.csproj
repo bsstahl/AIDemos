@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ChutesAndLadders.Common\ChutesAndLadders.Common.csproj" />
     <ProjectReference Include="..\ChutesAndLadders.Strategy.Rules\ChutesAndLadders.Strategy.Rules.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.ShortestPath\ChutesAndLadders.Strategy.ShortestPath.csproj" />
   </ItemGroup>
 
   <ItemGroup>

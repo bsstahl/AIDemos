@@ -20,15 +20,13 @@ namespace ChutesAndLadders.Demos
         public static void Evolution(int maxGenerations, int simulationsPerGeneration, 
             double misspellingRate, Func<int, int, int, Task> updateDelegate = null)
         {
-            var basicGeneticStrategy = new ChutesAndLadders.Strategy.Genetic.Engine();
-
             var players = new PlayerCollectionBuilder()
-                .Add("Player 1", basicGeneticStrategy.Evolve(misspellingRate))
-                .Add("Player 2", basicGeneticStrategy.Evolve(misspellingRate))
-                .Add("Player 3", basicGeneticStrategy.Evolve(misspellingRate))
-                .Add("Player 4", basicGeneticStrategy.Evolve(misspellingRate))
-                .Add("Player 5", basicGeneticStrategy.Evolve(misspellingRate))
-                .Add("Player 6", basicGeneticStrategy.Evolve(misspellingRate))
+                .Add("Player 1", new ChutesAndLadders.Strategy.Genetic.Engine())
+                .Add("Player 2", new ChutesAndLadders.Strategy.Genetic.Engine())
+                .Add("Player 3", new ChutesAndLadders.Strategy.Genetic.Engine())
+                .Add("Player 4", new ChutesAndLadders.Strategy.Genetic.Engine())
+                .Add("Player 5", new ChutesAndLadders.Strategy.Genetic.Engine())
+                .Add("Player 6", new ChutesAndLadders.Strategy.Genetic.Engine())
                 .Build();
 
             var engine = new SimulationCollection();
@@ -60,7 +58,7 @@ namespace ChutesAndLadders.Demos
                 players = new PlayerCollectionBuilder()
                     .Add("Player 1", bestStrategy)
                     .Add("Player 2", runnerUpStrategy)
-                    .Add("Player 3", (bestStrategy as Strategy.Genetic.Engine).Evolve())
+                    .Add("Player 3", (bestStrategy as Strategy.Genetic.Engine).CrossoverWith(runnerUpStrategy as Strategy.Genetic.Engine))
                     .Add("Player 4", (bestStrategy as Strategy.Genetic.Engine).Evolve())
                     .Add("Player 5", (bestStrategy as Strategy.Genetic.Engine).Evolve())
                     .Add("Player 6", (runnerUpStrategy as Strategy.Genetic.Engine).Evolve())
@@ -68,8 +66,11 @@ namespace ChutesAndLadders.Demos
             }
 
 
-            // Run the original (linear) strategy against the best one found genetically
+            // Run the linear strategy against the best one found genetically
             var rootStrategy = new ChutesAndLadders.Strategy.Genetic.Engine("GeneticRoot");
+            // rootStrategy.LoadLinearDNA();
+            rootStrategy.LoadBestPathDNA();
+
             var finalStrategy = players.OrderByDescending(p => p.WinCount).First().Strategy as Strategy.Genetic.Engine;
 
             new SimulationCollectionBuilder()

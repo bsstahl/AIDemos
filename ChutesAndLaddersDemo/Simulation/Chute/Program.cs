@@ -95,7 +95,7 @@ namespace Chute
 
             // Demo 3b is generally the only one that needs to be shown, since
             // it is the actual primary evolution demo.
-            // Genetics.Evolution(25, 100, 0.1);
+            Genetics.Evolution(500, 500, 0.1);
 
             #endregion
 
