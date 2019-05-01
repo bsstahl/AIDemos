@@ -1,0 +1,21 @@
+﻿<div>
+    <input type="text" value="@MessageText" placeholder="@Placeholder" onkeyup="@OnMessageTextChange" />
+    <span class="@WarningStyle">Warning: Possibly Toxic Comment</span>
+</div>
+
+@functions {
+    [Parameter]
+    string Placeholder { get; set; }
+
+    string WarningStyle { get; set; } = "alert-danger";
+
+    string MessageText { get; set; }
+
+    NonToxic.Model.Engine _engine = new NonToxic.Model.Engine();
+
+    void OnMessageTextChange()
+    {
+        // Someday this will work
+        this.WarningStyle = _engine.Predict(this.MessageText) ? "alert-danger" : "invisible";
+    }
+}
