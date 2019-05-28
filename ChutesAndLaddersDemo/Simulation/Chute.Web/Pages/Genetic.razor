@@ -1,0 +1,36 @@
+﻿@page "/genetic"
+
+<h1>Genetic Algorithms</h1>
+
+<table>
+    <tr>
+        <td><label for="maxGenerations">Max Generations:</label></td>
+        <td><input id="maxGenerations" type="number" bind=@maxGenerations /></td>
+    </tr>
+    <tr>
+        <td>Simulations per Generation:</td>
+        <td><input type="number" bind="@simulationsPerGeneration" /></td>
+    </tr>
+    <tr>
+        <td>Misspelling Rate:</td>
+        <td><input type="number" bind="@misspellingRate" /></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button class="btn btn-primary" onclick="@RunSimulation">Go</button>
+        </td>
+    </tr>
+</table>
+
+@functions {
+    int maxGenerations { get; set; } = 15;
+    int simulationsPerGeneration { get; set; } = 25;
+    double misspellingRate { get; set; } = 0.15;
+
+    async Task RunSimulation(UIMouseEventArgs e)
+    {
+        Console.WriteLine($"Run({maxGenerations},{simulationsPerGeneration},{misspellingRate})");
+        await ChutesAndLadders.Demos.Genetics.EvolutionAsync(maxGenerations, simulationsPerGeneration, misspellingRate, null);
+    }
+
+}

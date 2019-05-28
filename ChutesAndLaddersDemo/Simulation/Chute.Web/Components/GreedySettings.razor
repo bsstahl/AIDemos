@@ -11,13 +11,11 @@
 </table>
 
 @functions {
-[Parameter] int MaxSimulations { get; set; }
-[Parameter] Func<int, Task> RunMethod { get; set; }
+    int MaxSimulations { get; set; }
 
-async Task RunSimulation(UIMouseEventArgs e)
-{
-    this.StateHasChanged();
-    await RunMethod.Invoke(this.MaxSimulations);
-}
+    async Task RunSimulation(UIMouseEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
 
 }
