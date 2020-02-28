@@ -74,6 +74,7 @@ namespace VotingData
 
         private static double ErrorFunction(double[] vectors, IEnumerable<Voter> voters, Func<double, double> activation)
         {
+            // Returns the sum of the squared errors for all voters in the set
             var model = new Model(vectors[0], vectors[1..^0], activation);
             return voters.Sum(v => Math.Pow(model.CalculateError(v), 2));
         }
