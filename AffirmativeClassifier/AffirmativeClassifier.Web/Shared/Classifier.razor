@@ -1,0 +1,19 @@
+﻿<h3>Affirmative Classifier</h3>
+
+<div>
+    <input type="text" @bind="this.Utterance" />
+    <button @onclick="Predict">Answer</button>
+    <br />
+    Result: <input value="@this.IsAffirmative.ToString()" />
+</div>
+
+@code {
+    private String Utterance { get; set; }
+    private Boolean IsAffirmative { get; set; }
+
+
+    private void Predict(MouseEventArgs e)
+    {
+        // this.IsAffirmative = _model.Predict(input).Prediction;
+    }
+}
