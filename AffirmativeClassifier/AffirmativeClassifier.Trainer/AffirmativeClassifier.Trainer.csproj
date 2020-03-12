@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <StartupObject>AffirmativeClassifier.Trainer.Program</StartupObject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AffirmativeClassifier\AffirmativeClassifier.csproj" />
+    <ProjectReference Include="..\Amoeba.Common\Amoeba.Common.csproj" />
+  </ItemGroup>
+
+</Project>

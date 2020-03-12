@@ -12,6 +12,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AffirmativeClassifier.Web", "AffirmativeClassifier.Web\AffirmativeClassifier.Web.csproj", "{C8A70ED4-99EC-4EE5-BB48-D7C8D7D90FE3}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AffirmativeClassifier.Trainer", "AffirmativeClassifier.Trainer\AffirmativeClassifier.Trainer.csproj", "{741E3221-3998-48EA-B7C5-A646E5C473AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amoeba.Common", "Amoeba.Common\Amoeba.Common.csproj", "{B4B6D480-6BE1-4A1F-A92A-02CD5D65328A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AffirmativeClassifier", "AffirmativeClassifier\AffirmativeClassifier.csproj", "{D17C337B-10E5-493B-995C-6BBCF773CC36}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AffirmativeClassifier.Test", "AffirmativeClassifier.Test\AffirmativeClassifier.Test.csproj", "{B689EEC7-FE9D-467C-BE6B-0A4E9B42AF7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AffirmativeClassifier.Trainer.Test", "AffirmativeClassifier.Trainer.Test\AffirmativeClassifier.Trainer.Test.csproj", "{9F4C7A28-9754-409D-9A17-27DD61E39CAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +36,26 @@ Global
 		{C8A70ED4-99EC-4EE5-BB48-D7C8D7D90FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8A70ED4-99EC-4EE5-BB48-D7C8D7D90FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8A70ED4-99EC-4EE5-BB48-D7C8D7D90FE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{741E3221-3998-48EA-B7C5-A646E5C473AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{741E3221-3998-48EA-B7C5-A646E5C473AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{741E3221-3998-48EA-B7C5-A646E5C473AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{741E3221-3998-48EA-B7C5-A646E5C473AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4B6D480-6BE1-4A1F-A92A-02CD5D65328A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B6D480-6BE1-4A1F-A92A-02CD5D65328A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B6D480-6BE1-4A1F-A92A-02CD5D65328A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B6D480-6BE1-4A1F-A92A-02CD5D65328A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D17C337B-10E5-493B-995C-6BBCF773CC36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D17C337B-10E5-493B-995C-6BBCF773CC36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D17C337B-10E5-493B-995C-6BBCF773CC36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D17C337B-10E5-493B-995C-6BBCF773CC36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B689EEC7-FE9D-467C-BE6B-0A4E9B42AF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B689EEC7-FE9D-467C-BE6B-0A4E9B42AF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B689EEC7-FE9D-467C-BE6B-0A4E9B42AF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B689EEC7-FE9D-467C-BE6B-0A4E9B42AF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F4C7A28-9754-409D-9A17-27DD61E39CAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F4C7A28-9754-409D-9A17-27DD61E39CAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F4C7A28-9754-409D-9A17-27DD61E39CAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F4C7A28-9754-409D-9A17-27DD61E39CAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
