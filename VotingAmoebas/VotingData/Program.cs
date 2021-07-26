@@ -9,7 +9,7 @@ namespace VotingData
     {
         static void Main(string[] args)
         {
-            const int MAX_EXECUTIONS = 250;
+            const int MAX_EXECUTIONS = 1000;
 
 
             // Load the voter data
@@ -28,7 +28,10 @@ namespace VotingData
                 var (accuracy, model) = TrainAndTestModel(allVoters);
 
                 if (accuracy > highestAccuracy)
+                {
+                    highestAccuracy = accuracy;
                     bestModel = model;
+                }
 
                 // Update stats
                 count++;

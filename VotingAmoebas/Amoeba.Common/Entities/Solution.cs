@@ -23,7 +23,7 @@ namespace Amoeba.Common.Entities
 
         public Solution(Func<double[], double> objectiveFunction, double[] vector)
         {
-            // a specifiede solution
+            // a specified solution
             this.vector = new double[vector.Length];
             Array.Copy(vector, this.vector, vector.Length);
             this.value = objectiveFunction.Invoke(this.vector);
