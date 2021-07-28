@@ -9,7 +9,7 @@ namespace VotingData
     {
         static void Main(string[] args)
         {
-            const int MAX_EXECUTIONS = 1000;
+            const int MAX_EXECUTIONS = 250;
 
 
             // Load the voter data
@@ -22,10 +22,12 @@ namespace VotingData
             Double highestAccuracy = 0.0;
             Model bestModel = null;
 
+            (var trainingSet, var testSet) = allVoters.Split(0.75);
+
             while (count < MAX_EXECUTIONS)
             {
                 // Train and test
-                var (accuracy, model) = TrainAndTestModel(allVoters);
+                var (accuracy, model) = TrainAndTestModel(trainingSet, testSet);
 
                 if (accuracy > highestAccuracy)
                 {
@@ -44,17 +46,16 @@ namespace VotingData
             var max = resultPercentages.Max(r => r);
             var min = resultPercentages.Min(r => r);
 
+            // Training Results
+            Console.WriteLine($"Training - Mean: {avg}  Min: {min}  Max {max}  StDev: {dev}");
+
             // Run all voters through the best model and show the failures
             var (bestModelPasses, bestModelFailures) = bestModel.Test(allVoters);
             Console.WriteLine($"Incorrect Predictions:\r\n{bestModelFailures.AsResultsList()}");
-            Console.WriteLine($"Mean: {avg}  Min: {min}  Max {max}  StDev: {dev}");
         }
 
-        private static (Double accuracy, Model model) TrainAndTestModel(IEnumerable<Voter> voters)
+        private static (double accuracy, Model model) TrainAndTestModel(IEnumerable<Voter> trainingSet, IEnumerable<Voter> testSet)
         {
-            // Split into training and test sets
-            (var trainingSet, var testSet) = voters.Split(0.75);
-
             // Train the model
             var model = Model.Train(trainingSet, ErrorFunction, Sigmoid);
 
@@ -66,14 +67,8 @@ namespace VotingData
             int count = fail.Count() + correctCount;
             double pct = (Convert.ToDouble(correctCount) / Convert.ToDouble(count)) * 100;
 
-            // Display the test results
-            //Console.WriteLine($"Incorrect Predictions:\r\n{fail.AsResultsList()}");
-            //Console.WriteLine($"Correct Predictions:\r\n{pass.AsResultsList()}");
-            //Console.WriteLine($"Total Tests: {count} - Predicted Correctly: {correctCount} ({pct.ToString("00.0000")}%).");
-
             return (pct, model);
         }
-
 
         private static double ErrorFunction(double[] vectors, IEnumerable<Voter> voters, Func<double, double> activation)
         {
