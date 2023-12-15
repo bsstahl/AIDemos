@@ -1,0 +1,103 @@
+using ADA2.Client.Entities;
+using ADA2.Embeddings.Test.Extensions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Xunit.Abstractions;
+
+namespace ADA2.Embeddings.Test;
+
+public class A01_Embeddings
+{
+    private readonly IConfiguration _config;
+    private readonly Microsoft.Extensions.Logging.ILogger _logger;
+    private readonly EncodingEngine _encodingEngine;
+
+    public A01_Embeddings(ITestOutputHelper output)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .WriteTo.Xunit(output).MinimumLevel.Verbose()
+            .CreateLogger();
+
+        _config = new ConfigurationBuilder()
+            .AddJsonFile("settings.json", true)
+            .AddUserSecrets<A01_Embeddings>()
+            .Build();
+
+        var services = new ServiceCollection()
+            .AddSingleton<EncodingEngine>()
+            .AddSingleton(_config)
+            .AddLogging(l => l.AddSerilog(Log.Logger))
+            .BuildServiceProvider();
+
+        _logger = services.GetRequiredService<Microsoft.Extensions.Logging.ILogger<A01_Embeddings>>();
+
+        _encodingEngine = services.GetRequiredService<EncodingEngine>();
+    }
+
+    [Theory]
+    [InlineData("I'm getting some RAM for my PC")]
+    [InlineData("I'm going to pull my boat with my Ram")]
+    [InlineData("I'm getting a ram and a ewe")]
+    [InlineData("I'm getting a new Ram")]
+    public async Task A_Distance_RAM(string testStatement)
+    {
+        var dictionary = new EmbeddingCollection(_encodingEngine) 
+        { 
+            "Goat",
+            "Memory",
+            "Truck"
+        };
+        var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
+        _logger.LogInformation("Test Results: {Distances}", distances);
+    }
+
+    [Theory]
+    [InlineData("He kicked the ball")]
+    [InlineData("He kicked the dirt")]
+    [InlineData("He kicked the bucket")]
+    public async Task B_Distance_Idioms(string testStatement)
+    {
+        var dictionary = new EmbeddingCollection(_encodingEngine)
+        {
+            "He kicked the ball",
+            "He kicked the dirt",
+            "He kicked the bucket",
+            "He died"
+        };
+        var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
+        _logger.LogInformation("Test Results: {Distances}", distances);
+    }
+
+    [Theory]
+    [InlineData("You're Early")]
+    [InlineData("Well, look who's on time")]
+    public async Task C_Distance_Sarcasm(string testStatement)
+    {
+        var dictionary = new EmbeddingCollection(_encodingEngine)
+        {
+            "Actually early",
+            "Actually late"
+        };
+        var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
+        _logger.LogInformation("Test Results: {Distances}", distances);
+    }
+
+    [Theory]
+    [InlineData("How old are you?")]
+    [InlineData("¿Quieres una cerveza?")]
+    public async Task D_Distance_Languages(string testStatement)
+    {
+        var dictionary = new EmbeddingCollection(_encodingEngine)
+        {
+            "What is your age?",
+            "Do you want a beer?",
+            "¿Cuántos años tienes?",
+            "Hány éves vagy?",
+            "Hvor gammel er du?"
+        };
+        var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
+        _logger.LogInformation("Test Results: {Distances}", distances);
+    }
+}

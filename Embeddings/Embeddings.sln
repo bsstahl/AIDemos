@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADA2.Client", "ADA2.Client\ADA2.Client.csproj", "{3E68B600-6A90-4700-BADA-E92FCB89938C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADA2.Embeddings.Test", "ADA2.Embeddings.Test\ADA2.Embeddings.Test.csproj", "{753423D2-EC5B-4CD7-9169-05475D5040F8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3E68B600-6A90-4700-BADA-E92FCB89938C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E68B600-6A90-4700-BADA-E92FCB89938C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E68B600-6A90-4700-BADA-E92FCB89938C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E68B600-6A90-4700-BADA-E92FCB89938C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{753423D2-EC5B-4CD7-9169-05475D5040F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{753423D2-EC5B-4CD7-9169-05475D5040F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{753423D2-EC5B-4CD7-9169-05475D5040F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{753423D2-EC5B-4CD7-9169-05475D5040F8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ECC43F8D-2907-4A68-BBCE-35CEC7C52322}
+	EndGlobalSection
+EndGlobal
