@@ -1,38 +1,23 @@
 using ADA2.Client.Entities;
 using ADA2.Embeddings.Test.Extensions;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using Xunit.Abstractions;
 
 namespace ADA2.Embeddings.Test;
 
-public class A01_Embeddings
+[Collection("Embeddings")]
+public class DistanceTests
 {
-    private readonly IConfiguration _config;
-    private readonly Microsoft.Extensions.Logging.ILogger _logger;
+    private readonly ILogger _logger;
     private readonly EncodingEngine _encodingEngine;
 
-    public A01_Embeddings(ITestOutputHelper output)
+    public DistanceTests(ITestOutputHelper output)
     {
-        Log.Logger = new LoggerConfiguration()
-            .WriteTo.Xunit(output).MinimumLevel.Verbose()
-            .CreateLogger();
-
-        _config = new ConfigurationBuilder()
-            .AddJsonFile("settings.json", true)
-            .AddUserSecrets<A01_Embeddings>()
-            .Build();
-
         var services = new ServiceCollection()
-            .AddSingleton<EncodingEngine>()
-            .AddSingleton(_config)
-            .AddLogging(l => l.AddSerilog(Log.Logger))
+            .AddOpenAI(output)
             .BuildServiceProvider();
-
-        _logger = services.GetRequiredService<Microsoft.Extensions.Logging.ILogger<A01_Embeddings>>();
-
+        _logger = services.GetRequiredService<ILogger<DistanceTests>>();
         _encodingEngine = services.GetRequiredService<EncodingEngine>();
     }
 
@@ -41,7 +26,7 @@ public class A01_Embeddings
     [InlineData("I'm going to pull my boat with my Ram")]
     [InlineData("I'm getting a ram and a ewe")]
     [InlineData("I'm getting a new Ram")]
-    public async Task A_Distance_RAM(string testStatement)
+    public async Task A_Distance_Homonyms(string testStatement)
     {
         var dictionary = new EmbeddingCollection(_encodingEngine) 
         { 
