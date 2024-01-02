@@ -54,6 +54,16 @@ public static class VectorExtensions
     }
 
     /// <summary>
+    /// Returns the negation of the specified vector
+    /// </summary>
+    /// <param name="value">The vector to be negated</param>
+    /// <returns>A vector value representing the negation of the supplied vector</returns>
+    public static float[] Negate(this float[] value)
+    {
+        return value.Select(v => -v).ToArray();
+    }
+
+    /// <summary>
     /// Normalize the specified vector to unit length
     /// </summary>
     /// <param name="value">The vector to be normalized</param>
@@ -61,7 +71,9 @@ public static class VectorExtensions
     public static float[] Normalize(this float[] value)
     {
         var mag = Magnitude(value);
-        return value.Select(v => Convert.ToSingle(v / mag)).ToArray();
+        return mag == 0.0f 
+            ? value 
+            : value.Select(v => Convert.ToSingle(v / mag)).ToArray();
     }
 
     /// <summary>
@@ -84,9 +96,9 @@ public static class VectorExtensions
     public static float CosineSimilarity(this float[] v1, float[] v2)
     {
         var dotProduct = v1.DotProduct(v2);
-        var magnitudeV1 = Magnitude(v1);
-        var magnitudeV2 = Magnitude(v2);
-        return Convert.ToSingle(dotProduct / (magnitudeV1 * magnitudeV1));
+        return dotProduct == 0f
+            ? 0f
+            : Convert.ToSingle(dotProduct / (Magnitude(v1) * Magnitude(v2)));
     }
 
     /// <summary>

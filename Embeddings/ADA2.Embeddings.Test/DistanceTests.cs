@@ -9,80 +9,93 @@ namespace ADA2.Embeddings.Test;
 [Collection("Embeddings")]
 public class DistanceTests
 {
+    private readonly IServiceProvider _services;
     private readonly ILogger _logger;
     private readonly EncodingEngine _encodingEngine;
 
     public DistanceTests(ITestOutputHelper output)
     {
-        var services = new ServiceCollection()
-            .AddOpenAI(output)
+        var seriLogger = output.GetLogger(Serilog.Events.LogEventLevel.Information);
+        _services = new ServiceCollection()
+            .AddOpenAI(seriLogger)
             .BuildServiceProvider();
-        _logger = services.GetRequiredService<ILogger<DistanceTests>>();
-        _encodingEngine = services.GetRequiredService<EncodingEngine>();
+        _logger = _services.GetRequiredService<ILogger<DistanceTests>>();
+        _encodingEngine = _services.GetRequiredService<EncodingEngine>();
     }
 
     [Theory]
-    [InlineData("I'm getting some RAM for my PC")]
-    [InlineData("I'm going to pull my boat with my Ram")]
-    [InlineData("I'm getting a ram and a ewe")]
-    [InlineData("I'm getting a new Ram")]
-    public async Task A_Distance_Homonyms(string testStatement)
+    [InlineData(1, "I'm getting some RAM for my PC")]
+    [InlineData(2, "I'm going to pull my boat with my Ram")]
+    [InlineData(3, "I'm getting a ram and a ewe")]
+    [InlineData(4, "I'm getting a new Ram")]
+    public async Task A_Distance_Homonyms(int testId, string testStatement)
     {
-        var dictionary = new EmbeddingCollection(_encodingEngine) 
-        { 
-            "Goat",
-            "Memory",
-            "Truck"
-        };
+        // Embeddings encode some of the context of the text, so
+        // homonyms do not generally have the same embedding values.
+
+        var dictionary = EmbeddingCollection.CreateFromText(_services, 
+            "Goat", 
+            "Memory", 
+            "Truck");
+
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
-        _logger.LogInformation("Test Results: {Distances}", distances);
+        _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
 
     [Theory]
-    [InlineData("He kicked the ball")]
-    [InlineData("He kicked the dirt")]
-    [InlineData("He kicked the bucket")]
-    public async Task B_Distance_Idioms(string testStatement)
+    [InlineData(5, "He kicked the ball")]
+    [InlineData(6, "He kicked the dirt")]
+    [InlineData(7, "He kicked the bucket")]
+    public async Task B_Distance_Idioms(int testId, string testStatement)
     {
-        var dictionary = new EmbeddingCollection(_encodingEngine)
-        {
-            "He kicked the ball",
-            "He kicked the dirt",
+        // Embeddings encode the idiomatic nature of certain expressions, so
+        // that they will have similar values to a literal statement with the
+        // same meaning.
+
+        var dictionary = EmbeddingCollection.CreateFromText(_services,
+            "He kicked the ball", 
+            "He kicked the dirt", 
             "He kicked the bucket",
-            "He died"
-        };
+            "He died");
+    
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
-        _logger.LogInformation("Test Results: {Distances}", distances);
+        _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
 
     [Theory]
-    [InlineData("You're Early")]
-    [InlineData("Well, look who's on time")]
-    public async Task C_Distance_Sarcasm(string testStatement)
+    [InlineData(8, "You're Early")]
+    [InlineData(9, "Well, look who's on time")]
+    public async Task C_Distance_Sarcasm(int testId, string testStatement)
     {
-        var dictionary = new EmbeddingCollection(_encodingEngine)
-        {
+        // Embeddings encode the sarcastic nature of certain expressions, so
+        // that they will have similar values to a sincere statement with the
+        // same meaning.
+
+        var dictionary = EmbeddingCollection.CreateFromText(_services,
             "Actually early",
-            "Actually late"
-        };
+            "Actually late");
+
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
-        _logger.LogInformation("Test Results: {Distances}", distances);
+        _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
 
     [Theory]
-    [InlineData("How old are you?")]
-    [InlineData("¿Quieres una cerveza?")]
-    public async Task D_Distance_Languages(string testStatement)
+    [InlineData(10, "How old are you?")]
+    [InlineData(11, "¿Quieres una cerveza?")]
+    public async Task D_Distance_Languages(int testId, string testStatement)
     {
-        var dictionary = new EmbeddingCollection(_encodingEngine)
-        {
+        // Embeddings encode the meaning of expressions independent of the
+        // language used, so they will have similar values to an equivalent statement
+        // in another language.
+
+        var dictionary = EmbeddingCollection.CreateFromText(_services,
             "What is your age?",
             "Do you want a beer?",
             "¿Cuántos años tienes?",
             "Hány éves vagy?",
-            "Hvor gammel er du?"
-        };
+            "Hvor gammel er du?");
+
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
-        _logger.LogInformation("Test Results: {Distances}", distances);
+        _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
 }

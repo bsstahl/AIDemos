@@ -12,7 +12,7 @@ public static class EncodingEngineExtensions
 
         var result = embeddings.IsError
             ? throw new InvalidOperationException($"Error executing language model")
-            : embeddings!.Embedding!;
+            : embeddings!.Embeddings!;
 
         result.ToList().ForEach(e => dictionaryResult.Add(e.Key, e.Value));
         return dictionaryResult;

@@ -6,7 +6,7 @@ namespace ADA2.Embeddings.Test.Extensions;
 
 internal static class EncodingEngineExtensions
 {
-    internal static async Task<IEnumerable<VectorDistance>> GetDistances(this EncodingEngine encodingEngine, ILogger logger, EmbeddingCollection dictionary, string testStatement)
+    internal static async Task<IEnumerable<VectorDistance>> GetDistances(this EncodingEngine encodingEngine, ILogger logger, EmbeddingCollection dictionary, string testStatement, string? testStatementTag = null)
     {
         // Fetch embeddings for all of the statements from the OpenAI service
         await dictionary.PopulateEmbeddings(encodingEngine.getEmbeddingsDelegate, TimeSpan.FromSeconds(0));
@@ -18,6 +18,6 @@ internal static class EncodingEngineExtensions
             : Embedding!.Single().Value;
 
         // Calculate the vector distances between each statement and the test statement
-        return dictionary.GetNearestNeighbors(testEmbeddingValue, float.MinValue);
+        return dictionary.GetNearestNeighbors(testEmbeddingValue, float.MinValue, testStatementTag ?? testStatement, testStatement);
     }
 }

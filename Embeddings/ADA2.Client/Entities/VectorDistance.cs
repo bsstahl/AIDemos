@@ -4,14 +4,21 @@ public class VectorDistance
 {
     public float Value { get; set; }
 
-    public float[] SourcePoint { get; set; } = Array.Empty<float>();
-
+    public TextEmbedding SourceEmbedding { get; set; } = new TextEmbedding();
 
     public TextEmbedding TargetEmbedding { get; set; } = new TextEmbedding();
 
 
     public override string ToString()
     {
-        return $"\r\nThe distance to '{TargetEmbedding.EmbeddingText}' is {Value}";
+        var source = SourceEmbedding.Tag is not null && !SourceEmbedding.Tag.Equals(SourceEmbedding.EmbeddingText)
+            ? $"{SourceEmbedding.EmbeddingText} [{SourceEmbedding.Tag}]"
+            : SourceEmbedding.EmbeddingText;
+
+        var target = TargetEmbedding.Tag is not null && !TargetEmbedding.Tag.Equals(TargetEmbedding.EmbeddingText)
+            ? $"{TargetEmbedding.EmbeddingText} [{TargetEmbedding.Tag}]"
+            : TargetEmbedding.EmbeddingText;
+
+        return $"\r\nThe distance from '{source}' to '{target}' is {Value}";
     }
 }

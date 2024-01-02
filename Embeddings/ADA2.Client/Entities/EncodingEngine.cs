@@ -26,7 +26,7 @@ public class EncodingEngine
     ModelConfig CloneModelConfig()
         => _modelConfig.Clone();
 
-    public async Task<(bool IsError, IDictionary<string, float[]>? Embedding)> EmbedAsync(IEnumerable<string> valuesToEmbed, bool leaveNewlinesIntact = false, ModelConfig? requestConfig = null, CancellationToken? cancellationToken = null)
+    public async Task<(bool IsError, IDictionary<string, float[]>? Embeddings)> EmbedAsync(IEnumerable<string> valuesToEmbed, bool leaveNewlinesIntact = false, ModelConfig? requestConfig = null, CancellationToken? cancellationToken = null)
     {
         (bool IsError, IDictionary<string, float[]>? Embeddings) embeddingsResponse 
             = new(false, new Dictionary<string, float[]>());
@@ -81,7 +81,7 @@ public class EncodingEngine
             modelResponse = (await openAIClient.GetEmbeddingsAsync(embeddingsOptions, cancellationToken ?? CancellationToken.None)
                 .ConfigureAwait(continueOnCapturedContext: false))
                 .AsEmbeddingsModelResponse(embeddingsOptions);
-            _logger.LogTrace("Response received from Embeddings Model - IsError: {IsError}, Values: {@Values}", modelResponse.IsError, values);
+            _logger.LogWarning("Response received from Embeddings Model - IsError: {IsError}, Values: {@Values}", modelResponse.IsError, values);
         }
         catch (Exception ex)
         {

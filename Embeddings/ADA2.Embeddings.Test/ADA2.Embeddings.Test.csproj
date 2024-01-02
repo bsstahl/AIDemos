@@ -34,6 +34,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Data\Emotions-wheel.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\SentimentEmbeddings.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="Data\SentimentEmbeddings_2ndOrder.json">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
 		<None Update="settings.json">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>

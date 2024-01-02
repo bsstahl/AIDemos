@@ -2,6 +2,9 @@
 using KdTree;
 using System.Collections;
 using ADA2.Client.Extensions;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ADA2.Client.Entities;
 
@@ -13,6 +16,7 @@ public class EmbeddingCollection : IEnumerable<TextEmbedding>, IEnumerable
     private readonly KdTree<float, int> _kdTree;
     private readonly FloatMath _typeMath;
     private readonly EncodingEngine _encodingEngine;
+    private readonly ILogger _logger;
 
     /// <summary>
     /// Gets or sets the value associated with the specified embedded text
@@ -38,13 +42,26 @@ public class EmbeddingCollection : IEnumerable<TextEmbedding>, IEnumerable
     /// <summary>
     /// Creates an empty collection
     /// </summary>
-    public EmbeddingCollection(EncodingEngine encodingEngine)
+    public EmbeddingCollection(ILogger<EmbeddingCollection> logger, EncodingEngine encodingEngine)
     {
+        _logger = logger;
         _dictionary = new Dictionary<int, TextEmbedding>();
         _typeMath = new FloatMath();
         _kdTree = new KdTree<float, int>(1536, _typeMath);
         _encodingEngine = encodingEngine;
     }
+
+    public void AddMany(IEnumerable<TextEmbedding>? embeddings)
+    {
+        (embeddings ?? Array.Empty<TextEmbedding>()).ToList()
+            .ForEach(delegate (TextEmbedding e)
+        {
+            Add(e.Index, e.Tag, e.EmbeddingText, e.EmbeddingValue);
+        });
+    }
+
+    public void AddMany(params string[] embeddingText)
+        => (embeddingText ?? Array.Empty<string>()).ToList().ForEach(t => this.Add(t));
 
     /// <summary>
     /// Adds an embedding to the collection
@@ -131,33 +148,19 @@ public class EmbeddingCollection : IEnumerable<TextEmbedding>, IEnumerable
         }
     }
 
-    public IEnumerable<VectorDistance> GetNearestNeighbors(float[] point, float standardDeviationsFromMean = 2f)
+    public IEnumerable<VectorDistance> GetNearestNeighbors(float[] point, float standardDeviationsFromMean = 2f, string? sourcePointTag = null, string? sourcePointText = null)
     {
-        var nearestNeighbors = _kdTree
-            .GetNearestNeighbours(point.ToArray(), Int32.MaxValue)
-            .Select(n => _dictionary[n.Value])
-            .Select(n => new VectorDistance()
-            {
-                SourcePoint = point,
-                TargetEmbedding = new TextEmbedding()
-                {
-                    Index = n.Index,
-                    Tag = n.Tag,
-                    EmbeddingText = n.EmbeddingText,
-                    EmbeddingValue = n.EmbeddingValue
-                },
-                Value = n.EmbeddingValue!.CosineDistance(point)
-            });
+        var allNeighbors = GetAllNeighbors(point, sourcePointTag, sourcePointText);
 
         // Calculate statistics and return only nearest outliers
 #pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection
         // Requires at least 2 passes since the sumOfSquares can't be calculated without the mean
-        var meanOfDistances = nearestNeighbors.Average(n => n.Value);
-        var sumOfSquares = nearestNeighbors.Sum(x => (x.Value - meanOfDistances) * (x.Value - meanOfDistances));
-        var stdDev = Convert.ToSingle(Math.Sqrt(sumOfSquares / (float)nearestNeighbors.Count()));
+        var meanOfDistances = allNeighbors.Average(n => n.Value);
+        var sumOfSquares = allNeighbors.Sum(x => (x.Value - meanOfDistances) * (x.Value - meanOfDistances));
+        var stdDev = Convert.ToSingle(Math.Sqrt(sumOfSquares / (float)allNeighbors.Count()));
 
         var outlierDistance = (meanOfDistances - (standardDeviationsFromMean * stdDev));
-        var result = nearestNeighbors
+        var result = allNeighbors
             .Where(n => n.TargetEmbedding.EmbeddingValue != point)
             .Where(n => (n.Value < outlierDistance))
             .OrderBy(n => n.Value)
@@ -165,8 +168,91 @@ public class EmbeddingCollection : IEnumerable<TextEmbedding>, IEnumerable
 #pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
 
         if (!result.Any()) // if there are no outliers, return the nearest neighbor
-            result = nearestNeighbors.OrderBy(n => n.Value).Take(1);
+            result = allNeighbors.OrderBy(n => n.Value).Take(1);
 
+        return result;
+    }
+
+    private IEnumerable<VectorDistance> GetAllNeighbors(float[] point, string? sourcePointTag, string? sourcePointText)
+    {
+        var nn = _kdTree.GetNearestNeighbours(point, Int32.MaxValue);
+        var nn1 = nn.Select(n => _dictionary[n.Value]);
+        var nearestNeighbors = nn1.Select(n => new VectorDistance()
+        {
+            SourceEmbedding = new TextEmbedding()
+            {
+                Tag = sourcePointTag ?? "Source",
+                EmbeddingText = sourcePointText ?? "Source",
+                EmbeddingValue = point
+            },
+            TargetEmbedding = new TextEmbedding()
+            {
+                Index = n.Index,
+                Tag = n.Tag,
+                EmbeddingText = n.EmbeddingText,
+                EmbeddingValue = n.EmbeddingValue
+            },
+            Value = n.EmbeddingValue!.CosineDistance(point)
+        });
+
+        //var nearestNeighbors = _kdTree
+        //    .GetNearestNeighbours(point, Int32.MaxValue)
+        //    .Select(n => _dictionary[n.Value])
+        //    .Select(n => new VectorDistance()
+        //    {
+        //        SourceEmbedding = new TextEmbedding()
+        //        {
+        //            Tag = sourcePointTag ?? "Source",
+        //            EmbeddingText = sourcePointText ?? "Source",
+        //            EmbeddingValue = point
+        //        },
+        //        TargetEmbedding = new TextEmbedding()
+        //        {
+        //            Index = n.Index,
+        //            Tag = n.Tag,
+        //            EmbeddingText = n.EmbeddingText,
+        //            EmbeddingValue = n.EmbeddingValue
+        //        },
+        //        Value = n.EmbeddingValue!.CosineDistance(point)
+        //    });
+
+        _logger.LogDebug("Nearest Neighbors: {NearestNeighbors}", nearestNeighbors);
+        return nearestNeighbors;
+    }
+
+    public static EmbeddingCollection Create(IServiceProvider services)
+        => services.GetRequiredService<EmbeddingCollection>();
+
+    /// <summary>
+    /// Constructs a collection from the contents of the json file at the specified file path
+    /// </summary>
+    /// <param name="filePath">The full file path to be used to retrieve the embeddings</param>
+    /// <returns>A new instance of <see cref="T:Carvana.Semantics.FreeText.Entities.EmbeddingCollection" /> containing the embeddings from the file</returns>
+    public static EmbeddingCollection CreateFromFile(IServiceProvider services, string filePath)
+    {
+        string text = File.ReadAllText(filePath);
+        return string.IsNullOrWhiteSpace(text)
+            ? throw new InvalidOperationException("No data found in '" + filePath + "'")
+            : CreateFromJson(services, text);
+    }
+
+    internal static EmbeddingCollection CreateFromJson(IServiceProvider services, string json)
+    {
+        var embeddings = JsonSerializer.Deserialize<IEnumerable<TextEmbedding>>(json);
+        return CreateFromEmbeddings(services, embeddings);
+    }
+
+    public static EmbeddingCollection CreateFromEmbeddings(IServiceProvider services, IEnumerable<TextEmbedding>? embeddings)
+    {
+        var result = EmbeddingCollection.Create(services);
+        result.AddMany(embeddings);
+        return result;
+    }
+
+    public static EmbeddingCollection CreateFromText(IServiceProvider services, params string[] embeddingText)
+    {
+        var result = EmbeddingCollection.Create(services);
+        result.AddMany(embeddingText);
         return result;
     }
 
