@@ -64,6 +64,9 @@ public class MathTests
     [InlineData(4, "the king")]
     public async Task B_VectorMath_Subtraction(int testId, string testStatement)
     {
+        // Subtracting 1 vector from another produces a new vector that is very close to the semantic
+        // meaning of the "subtraction" of the 2 original meanings.
+
         // queen-woman+man is very close to king
         // king-man+woman is very close to queen
 
@@ -132,6 +135,7 @@ public class MathTests
     public async Task D_VectorMath_LanguageSubtraction(int testId, string t1, string t2)
     {
         // Nearly all dimensions are changed significantly when translating between English and Spanish
+        // Meaning we can't identify specific dimensions that encode language
 
         var dictionary = EmbeddingCollection.CreateFromText(_services, t1, t2);
         await dictionary.PopulateEmbeddings(_encodingEngine.getEmbeddingsDelegate, TimeSpan.FromSeconds(0));
@@ -142,7 +146,7 @@ public class MathTests
             .Difference(v2.EmbeddingValue!)
             .Normalize();
 
-        _logger.LogInformation("Test Results: {Vector}", difference);
+        _logger.LogTrace("Test Results: {Vector}", difference);
 
         var sig = 0.001f;
         _logger.LogInformation("Count for Test {Id} where |value| < {Sig}: {Count}", testId, sig, difference.Count(v => Math.Abs(v) < sig));

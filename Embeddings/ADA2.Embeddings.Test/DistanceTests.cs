@@ -86,7 +86,7 @@ public class DistanceTests
     {
         // Embeddings encode the meaning of expressions independent of the
         // language used, so they will have similar values to an equivalent statement
-        // in another language.
+        // in another language, though not the same since language is also encoded.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "What is your age?",
@@ -96,6 +96,33 @@ public class DistanceTests
             "Hvor gammel er du?");
 
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
+        _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
+    }
+
+    [Theory]
+    [InlineData(12, "discontent")]
+    public async Task E_Distance_Antonym(int testId, string t1)
+    {
+        // The largest cosine distances are for words/phrases that are both
+        // semantically and contextually opposite. Antonyms are not necessarily
+        // maximally distant from each other since they share many common
+        // traits and often are similar within the context.
+
+        var dictionary = EmbeddingCollection.CreateFromText(_services, 
+            "cellulose",
+            "discomfort",
+            "compliant",
+            "contentment",
+            "optimism",
+            "peace",
+            "audacious",
+            "submissive",
+            "bureaucracy",
+            "liturgy",
+            "liturgia",
+            "horticulture");
+
+        var distances = await _encodingEngine.GetDistances(_logger, dictionary, t1);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
 }
