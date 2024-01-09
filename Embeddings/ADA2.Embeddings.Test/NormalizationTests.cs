@@ -90,10 +90,11 @@ public class NormalizationTests
     }
 
     [Theory]
-    [InlineData(9, "Pyrite is often known as fools-gold", "rock")]
-    [InlineData(10, "Tree branches can be ground to a pulp", "paper")]
-    [InlineData(11, "Make a very straight cut", "scissors")]
-    [InlineData(12, "Live long and prosper", "spock")]
+    [InlineData(9, "Tree branches can be ground to a pulp", "paper")]
+    [InlineData(10, "Pyrite is often known as fools-gold", "rock")]
+    [InlineData(11, "Live long and prosper", "spock")]
+    [InlineData(12, "Make a very straight cut", "scissors")]
+    [InlineData(13, "Lunch for roadrunners", "lizard")]
     public async Task C_Normalization_RockPaperScissors(int testId, string expression, string expected)
     {
         // Embeddings can be used to classify inputs into categories
