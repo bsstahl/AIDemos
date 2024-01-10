@@ -43,29 +43,31 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(5, "He kicked the ball")]
-    [InlineData(6, "He kicked the dirt")]
-    [InlineData(7, "He kicked the bucket")]
-    public async Task B_Distance_Idioms(int testId, string testStatement)
+    [InlineData(5, "He kicked the ball", "He shoots and scores")]
+    [InlineData(6, "He kicked the dirt", "Boot to the dust")]
+    [InlineData(7, "He kicked the bucket", "He died")]
+    public async Task B_Distance_Idioms(int testId, string testStatement, string expected)
     {
         // Embeddings encode the idiomatic nature of certain expressions, so
         // that they will have similar values to a literal statement with the
         // same meaning.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
-            "He kicked the ball", 
-            "He kicked the dirt", 
-            "He kicked the bucket",
+            "He shoots and scores", 
+            "Boot to the dust", 
             "He died");
     
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
+
+        var actual = distances.OrderBy(d => d.Value).First().TargetEmbedding.Tag;
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
-    [InlineData(8, "You're Early")]
-    [InlineData(9, "Well, look who's on time")]
-    public async Task C_Distance_Sarcasm(int testId, string testStatement)
+    [InlineData(8, "You're Early", "Actually early")]
+    [InlineData(9, "Well, look who's on time", "Actually late")]
+    public async Task C_Distance_Sarcasm(int testId, string testStatement, string expected)
     {
         // Embeddings encode the sarcastic nature of certain expressions, so
         // that they will have similar values to a sincere statement with the
@@ -77,12 +79,15 @@ public class DistanceTests
 
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
+
+        var actual = distances.OrderBy(d => d.Value).First().TargetEmbedding.Tag;
+        Assert.Equal(expected, actual);
     }
 
     [Theory]
-    [InlineData(10, "How old are you?")]
-    [InlineData(11, "¿Quieres una cerveza?")]
-    public async Task D_Distance_Languages(int testId, string testStatement)
+    [InlineData(10, "How old are you?", "What is your age?")]
+    [InlineData(11, "¿Quieres una cerveza?", "Do you want a beer?")]
+    public async Task D_Distance_Languages(int testId, string testStatement, string actual)
     {
         // Embeddings encode the meaning of expressions independent of the
         // language used, so they will have similar values to an equivalent statement
