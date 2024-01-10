@@ -43,8 +43,8 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(5, "He kicked the ball", "He shoots and scores")]
-    [InlineData(6, "He kicked the dirt", "Boot to the dust")]
+    [InlineData(5, "He shoots and scores", "He kicked the ball")]
+    [InlineData(6, "Boot to the dust", "He kicked the dirt")]
     [InlineData(7, "He kicked the bucket", "He died")]
     public async Task B_Distance_Idioms(int testId, string testStatement, string expected)
     {
@@ -53,8 +53,9 @@ public class DistanceTests
         // same meaning.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
-            "He shoots and scores", 
-            "Boot to the dust", 
+            "He kicked the ball", 
+            "He kicked the dirt",
+            "He played with a pail",
             "He died");
     
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
