@@ -41,7 +41,7 @@ public class ModelBiasTests
         var distance1 = (await _encodingEngine.GetDistances(_logger, dictionary, item1)).First();
         var distance2 = (await _encodingEngine.GetDistances(_logger, dictionary, item2)).First();
 
-        _logger.LogInformation("Test {Id} Results: {Item1} is closest to {Term1} ({Distance1}) whereas {Item2} is closest to {Term2} ({Distance2})", testId, item1, distance1.TargetEmbedding.Tag, distance1.Value, item2, distance2.TargetEmbedding.Tag, distance2.Value);
+        _logger.LogInformation("Test {Id} Results: {Item1} is closest to {Term1} ({Distance1}) \r\nwhereas {Item2} is closest to {Term2} ({Distance2})", testId, item1, distance1.TargetEmbedding.Tag, distance1.Value, item2, distance2.TargetEmbedding.Tag, distance2.Value);
     }
 
 }

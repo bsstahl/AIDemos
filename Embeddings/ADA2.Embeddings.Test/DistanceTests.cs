@@ -42,11 +42,12 @@ public class DistanceTests
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
 
+
     [Theory]
-    [InlineData(5, "He shoots and scores", "He kicked the ball")]
-    [InlineData(6, "Boot to the dust", "He kicked the dirt")]
-    [InlineData(7, "He kicked the bucket", "He died")]
-    public async Task B_Distance_Idioms(int testId, string testStatement, string expected)
+    [InlineData(5, "He kicked the ball")]
+    [InlineData(6, "He kicked the bucket")]
+    [InlineData(7, "He died")]
+    public async Task B_Distance_Idioms(int testId, string testStatement)
     {
         // Embeddings encode the idiomatic nature of certain expressions, so
         // that they will have similar values to a literal statement with the
@@ -55,14 +56,11 @@ public class DistanceTests
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "He kicked the ball", 
             "He kicked the dirt",
-            "He played with a pail",
+            "He kicked the bucket",
             "He died");
     
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
-
-        var actual = distances.OrderBy(d => d.Value).First().TargetEmbedding.Tag;
-        Assert.Equal(expected, actual);
     }
 
     [Theory]

@@ -37,12 +37,7 @@ public class NormalizationTests
         // input can be limited to a specific set of results
 
         var cutOffDistance = 0.2f;
-        var dictionary = EmbeddingCollection.CreateFromText(_services,
-            "go east",
-            "go west",
-            "go north",
-            "go south");
-
+        var dictionary = EmbeddingCollection.CreateFromText(_services, "go east","go west","go north","go south");
         var tagResults = await _encodingEngine.GetDistances(_logger, dictionary, expression, expression);
 
         var instructionDistance = tagResults.OrderBy(x => x.Value).First();
@@ -98,20 +93,14 @@ public class NormalizationTests
     public async Task C_Normalization_RockPaperScissors(int testId, string expression, string expected)
     {
         // Embeddings can be used to classify inputs into categories
-
         var dictionary = EmbeddingCollection.CreateFromText(_services,
-            "rock",
-            "paper",
-            "scissors",
-            "lizard",
-            "spock");
+            "rock","paper","scissors","lizard","spock");
 
         var tagResults = await _encodingEngine.GetDistances(_logger, dictionary, expression, expression);
-
         var bestDistance = tagResults.OrderBy(x => x.Value).First();
         var actual = bestDistance.TargetEmbedding.Tag;
 
-        _logger.LogInformation("Role for test {Id}: {Job} ({Distance})", testId, actual, bestDistance.Value);
+        _logger.LogInformation("Classification for test {Id}: {Job} ({Distance})", testId, actual, bestDistance.Value);
 
         Assert.Equal(expected, actual);
     }
