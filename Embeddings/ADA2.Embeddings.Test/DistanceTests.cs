@@ -47,6 +47,8 @@ public class DistanceTests
     [InlineData(5, "He kicked the ball")]
     [InlineData(6, "He kicked the bucket")]
     [InlineData(7, "He died")]
+    [InlineData(8, "He kicked a bucket")]
+    [InlineData(9, "He kicked bucket")]
     public async Task B_Distance_Idioms(int testId, string testStatement)
     {
         // Embeddings encode the idiomatic nature of certain expressions, so
@@ -56,6 +58,7 @@ public class DistanceTests
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "He kicked the ball", 
             "He kicked the dirt",
+            "He kicked a ball",
             "He kicked the bucket",
             "He died");
     
@@ -64,8 +67,8 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(8, "You're Early", "Actually early")]
-    [InlineData(9, "Well, look who's on time", "Actually late")]
+    [InlineData(10, "You're Early", "Actually early")]
+    [InlineData(11, "Well, look who's on time", "Actually late")]
     public async Task C_Distance_Sarcasm(int testId, string testStatement, string expected)
     {
         // Embeddings encode the sarcastic nature of certain expressions, so
@@ -84,8 +87,8 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(10, "How old are you?", "What is your age?")]
-    [InlineData(11, "¿Quieres una cerveza?", "Do you want a beer?")]
+    [InlineData(12, "How old are you?", "What is your age?")]
+    [InlineData(13, "¿Quieres una cerveza?", "Do you want a beer?")]
     public async Task D_Distance_Languages(int testId, string testStatement, string actual)
     {
         // Embeddings encode the meaning of expressions independent of the
@@ -104,7 +107,7 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(12, "discontent")]
+    [InlineData(14, "discontent")]
     public async Task E_Distance_Antonym(int testId, string t1)
     {
         // The largest cosine distances are for words/phrases that are both
@@ -129,4 +132,5 @@ public class DistanceTests
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, t1);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
     }
+
 }

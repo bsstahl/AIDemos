@@ -152,4 +152,35 @@ public class MathTests
         _logger.LogInformation("Count for Test {Id} where |value| < {Sig}: {Count}", testId, sig, difference.Count(v => Math.Abs(v) < sig));
     }
 
+    [Theory]
+    [InlineData(15, "Duckling", "Duck")]
+    public async Task F_Distance_Analogical(int testId, string t1, string t2)
+    {
+        // The vector difference between puppy and dog does not capture
+        // the relationship between them in a repeatable way so we cannot
+        // supply that difference to other analogous relationships
+
+        var dictionary = EmbeddingCollection.CreateFromText(_services,
+            "Puppy",
+            "Dog",
+            t1,
+            t2
+            );
+        await dictionary.PopulateEmbeddings(_encodingEngine.getEmbeddingsDelegate, TimeSpan.FromSeconds(0));
+
+        var puppy = dictionary["Puppy"];
+        var dog = dictionary["Dog"];
+
+        var v1 = dictionary[t1];
+        var v2 = dictionary[t2];
+
+        var diff = dog.EmbeddingValue.Difference(puppy.EmbeddingValue);
+        var result = v1.EmbeddingValue.Sum(diff).Normalize();
+
+        dictionary.Add($"dog-puppy+{t1}", result);
+
+        var distances = await _encodingEngine.GetDistances(_logger, dictionary, t2);
+        _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
+    }
+
 }
