@@ -27,32 +27,32 @@ public class MathTests
 
     [Theory]
     [InlineData(1, "the queen")]
-    [InlineData(2, "la monarcha")]
+    [InlineData(2, "la Monarca")]
     public async Task A_VectorMath_Addition(int testId, string testStatement)
     {
         // Adding 2 vectors together produces a new vector that is very close to the semantic
         // meaning of the "sum" of the 2 original meanings.
 
         // Monarch + Woman is very close to Queen
-        // Monarcha + Mujer is very close to Reina
+        // Monarca + Mujer is very close to Reina
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "the monarch",
             "the woman",
             "la mujer",
-            "la monarcha");
+            "la Monarca");
         await dictionary.PopulateEmbeddings(_encodingEngine.getEmbeddingsDelegate, TimeSpan.FromSeconds(0));
 
         var monarch = dictionary["the monarch"];
         var woman = dictionary["the woman"];
         var mujer = dictionary["la mujer"];
-        var monarcha = dictionary["la monarcha"];
+        var Monarca = dictionary["la Monarca"];
 
         var monarchPlusWoman = monarch.EmbeddingValue!.Sum(woman.EmbeddingValue!).Normalize();
-        var monarchaPlusMujer = monarcha.EmbeddingValue!.Sum(mujer.EmbeddingValue!).Normalize();
+        var MonarcaPlusMujer = Monarca.EmbeddingValue!.Sum(mujer.EmbeddingValue!).Normalize();
 
         dictionary.Add("monarch+woman", monarchPlusWoman);
-        dictionary.Add("monarcha+mujer", monarchaPlusMujer);
+        dictionary.Add("Monarca+mujer", MonarcaPlusMujer);
 
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
@@ -158,7 +158,9 @@ public class MathTests
     {
         // The vector difference between puppy and dog does not capture
         // the relationship between them in a repeatable way so we cannot
-        // supply that difference to other analogous relationships
+        // supply that difference to other analogous relationships.
+        // That is, Puppy is not to Dog as Duckling is to Duck
+        // within the embeddings space.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "Puppy",

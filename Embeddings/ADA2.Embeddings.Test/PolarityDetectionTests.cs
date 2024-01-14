@@ -24,7 +24,7 @@ public class PolarityDetectionTests
     }
 
     [Theory]
-    [InlineData(1, "Are you a c# developer?", "Yes", true)]
+    [InlineData(1, "Are you a c# developer?", "Sure", true)]
     [InlineData(2, "Do you have a pet chinchilla?", "I don't think so", false)]
     [InlineData(3, "Are dogs your favorite pets?", "I'm a canine lover", true)]
     [InlineData(4, "Do you like Javascript", "Nobody does", false)]
