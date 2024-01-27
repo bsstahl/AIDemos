@@ -52,9 +52,7 @@ public class EncodingEngine
             if (embeddingResults.IsError)
                 result = false;
             else
-            {
                 embeddingResults.Embeddings?.ToList().ForEach(e => _cache.Add(e.Key, e.Value));
-            }
         }
 
         return result;

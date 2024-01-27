@@ -34,7 +34,7 @@ public class DistanceTests
         // homonyms do not generally have the same embedding values.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services, 
-            "Goat", 
+            "Sheep", 
             "Memory", 
             "Truck");
 

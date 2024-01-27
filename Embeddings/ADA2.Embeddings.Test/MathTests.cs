@@ -27,7 +27,7 @@ public class MathTests
 
     [Theory]
     [InlineData(1, "the queen")]
-    [InlineData(2, "la monarcha")]
+    [InlineData(2, "la monarca")]
     public async Task A_VectorMath_Addition(int testId, string testStatement)
     {
         // Adding 2 vectors together produces a new vector that is very close to the semantic
@@ -40,19 +40,19 @@ public class MathTests
             "the monarch",
             "the woman",
             "la mujer",
-            "la monarcha");
+            "la monarca");
         await dictionary.PopulateEmbeddings(_encodingEngine.getEmbeddingsDelegate, TimeSpan.FromSeconds(0));
 
         var monarch = dictionary["the monarch"];
         var woman = dictionary["the woman"];
         var mujer = dictionary["la mujer"];
-        var monarcha = dictionary["la monarcha"];
+        var monarcha = dictionary["la monarca"];
 
         var monarchPlusWoman = monarch.EmbeddingValue!.Sum(woman.EmbeddingValue!).Normalize();
         var monarchaPlusMujer = monarcha.EmbeddingValue!.Sum(mujer.EmbeddingValue!).Normalize();
 
         dictionary.Add("monarch+woman", monarchPlusWoman);
-        dictionary.Add("monarcha+mujer", monarchaPlusMujer);
+        dictionary.Add("monarca+mujer", monarchaPlusMujer);
 
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
