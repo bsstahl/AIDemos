@@ -48,12 +48,13 @@ public class DistanceTests
     [InlineData(6, "He kicked the bucket")]
     [InlineData(7, "He died")]
     [InlineData(8, "He kicked a bucket")]
-    [InlineData(9, "He kicked bucket")]
     public async Task B_Distance_Idioms(int testId, string testStatement)
     {
-        // Embeddings encode the idiomatic nature of certain expressions, so
-        // that they will have similar values to a literal statement with the
-        // same meaning.
+        // Embeddings encode the idiomatic nature of certain expressions, so that
+        // they will have similar values to a literal statement with the same meaning.
+        // A literal form of the same phrase does not exhibit the same feature. So,
+        // "He kicked the bucket" is close to "He died", but "He kicked a bucket"
+        // and "He played kick the bucket" are not.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "He kicked the ball", 
@@ -67,8 +68,8 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(10, "You're Early", "Actually early")]
-    [InlineData(11, "Well, look who's on time", "Actually late")]
+    [InlineData(9, "You're Early", "Actually early")]
+    [InlineData(10, "Well, look who's on time", "Actually late")]
     public async Task C_Distance_Sarcasm(int testId, string testStatement, string expected)
     {
         // Embeddings encode the sarcastic nature of certain expressions, so
@@ -87,8 +88,8 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(12, "How old are you?", "What is your age?")]
-    [InlineData(13, "¿Quieres una cerveza?", "Do you want a beer?")]
+    [InlineData(11, "How old are you?", "What is your age?")]
+    [InlineData(12, "¿Quieres una cerveza?", "Do you want a beer?")]
     public async Task D_Distance_Languages(int testId, string testStatement, string actual)
     {
         // Embeddings encode the meaning of expressions independent of the
@@ -107,11 +108,11 @@ public class DistanceTests
     }
 
     [Theory]
-    [InlineData(14, "discontent")]
+    [InlineData(13, "discontent")]
     public async Task E_Distance_Antonym(int testId, string t1)
     {
         // The largest cosine distances are for words/phrases that are both
-        // semantically and contextually opposite. Antonyms are not necessarily
+        // semantically and contextually different. Antonyms are not necessarily
         // maximally distant from each other since they share many common
         // traits and often are similar within the context.
 

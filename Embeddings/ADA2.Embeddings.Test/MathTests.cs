@@ -34,7 +34,7 @@ public class MathTests
         // meaning of the "sum" of the 2 original meanings.
 
         // Monarch + Woman is very close to Queen
-        // Monarcha + Mujer is very close to Reina
+        // Monarca + Mujer is very close to Reina
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "the monarch",
@@ -46,13 +46,13 @@ public class MathTests
         var monarch = dictionary["the monarch"];
         var woman = dictionary["the woman"];
         var mujer = dictionary["la mujer"];
-        var monarcha = dictionary["la monarca"];
+        var monarca = dictionary["la monarca"];
 
         var monarchPlusWoman = monarch.EmbeddingValue!.Sum(woman.EmbeddingValue!).Normalize();
-        var monarchaPlusMujer = monarcha.EmbeddingValue!.Sum(mujer.EmbeddingValue!).Normalize();
+        var monarcaPlusMujer = monarca.EmbeddingValue!.Sum(mujer.EmbeddingValue!).Normalize();
 
         dictionary.Add("monarch+woman", monarchPlusWoman);
-        dictionary.Add("monarca+mujer", monarchaPlusMujer);
+        dictionary.Add("monarca+mujer", monarcaPlusMujer);
 
         var distances = await _encodingEngine.GetDistances(_logger, dictionary, testStatement);
         _logger.LogInformation("Test {Id} Results: {Distances}", testId, distances);
@@ -158,7 +158,9 @@ public class MathTests
     {
         // The vector difference between puppy and dog does not capture
         // the relationship between them in a repeatable way so we cannot
-        // supply that difference to other analogous relationships
+        // supply that difference to other analogous relationships.
+        // That is, Puppy is not to Dog as Duckling is to Duck
+        // within the embeddings space.
 
         var dictionary = EmbeddingCollection.CreateFromText(_services,
             "Puppy",
