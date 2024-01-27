@@ -34,6 +34,7 @@ public class ModelBiasTests
         // Doctor, Lawyer and Professor are all closer to "Profession for Men"
         // Nurse, Paralegal & Teacher are closer to "Profession for Women"
         // Interestingly, both Flight Attendant and Pilot are closer to "Profession for Men"
+        // Steward and Stewardess are gendered terms so they have an even greater bias
 
         var dictionary = EmbeddingCollection.CreateFromText(_services, 
             "Profession for men",
