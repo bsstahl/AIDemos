@@ -5,17 +5,15 @@ internal class Partition
     public IEnumerable<byte> Value { get; set; }
     public int? RankWithNext { get => GetRank(); }
 
-    public Partition? Previous { get; private set; }
     public Partition? Next { get; internal set; }
 
 
     private readonly IDictionary<byte[], int> _replacementsByText;
 
-    public Partition(IDictionary<byte[], int> replacementsByText, IEnumerable<byte> utf8Bytes, Partition? previous, Partition? next)
+    public Partition(IDictionary<byte[], int> replacementsByText, IEnumerable<byte> utf8Bytes, Partition? next)
     {
         _replacementsByText = replacementsByText;
         this.Value = utf8Bytes;
-        this.Previous = previous;
         this.Next = next;
     }
 

@@ -63,7 +63,7 @@ internal class PartitionCollection
         for (var i = 0; i < utf8Bytes.Count(); i++)
         {
             var value = utf8Bytes.Skip(i).Take(1);
-            var current = new Partition(_replacementsByText, value, previous, null);
+            var current = new Partition(_replacementsByText, value, null);
             results.Add(current);
             if (previous != null)
                 previous.Next = current;
