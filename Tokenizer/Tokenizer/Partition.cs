@@ -2,25 +2,33 @@
 
 internal class Partition
 {
-    // public int Index { get; set; }
     public IEnumerable<byte> Value { get; set; }
-    public int? Rank { get; set; }
+    public int? RankWithNext { get => GetRank(); }
+
+    public Partition? Previous { get; private set; }
+    public Partition? Next { get; internal set; }
+
 
     private readonly IDictionary<byte[], int> _replacementsByText;
 
-    // int index, 
-    public Partition(IDictionary<byte[], int> replacementsByText, IEnumerable<byte> utf8Bytes)
+    public Partition(IDictionary<byte[], int> replacementsByText, IEnumerable<byte> utf8Bytes, Partition? previous, Partition? next)
     {
         _replacementsByText = replacementsByText;
-        // this.Index = index;
         this.Value = utf8Bytes;
-        this.Rank = GetRank();
+        this.Previous = previous;
+        this.Next = next;
     }
 
-    internal int? GetRank()
+    internal int Encode()
+        => _replacementsByText[this.Value.ToArray()];
+
+    private int? GetRank()
     {
-        return _replacementsByText
-            .TryGetValue(this.Value.ToArray(), out var rank) ? rank : (int?)null;
+        return (this.Next is null) 
+            ? null
+            : _replacementsByText.TryGetValue(this.Value.Concat(this.Next.Value).ToArray(), out var rank) 
+                ? rank 
+                : (int?)null;
     }
 
 }
