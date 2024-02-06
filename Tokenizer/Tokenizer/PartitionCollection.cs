@@ -5,16 +5,23 @@ internal class PartitionCollection
     IDictionary<byte[], int> _replacementsByText;
     List<Partition> _partitions;
 
-    public int Count { get => _partitions.Count; }
-    public bool HasMergeablePartitions { get => (_partitions.Count > 1 && (this.LowestPairRank is not null)); }
-    public int? LowestPairRank { get => _partitions.Min(p => p.RankWithNext); }
-    public Partition? LowestRankedPartition
+    private int? LowestPairRank 
+    { 
+        get => _partitions.Min(p => p.RankWithNext); 
+    }
+
+    private Partition? LowestRankedPartition
     {
         get => _partitions.FirstOrDefault(p => p.RankWithNext == this.LowestPairRank);
     }
 
+    private bool HasMergeablePartitions 
+    { 
+        get => (_partitions.Count > 1 && (this.LowestPairRank is not null)); 
+    }
 
-    public PartitionCollection(IDictionary<byte[], int> replacementsByText, IEnumerable<byte> utf8Bytes)
+
+    internal PartitionCollection(IDictionary<byte[], int> replacementsByText, IEnumerable<byte> utf8Bytes)
     {
         _replacementsByText = replacementsByText;
         _partitions = this.Load(utf8Bytes);
