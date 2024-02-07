@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
+using Tokenizer.Extensions;
 
 namespace Tokenizer;
 
@@ -47,11 +47,9 @@ public class Model
 
     public IEnumerable<int> Encode(string text, ISet<string>? _1 = null, ISet<string>? _2 = null)
     {
-        var segments = string.IsNullOrEmpty(text)
-            ? new List<Segment>()
-            : new Regex(_regexPattern).Matches(text)
-                .Select(m => new Segment(this.TextValues, m.Value));
-        return segments.SelectMany(s => s.Encode());
+        return text
+            .AsSegments(_regexPattern, this.TextValues)
+            .SelectMany(s => s.Encode());
     }
 
 }

@@ -32,8 +32,8 @@ internal class PartitionCollection
         // Merge partitions based on rank
         while (this.HasMergeablePartitions)
         {
-            // Since HasMergeablePartitions is true,
-            // we know that LowestPairRank is not null
+            // Since HasMergeablePartitions is true, we know
+            // that the value of the lowest ranked pair is not null
             this.MergeWithNext(this.LowestRankedPartition!);
         }
 
