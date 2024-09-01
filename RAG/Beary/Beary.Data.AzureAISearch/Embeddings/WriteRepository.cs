@@ -1,32 +1,29 @@
-﻿using Azure;
-using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Models;
-using Beary.ValueTypes;
+﻿using Beary.ValueTypes;
 
-namespace Beary.Data.AzureAISearch;
+namespace Beary.Data.AzureAISearch.Embeddings;
 
-public class WriteRepository : IWriteSearchDocuments
+public class WriteRepository : IWriteEmbeddingsSearchDocuments
 {
     private readonly string _searchServiceName;
     private readonly string _apiKey;
 
-    private BearyIndex? _indexClient;
-    private BearyIndex IndexClient
+    private Index? _indexClient;
+    private Index IndexClient
     {
         get
         {
-            _indexClient ??= new BearyIndex(this.Endpoint, _apiKey);
+            _indexClient ??= new Index(Endpoint, _apiKey);
             return _indexClient;
         }
     }
 
     public Uri Endpoint => new Uri($"https://{_searchServiceName}.search.windows.net");
-    
+
 
     public WriteRepository(string searchServiceName, string apiKey)
     {
-        ArgumentNullException.ThrowIfNullOrEmpty(searchServiceName, nameof(searchServiceName));
-        ArgumentNullException.ThrowIfNullOrEmpty(apiKey, nameof(apiKey));
+        ArgumentException.ThrowIfNullOrEmpty(searchServiceName, nameof(searchServiceName));
+        ArgumentException.ThrowIfNullOrEmpty(apiKey, nameof(apiKey));
 
         _searchServiceName = searchServiceName;
         _apiKey = apiKey;
@@ -38,7 +35,7 @@ public class WriteRepository : IWriteSearchDocuments
         ArgumentNullException.ThrowIfNull(fullArticleLocation, nameof(fullArticleLocation));
         ArgumentNullException.ThrowIfNull(contentChunk, nameof(contentChunk));
 
-        var document = new SearchDocument
+        var document = new Document
         {
             Id = id.Value,
             Content = contentChunk.Value,
@@ -46,6 +43,6 @@ public class WriteRepository : IWriteSearchDocuments
             Vector = embedding?.Value ?? []
         };
 
-        await this.IndexClient.AddDocument(document).ConfigureAwait(false);
+        await IndexClient.AddDocument(document).ConfigureAwait(false);
     }
 }

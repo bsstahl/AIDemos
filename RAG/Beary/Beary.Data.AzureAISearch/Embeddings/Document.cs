@@ -1,8 +1,8 @@
 ﻿using Azure.Search.Documents.Indexes;
 
-namespace Beary.Data.AzureAISearch;
+namespace Beary.Data.AzureAISearch.Embeddings;
 
-internal class SearchDocument
+internal class Document
 {
     [SimpleField(IsKey = true)]
     public string Id { get; set; }
@@ -14,5 +14,5 @@ internal class SearchDocument
     public Uri ContentSource { get; set; }
 
     [SimpleField(IsFilterable = true, IsSortable = true)]
-    public IEnumerable<Double>? Vector { get; set; }
+    public IEnumerable<double>? Vector { get; set; }
 }

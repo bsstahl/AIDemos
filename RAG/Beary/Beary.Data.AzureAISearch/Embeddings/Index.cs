@@ -1,36 +1,36 @@
-﻿using Azure.Search.Documents.Indexes;
+﻿using Azure;
+using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
-using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 
-namespace Beary.Data.AzureAISearch;
+namespace Beary.Data.AzureAISearch.Embeddings;
 
-internal class BearyIndex : SearchIndex
+internal class Index : SearchIndex
 {
     // TODO: Get From Config
-    const string indexName = "beary-index";
+    const string indexName = "beary-embeddings-index";
 
     private SearchClient? _searchClient;
-    internal SearchClient SearchClient 
+    internal SearchClient SearchClient
     {
         get
         {
-            _searchClient ??= this.GetSearchClient();
+            _searchClient ??= GetSearchClient();
             return _searchClient;
-        } 
+        }
     }
 
     internal Uri Endpoint { get; private set; }
     internal string ApiKey { get; private set; }
 
 
-    internal BearyIndex(Uri endpoint, string apiKey) : base(indexName)
+    internal Index(Uri endpoint, string apiKey) : base(indexName)
     {
-        this.Endpoint = endpoint;
-        this.ApiKey = apiKey;
+        Endpoint = endpoint;
+        ApiKey = apiKey;
 
-        base.Fields = new List<SearchField>()
+        Fields = new List<SearchField>()
         {
             new SimpleField("Id", SearchFieldDataType.String) { IsKey = true },
             new SearchableField("Content") { IsFilterable = true, IsSortable = true },
@@ -39,21 +39,21 @@ internal class BearyIndex : SearchIndex
         };
     }
 
-    internal async Task AddDocument(SearchDocument document)
+    internal async Task AddDocument(Document document)
     {
         var batch = IndexDocumentsBatch.Upload(new[] { document });
-        await this.SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
+        await SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
     }
 
     internal SearchClient GetSearchClient()
     {
-        var credential = new AzureKeyCredential(this.ApiKey);
+        var credential = new AzureKeyCredential(ApiKey);
 
-        var indexClient = new SearchIndexClient(this.Endpoint, credential);
+        var indexClient = new SearchIndexClient(Endpoint, credential);
         var indexTask = indexClient
             .CreateOrUpdateIndexAsync(this);
         indexTask.Wait();
 
-        return new SearchClient(this.Endpoint, this.Name, credential);
+        return new SearchClient(Endpoint, Name, credential);
     }
 }

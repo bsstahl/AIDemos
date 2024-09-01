@@ -2,7 +2,7 @@
 
 namespace Beary.Data;
 
-public interface IWriteSearchDocuments
+public interface IWriteEmbeddingsSearchDocuments
 {
     Task SaveAsync(Identifier id, ArticleContent contentChunk, Location fullArticleLocation, Vector? embedding);
 }
