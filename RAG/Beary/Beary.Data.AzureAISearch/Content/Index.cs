@@ -3,12 +3,12 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using Beary.Data.AzureAISearch.Extensions;
 
-namespace Beary.Data.AzureAISearch.Embeddings;
+namespace Beary.Data.AzureAISearch.Content;
 
 internal class Index : SearchIndex
 {
     // TODO: Get From Config
-    const string indexName = "beary-embeddings-index";
+    const string indexName = "beary-content-index";
 
     private SearchClient? _searchClient;
     internal SearchClient SearchClient
@@ -33,15 +33,14 @@ internal class Index : SearchIndex
         {
             new SimpleField("Id", SearchFieldDataType.String) { IsKey = true },
             new SearchableField("Content") { IsFilterable = true, IsSortable = true },
-            new SimpleField("Vector", SearchFieldDataType.Collection(SearchFieldDataType.Double)) { IsFilterable = true },
-            new SimpleField("ContentSource", SearchFieldDataType.String) { IsFilterable = true, IsSortable = true }
+            new SimpleField("TokenCount", SearchFieldDataType.Int32) { IsFilterable = true }
         };
     }
 
     internal async Task AddDocument(Document document)
     {
         var batch = IndexDocumentsBatch.Upload(new[] { document });
-        await this.SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
+        await SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
     }
 
 }
