@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35208.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Data.AzureAISearch", "Beary.Data.AzureAISearch\Beary.Data.AzureAISearch.csproj", "{148F4483-388C-4100-8288-9503A5FF203E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary", "Beary\Beary.csproj", "{D70E743F-B673-4F0E-8981-6E79087D1A81}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5B2E858F-2E75-4841-AD3F-CB95FD0E720D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tst", "tst", "{EB9AE411-2975-452D-B953-C14FF2475823}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Data.AzureAISearch.Test", "Beary.Data.AzureAISearch.Test\Beary.Data.AzureAISearch.Test.csproj", "{99BE1A68-A784-4E3B-86C0-9169087AD7F9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Data", "Beary.Data\Beary.Data.csproj", "{2374B809-EF7A-46CE-8DEB-A78E4AF0B8C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{148F4483-388C-4100-8288-9503A5FF203E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{148F4483-388C-4100-8288-9503A5FF203E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{148F4483-388C-4100-8288-9503A5FF203E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{148F4483-388C-4100-8288-9503A5FF203E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D70E743F-B673-4F0E-8981-6E79087D1A81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D70E743F-B673-4F0E-8981-6E79087D1A81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D70E743F-B673-4F0E-8981-6E79087D1A81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D70E743F-B673-4F0E-8981-6E79087D1A81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99BE1A68-A784-4E3B-86C0-9169087AD7F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99BE1A68-A784-4E3B-86C0-9169087AD7F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99BE1A68-A784-4E3B-86C0-9169087AD7F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99BE1A68-A784-4E3B-86C0-9169087AD7F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2374B809-EF7A-46CE-8DEB-A78E4AF0B8C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2374B809-EF7A-46CE-8DEB-A78E4AF0B8C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2374B809-EF7A-46CE-8DEB-A78E4AF0B8C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2374B809-EF7A-46CE-8DEB-A78E4AF0B8C2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{148F4483-388C-4100-8288-9503A5FF203E} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
+		{D70E743F-B673-4F0E-8981-6E79087D1A81} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
+		{99BE1A68-A784-4E3B-86C0-9169087AD7F9} = {EB9AE411-2975-452D-B953-C14FF2475823}
+		{2374B809-EF7A-46CE-8DEB-A78E4AF0B8C2} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C25F8F2-81A5-4EBA-BC93-2AFC31261121}
+	EndGlobalSection
+EndGlobal

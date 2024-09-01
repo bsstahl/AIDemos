@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<AnalysisLevel>latest-all</AnalysisLevel>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Azure.Search.Documents" Version="11.6.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Beary.Data\Beary.Data.csproj" />
+	  <ProjectReference Include="..\Beary\Beary.csproj" />
+	</ItemGroup>
+
+</Project>
