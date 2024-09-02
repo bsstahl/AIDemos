@@ -1,6 +1,6 @@
 ﻿using Beary.ValueTypes;
 
-namespace Beary.Data.Entities;
+namespace Beary.Entities;
 
 public class Article
 {

@@ -1,5 +1,5 @@
-﻿using Beary.ValueTypes;
-using Beary.Data.Entities;
+﻿using Beary.Entities;
+using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Content;
 

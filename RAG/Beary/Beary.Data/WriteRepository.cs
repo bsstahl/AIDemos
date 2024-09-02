@@ -1,11 +1,12 @@
-﻿using Beary.Data.Entities;
-using Beary.Data.Interfaces;
+﻿using Beary.Data.Interfaces;
+using Beary.Entities;
+using Beary.Interfaces;
 using Beary.ValueTypes;
 
 namespace Beary.Data;
 
 /// Orchestrates the 2 underlying repositories
-public class WriteRepository
+public class WriteRepository : IWriteContent
 {
     private readonly IWriteContentSearchDocuments _contentRepo;
     private readonly IWriteEmbeddingsSearchDocuments _chunkRepo;
@@ -34,9 +35,6 @@ public class WriteRepository
         // TODO: Check for nulls where they should be disallowed (ie articleId, fullText, articleTokens, Chunk.Id, Chunk.ChunkText)
         await _contentRepo.SaveAsync(articleId, fullText, articleTokens);
         foreach (var chunk in chunks)
-        {
-            await _chunkRepo.SaveAsync(chunk.Id, chunk.ChunkText, articleId, chunk.Embedding);
-        }
-        throw new NotImplementedException();
+            await _chunkRepo.SaveAsync(chunk.Id, chunk.Index, chunk.ChunkText, articleId, chunk.Embedding);
     }
 }

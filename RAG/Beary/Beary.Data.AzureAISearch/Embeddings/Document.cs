@@ -7,6 +7,9 @@ internal class Document
     [SimpleField(IsKey = true)]
     public string Id { get; set; }
 
+    [SimpleField(IsFilterable = true, IsSortable = true)]
+    public int ElementIndex { get; set; }
+
     [SearchableField]
     public string Content { get; set; }
 

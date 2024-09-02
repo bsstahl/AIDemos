@@ -35,6 +35,7 @@ public class EmbeddingsWriteRepository_Save_Should
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await target.SaveAsync(
             Identifier.From(id),
+            ElementIndex.From(0),
             ArticleContent.From(content),
             Identifier.From(articleId),
             Vector.From(vector));
@@ -53,6 +54,7 @@ public class EmbeddingsWriteRepository_Save_Should
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await target.SaveAsync(
             Identifier.From(id),
+            ElementIndex.From(0),
             ArticleContent.From(content),
             Identifier.From(articleId));
     }
@@ -70,6 +72,27 @@ public class EmbeddingsWriteRepository_Save_Should
 
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
+            null!,
+            ElementIndex.From(0),
+            ArticleContent.From(content),
+            Identifier.From(articleId),
+            Vector.From(vector)));
+    }
+
+    [Fact]
+    public async Task FailIfElementIndexIsNotSupplied()
+    {
+        var searchServiceName = _config["SearchService:Name"];
+        var apiKey = _config["SearchService:ApiKey"];
+
+        var id = Guid.NewGuid();
+        var content = string.Empty.GetRandom();
+        var articleId = Guid.NewGuid();
+        var vector = new List<double> { 1.1, 2.2, 3.3 };
+
+        var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
+        await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
+            Identifier.From(id),
             null!,
             ArticleContent.From(content),
             Identifier.From(articleId),
@@ -90,6 +113,7 @@ public class EmbeddingsWriteRepository_Save_Should
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             Identifier.From(id),
+            ElementIndex.From(0),
             null!,
             Identifier.From(articleId),
             Vector.From(vector)));
