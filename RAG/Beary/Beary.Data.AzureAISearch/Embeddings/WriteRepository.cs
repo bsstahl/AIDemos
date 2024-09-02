@@ -1,4 +1,5 @@
-﻿using Beary.ValueTypes;
+﻿using Beary.Data.Interfaces;
+using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
 
@@ -29,17 +30,17 @@ public class WriteRepository : IWriteEmbeddingsSearchDocuments
         _apiKey = apiKey;
     }
 
-    public async Task SaveAsync(Identifier id, ArticleContent contentChunk, Location fullArticleLocation, Vector? embedding = null)
+    public async Task SaveAsync(Identifier id, ArticleContent contentChunk, Identifier fullArticleId, Vector? embedding = null)
     {
         ArgumentNullException.ThrowIfNull(id, nameof(id));
-        ArgumentNullException.ThrowIfNull(fullArticleLocation, nameof(fullArticleLocation));
+        ArgumentNullException.ThrowIfNull(fullArticleId, nameof(fullArticleId));
         ArgumentNullException.ThrowIfNull(contentChunk, nameof(contentChunk));
 
         var document = new Document
         {
             Id = id.Value,
             Content = contentChunk.Value,
-            ContentSource = fullArticleLocation.Value,
+            ArticleId = fullArticleId.Value,
             Vector = embedding?.Value ?? []
         };
 

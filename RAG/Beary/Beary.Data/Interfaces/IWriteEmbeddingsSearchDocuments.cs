@@ -1,8 +1,8 @@
 ﻿using Beary.ValueTypes;
 
-namespace Beary.Data;
+namespace Beary.Data.Interfaces;
 
 public interface IWriteEmbeddingsSearchDocuments
 {
-    Task SaveAsync(Identifier id, ArticleContent contentChunk, Location fullArticleLocation, Vector? embedding);
+    Task SaveAsync(Identifier id, ArticleContent contentChunk, Identifier fullArticleId, Vector? embedding);
 }

@@ -1,4 +1,4 @@
-﻿namespace Beary.Data.Articles;
+﻿namespace Beary.Data;
 
 public class ReadRepository
 {

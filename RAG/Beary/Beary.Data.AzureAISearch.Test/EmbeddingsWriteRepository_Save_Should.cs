@@ -29,14 +29,14 @@ public class EmbeddingsWriteRepository_Save_Should
 
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
-        var url = $"http://www.example.com/{id}";
+        var articleId = Guid.NewGuid();
         var vector = new List<double> { 1.1, 2.2, 3.3 };
 
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await target.SaveAsync(
             Identifier.From(id),
             ArticleContent.From(content),
-            Location.From(url),
+            Identifier.From(articleId),
             Vector.From(vector));
     }
 
@@ -48,13 +48,13 @@ public class EmbeddingsWriteRepository_Save_Should
 
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
-        var url = $"http://www.example.com/{id}";
+        var articleId = Guid.NewGuid();
 
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await target.SaveAsync(
             Identifier.From(id),
             ArticleContent.From(content),
-            Location.From(url));
+            Identifier.From(articleId));
     }
 
     [Fact]
@@ -65,14 +65,14 @@ public class EmbeddingsWriteRepository_Save_Should
 
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
-        var url = $"http://www.example.com/{id}";
+        var articleId = Guid.NewGuid();
         var vector = new List<double> { 1.1, 2.2, 3.3 };
 
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             null!,
             ArticleContent.From(content),
-            Location.From(url),
+            Identifier.From(articleId),
             Vector.From(vector)));
     }
 
@@ -84,14 +84,14 @@ public class EmbeddingsWriteRepository_Save_Should
 
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
-        var url = $"http://www.example.com/{id}";
+        var articleId = Guid.NewGuid();
         var vector = new List<double> { 1.1, 2.2, 3.3 };
 
         var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             Identifier.From(id),
             null!,
-            Location.From(url),
+            Identifier.From(articleId),
             Vector.From(vector)));
     }
 }

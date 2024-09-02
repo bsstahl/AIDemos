@@ -34,7 +34,7 @@ internal class Index : SearchIndex
             new SimpleField("Id", SearchFieldDataType.String) { IsKey = true },
             new SearchableField("Content") { IsFilterable = true, IsSortable = true },
             new SimpleField("Vector", SearchFieldDataType.Collection(SearchFieldDataType.Double)) { IsFilterable = true },
-            new SimpleField("ContentSource", SearchFieldDataType.String) { IsFilterable = true, IsSortable = true }
+            new SimpleField("ArticleId", SearchFieldDataType.String) { IsFilterable = false, IsSortable = false }
         };
     }
 

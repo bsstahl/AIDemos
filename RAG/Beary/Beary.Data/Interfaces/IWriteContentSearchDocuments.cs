@@ -1,6 +1,6 @@
 ﻿using Beary.ValueTypes;
 
-namespace Beary.Data;
+namespace Beary.Data.Interfaces;
 
 public interface IWriteContentSearchDocuments
 {

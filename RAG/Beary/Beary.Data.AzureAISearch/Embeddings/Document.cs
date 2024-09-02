@@ -11,7 +11,7 @@ internal class Document
     public string Content { get; set; }
 
     [SimpleField(IsFilterable = true, IsSortable = true)]
-    public Uri ContentSource { get; set; }
+    public string ArticleId { get; set; }
 
     [SimpleField(IsFilterable = true, IsSortable = true)]
     public IEnumerable<double>? Vector { get; set; }

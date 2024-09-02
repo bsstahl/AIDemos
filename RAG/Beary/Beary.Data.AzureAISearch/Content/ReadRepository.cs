@@ -1,10 +1,13 @@
-﻿using Beary.Data.Interfaces;
-using Beary.ValueTypes;
+﻿using Beary.ValueTypes;
+using Beary.Data.Entities;
 
 namespace Beary.Data.AzureAISearch.Content;
 
-public class WriteRepository : IWriteContentSearchDocuments
+public class ReadRepository
 {
+    // https://[search_service_name].search.windows.net/indexes/[index_name]/docs/[document_key]?api-version=[api_version]
+    // https://beary-search.search.windows.net/indexes/beary-content-index/docs/d53796a4-61dc-4dcf-94b2-44813875826a?api-version=2024-05-01-preview
+
     private readonly string _searchServiceName;
     private readonly string _apiKey;
 
@@ -21,7 +24,7 @@ public class WriteRepository : IWriteContentSearchDocuments
     public Uri Endpoint => new Uri($"https://{_searchServiceName}.search.windows.net");
 
 
-    public WriteRepository(string searchServiceName, string apiKey)
+    public ReadRepository(string searchServiceName, string apiKey)
     {
         ArgumentException.ThrowIfNullOrEmpty(searchServiceName, nameof(searchServiceName));
         ArgumentException.ThrowIfNullOrEmpty(apiKey, nameof(apiKey));
@@ -30,20 +33,11 @@ public class WriteRepository : IWriteContentSearchDocuments
         _apiKey = apiKey;
     }
 
-    public async Task SaveAsync(Identifier id, ArticleContent content, TokenCount tokenCount)
+    public async Task<Article> Get(Identifier id)
     {
         ArgumentNullException.ThrowIfNull(id, nameof(id));
-        ArgumentNullException.ThrowIfNull(content, nameof(content));
-        ArgumentNullException.ThrowIfNull(tokenCount, nameof(tokenCount));
 
-        var document = new Document
-        {
-            Id = id.Value,
-            Content = content.Value,
-            TokenCount = tokenCount.Value
-        };
-
-        await IndexClient.AddDocument(document).ConfigureAwait(false);
+        var results = await IndexClient.ReadById(id).ConfigureAwait(false);
+        return new Article(id.Value, results.Content, results.TokenCount);
     }
-
 }

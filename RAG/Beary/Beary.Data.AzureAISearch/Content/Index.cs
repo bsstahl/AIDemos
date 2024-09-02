@@ -2,6 +2,7 @@
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using Beary.Data.AzureAISearch.Extensions;
+using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Content;
 
@@ -40,7 +41,12 @@ internal class Index : SearchIndex
     internal async Task AddDocument(Document document)
     {
         var batch = IndexDocumentsBatch.Upload(new[] { document });
-        await SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
+        await this.SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
     }
 
+    internal async Task<Document> ReadById(Identifier id)
+    {
+        var result = await SearchClient.GetDocumentAsync<Document>(id.Value).ConfigureAwait(false);
+        return result.Value;
+    }
 }
