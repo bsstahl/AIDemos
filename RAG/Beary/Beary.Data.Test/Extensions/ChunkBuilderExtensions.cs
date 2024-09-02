@@ -6,11 +6,13 @@ namespace Beary.Data.Test.Extensions;
 
 internal static class ChunkBuilderExtensions
 {
+    const int vectorSearchDimensions = 3;
+
     internal static ContentChunkBuilder UseRandomValues(this ContentChunkBuilder builder, int index)
     {
-        var vector = new List<double>();
-        for (var i = 0; i < 7.GetRandom(3); i++)
-            vector.Add((1.0).GetRandom(0.0));
+        var vector = new List<Single>();
+        for (var i = 0; i < vectorSearchDimensions; i++)
+            vector.Add((1.0f).GetRandom(0.0f));
 
         return builder
             .Id(Guid.NewGuid().ToString())

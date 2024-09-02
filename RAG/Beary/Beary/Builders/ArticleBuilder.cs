@@ -42,7 +42,7 @@ public class ArticleBuilder
         return this;
     }
 
-    public ArticleBuilder AddContentChunk(string id, int index, string chunkText, IEnumerable<double>? vector)
+    public ArticleBuilder AddContentChunk(string id, int index, string chunkText, IEnumerable<Single>? vector)
     {
         var builder = new ContentChunkBuilder()
                 .Id(id)

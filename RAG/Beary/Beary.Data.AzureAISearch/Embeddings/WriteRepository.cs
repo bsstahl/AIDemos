@@ -1,6 +1,5 @@
 ﻿using Beary.Data.Interfaces;
 using Beary.ValueTypes;
-using System.Runtime.CompilerServices;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
 
@@ -47,6 +46,6 @@ public class WriteRepository : IWriteEmbeddingsSearchDocuments
             Vector = embedding?.Value ?? []
         };
 
-        await IndexClient.AddDocument(document).ConfigureAwait(false);
+        await this.IndexClient.AddDocument(document).ConfigureAwait(false);
     }
 }

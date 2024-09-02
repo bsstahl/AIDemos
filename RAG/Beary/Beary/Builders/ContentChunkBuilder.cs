@@ -9,7 +9,7 @@ public class ContentChunkBuilder
     private string? _id;
     private int? _index;
     private string? _chunkText;
-    private IEnumerable<Double>? _vector;
+    private IEnumerable<Single>? _vector;
 
     public ContentChunk Build()
     {
@@ -42,7 +42,7 @@ public class ContentChunkBuilder
         return this;
     }
 
-    public ContentChunkBuilder Vector(IEnumerable<Double> vector)
+    public ContentChunkBuilder Vector(IEnumerable<Single> vector)
     {
         _vector = vector;
         return this;

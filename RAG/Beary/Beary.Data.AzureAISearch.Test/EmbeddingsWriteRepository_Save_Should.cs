@@ -11,11 +11,17 @@ public class EmbeddingsWriteRepository_Save_Should
     private readonly ServiceProvider _services;
     private readonly IConfiguration _config;
 
+    private readonly string _searchServiceName;
+    private readonly string _apiKey;
+
     public EmbeddingsWriteRepository_Save_Should()
     {
         _config = new ConfigurationBuilder()
             .AddUserSecrets<EmbeddingsWriteRepository_Save_Should>()
             .Build();
+
+        _searchServiceName = _config["SearchService:Name"];
+        _apiKey = _config["SearchService:ApiKey"];
 
         _services = new ServiceCollection()
             .BuildServiceProvider();
@@ -24,15 +30,12 @@ public class EmbeddingsWriteRepository_Save_Should
     [Fact]
     public async Task SucceedIfAllValuesAreSupplied()
     {
-        var searchServiceName = _config["SearchService:Name"];
-        var apiKey = _config["SearchService:ApiKey"];
-
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
         var articleId = Guid.NewGuid();
-        var vector = new List<double> { 1.1, 2.2, 3.3 };
+        var vector = new List<Single> { 1.1f, 2.2f, 3.3f };
 
-        var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
+        var target = new Embeddings.WriteRepository(_searchServiceName, _apiKey);
         await target.SaveAsync(
             Identifier.From(id),
             ElementIndex.From(0),
@@ -44,14 +47,11 @@ public class EmbeddingsWriteRepository_Save_Should
     [Fact]
     public async Task SucceedIfAllValuesButEmbeddingAreSupplied()
     {
-        var searchServiceName = _config["SearchService:Name"];
-        var apiKey = _config["SearchService:ApiKey"];
-
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
         var articleId = Guid.NewGuid();
 
-        var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
+        var target = new Embeddings.WriteRepository(_searchServiceName, _apiKey);
         await target.SaveAsync(
             Identifier.From(id),
             ElementIndex.From(0),
@@ -62,15 +62,12 @@ public class EmbeddingsWriteRepository_Save_Should
     [Fact]
     public async Task FailIfIdIsNotSupplied()
     {
-        var searchServiceName = _config["SearchService:Name"];
-        var apiKey = _config["SearchService:ApiKey"];
-
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
         var articleId = Guid.NewGuid();
-        var vector = new List<double> { 1.1, 2.2, 3.3 };
+        var vector = new List<Single> { 1.1f, 2.2f, 3.3f };
 
-        var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
+        var target = new Embeddings.WriteRepository(_searchServiceName, _apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             null!,
             ElementIndex.From(0),
@@ -82,15 +79,12 @@ public class EmbeddingsWriteRepository_Save_Should
     [Fact]
     public async Task FailIfElementIndexIsNotSupplied()
     {
-        var searchServiceName = _config["SearchService:Name"];
-        var apiKey = _config["SearchService:ApiKey"];
-
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
         var articleId = Guid.NewGuid();
-        var vector = new List<double> { 1.1, 2.2, 3.3 };
+        var vector = new List<Single> { 1.1f, 2.2f, 3.3f };
 
-        var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
+        var target = new Embeddings.WriteRepository(_searchServiceName, _apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             Identifier.From(id),
             null!,
@@ -102,15 +96,12 @@ public class EmbeddingsWriteRepository_Save_Should
     [Fact]
     public async Task FailIfArticleContentIsNotSupplied()
     {
-        var searchServiceName = _config["SearchService:Name"];
-        var apiKey = _config["SearchService:ApiKey"];
-
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
         var articleId = Guid.NewGuid();
-        var vector = new List<double> { 1.1, 2.2, 3.3 };
+        var vector = new List<Single> { 1.1f, 2.2f, 3.3f };
 
-        var target = new Embeddings.WriteRepository(searchServiceName, apiKey);
+        var target = new Embeddings.WriteRepository(_searchServiceName, _apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             Identifier.From(id),
             ElementIndex.From(0),

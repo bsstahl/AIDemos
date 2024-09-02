@@ -9,7 +9,7 @@ public class ContentChunk
     public ArticleContent ChunkText { get; set; }
     public Vector? Embedding { get; set; }
 
-    public ContentChunk(string id, int index, string chunkText, IEnumerable<double>? embedding)
+    public ContentChunk(string id, int index, string chunkText, IEnumerable<Single>? embedding)
         : this(Identifier.From(id), ElementIndex.From(index), ArticleContent.From(chunkText), Vector.From(embedding))
     { }
 
