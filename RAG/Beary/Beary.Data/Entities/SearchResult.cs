@@ -1,4 +1,6 @@
-﻿namespace Beary.Data.Entities;
+﻿using System.Text.Json;
+
+namespace Beary.Data.Entities;
 
 public class SearchResult
 {
@@ -6,7 +8,11 @@ public class SearchResult
     public int ElementIndex { get; set; }
     public string Content { get; set; }
     public string ArticleId { get; set; }
-    public IEnumerable<double>? Vector { get; set; }
-    public double Distance { get; set; }
+    public double Score { get; set; }
 
+
+    override public string ToString()
+    {
+        return JsonSerializer.Serialize(this);
+    }
 }

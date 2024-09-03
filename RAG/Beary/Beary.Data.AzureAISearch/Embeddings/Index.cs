@@ -53,27 +53,31 @@ internal class Index : SearchIndex
         await this.SearchClient.IndexDocumentsAsync(batch).ConfigureAwait(false);
     }
 
+    internal async Task<long> GetDocumentCount()
+    {
+        var stats = await SearchClient.GetDocumentCountAsync().ConfigureAwait(false);
+        return stats.Value;
+    }
+
     internal async Task<IEnumerable<Data.Entities.SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors)
     {
         var searchOptions = new SearchOptions
         {
             IncludeTotalCount = true,
             Size = numberOfNeighbors.Value,
-            QueryType = SearchQueryType.Full
+            QueryType = SearchQueryType.Full,
+            VectorSearch = new VectorSearchOptions()
         };
 
-        var payload = new
-        {
-            value = queryVector.Value,
-            Fields = new[] { "Vector" },
-            k = numberOfNeighbors.Value
-        };
+        var searchCriteria = new VectorizedQuery(new ReadOnlyMemory<Single>(queryVector.Value.ToArray()));
+        searchCriteria.Fields.Add("Vector");
+        searchOptions.VectorSearch.Queries.Add(searchCriteria);
 
         using var tokenSource = new CancellationTokenSource();
         var cancellationToken = tokenSource.Token;
 
         var queryResponse = await this.SearchClient
-            .SearchAsync<Document>(string.Empty, searchOptions, cancellationToken)
+            .SearchAsync<Document>("", searchOptions, cancellationToken)
             .ConfigureAwait(false);
 
         var pagedResults = queryResponse.Value.GetResults();

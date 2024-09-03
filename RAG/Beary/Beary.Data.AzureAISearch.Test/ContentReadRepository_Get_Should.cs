@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Beary.Data.AzureAISearch.Test;
 
-[ExcludeFromCodeCoverage]
+[ExcludeFromCodeCoverage, Collection("Content")]
 public class ContentReadRepository_Get_Should
 {
     private readonly ServiceProvider _services;

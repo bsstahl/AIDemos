@@ -5,5 +5,6 @@ namespace Beary.Data.Interfaces;
 
 public interface IReadEmbeddingsSearchDocuments
 {
+    Task<long> GetDocumentCount();
     Task<IEnumerable<SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors);
 }

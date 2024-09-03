@@ -4,11 +4,11 @@ using TestHelperExtensions;
 
 namespace Beary.Data.Test.Extensions;
 
-internal static class ChunkBuilderExtensions
+public static class ChunkBuilderExtensions
 {
     const int vectorSearchDimensions = 3;
 
-    internal static ContentChunkBuilder UseRandomValues(this ContentChunkBuilder builder, int index)
+    public static ContentChunkBuilder UseRandomValues(this ContentChunkBuilder builder, int index)
     {
         var vector = new List<Single>();
         for (var i = 0; i < vectorSearchDimensions; i++)
@@ -21,7 +21,7 @@ internal static class ChunkBuilderExtensions
             .Vector(vector);
     }
 
-    internal static string BuildArticleContent(this IEnumerable<ContentChunkBuilder> builders)
+    public static string BuildArticleContent(this IEnumerable<ContentChunkBuilder> builders)
     {
         return new StringBuilder()
             .AppendLine($"# {string.Empty.GetRandom()}")

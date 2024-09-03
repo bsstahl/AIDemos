@@ -38,4 +38,11 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments
             .GetNearestNeighbors(queryVector, numberOfNeighbors)
             .ConfigureAwait(false);
     }
+
+    public async Task<long> GetDocumentCount()
+    {
+        return await this.IndexClient
+            .GetDocumentCount()
+            .ConfigureAwait(false);
+    }
 }

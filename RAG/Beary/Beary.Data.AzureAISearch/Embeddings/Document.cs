@@ -28,7 +28,7 @@ internal class Document
             Id = this.Id,
             ArticleId = this.ArticleId,
             ElementIndex = this.ElementIndex,
-            Distance = score,
+            Score = score,
             Content = this.Content
         };
     }
