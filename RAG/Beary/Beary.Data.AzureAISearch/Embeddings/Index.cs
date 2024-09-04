@@ -10,7 +10,7 @@ internal class Index : SearchIndex
 {
     // TODO: Get From Config
     const string indexName = "beary-embeddings-index";
-    const int vectorSearchDimensions = 3;
+    const int vectorSearchDimensions = 768;
     const string vectorSearchProfileName = "gptSearchProfile";
 
     private SearchClient? _searchClient;
