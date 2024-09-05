@@ -4,7 +4,7 @@ using Beary.Interfaces;
 using Beary.Data.AzureAISearch.Extensions;
 using Beary.Data.Extensions;
 using Beary.ValueTypes;
-using Bimp.Extensions;
+using Beary.Embeddings.LocalServer.Extensions;
 
 namespace Bimp;
 
@@ -22,21 +22,32 @@ internal class Program
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(config)
             .AddSingleton<BlogPostData.Repository>()
+            .AddSingleton<Program>()
+            .AddHttpClient()
+            .UseLocalServerEmbeddingsModel()
             .UseBearyWriteRepository()
             .UseAzureAIContentWriteRepo()
             .UseAzureAIEmbeddingsWriteRepo()
             .BuildServiceProvider();
 
-        var program = new Program();
-        await program.Execute(services);
+        var program = services.GetRequiredService<Program>();
+        await program.Execute();
     }
 
-    async Task Execute(IServiceProvider services)
-    {
-        var blogPostRepo = services.GetRequiredService<BlogPostData.Repository>();
-        var blogPosts = await blogPostRepo.GetAllPosts();
+    private readonly BlogPostData.Repository _blogPostRepo;
+    private readonly IWriteContent _writeRepo;
+    private readonly IGetEmbeddings _embeddingsClient;
 
-        var writeRepo = services.GetRequiredService<IWriteContent>();
+    public Program(BlogPostData.Repository blogPostRepo, IWriteContent writeRepo, IGetEmbeddings embeddingsClient)
+    {
+        _blogPostRepo = blogPostRepo;
+        _writeRepo = writeRepo;
+        _embeddingsClient = embeddingsClient;
+    }
+
+    async Task Execute()
+    {
+        var blogPosts = await _blogPostRepo.GetAllPosts();
 
         foreach (var article in blogPosts)
         {
@@ -47,9 +58,18 @@ internal class Program
                 .Encode(articleText);
             var tokenCount = TokenCount.From(tokens.Count);
 
-            var embeddings = await article.Chunks.Select(c => c.ChunkText).GetEmbeddings(article.Id);
+            var embeddings = new List<Beary.Entities.ContentChunk>();
+            foreach (var chunk in article.Chunks)
+            {
+                var embedding = await _embeddingsClient
+                    .GetEmbedding(chunk.ChunkText, article.Id)
+                    .ConfigureAwait(false);
 
-            await writeRepo.SaveAsync(Identifier.From(article.Id),
+                if (embedding is not null)
+                    embeddings.Add(embedding);
+            }
+
+            await _writeRepo.SaveAsync(Identifier.From(article.Id),
                 ArticleContent.From(articleText), tokenCount, embeddings);
 
         }

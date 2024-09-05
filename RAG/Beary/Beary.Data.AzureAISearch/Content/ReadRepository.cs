@@ -1,9 +1,10 @@
-﻿using Beary.Entities;
+﻿using Beary.Data.Interfaces;
+using Beary.Entities;
 using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Content;
 
-public class ReadRepository
+public class ReadRepository : IReadContentSearchDocuments
 {
     // https://[search_service_name].search.windows.net/indexes/[index_name]/docs/[document_key]?api-version=[api_version]
     // https://beary-search.search.windows.net/indexes/beary-content-index/docs/d53796a4-61dc-4dcf-94b2-44813875826a?api-version=2024-05-01-preview
@@ -33,11 +34,11 @@ public class ReadRepository
         _apiKey = apiKey;
     }
 
-    public async Task<Article> Get(Identifier id)
+    public async Task<Article> GetArticle(Identifier articleId)
     {
-        ArgumentNullException.ThrowIfNull(id, nameof(id));
+        ArgumentNullException.ThrowIfNull(articleId, nameof(articleId));
 
-        var results = await IndexClient.ReadById(id).ConfigureAwait(false);
-        return new Article(id.Value, results.Content, results.TokenCount);
+        var results = await IndexClient.ReadById(articleId).ConfigureAwait(false);
+        return new Article(articleId.Value, results.Content, results.TokenCount);
     }
 }

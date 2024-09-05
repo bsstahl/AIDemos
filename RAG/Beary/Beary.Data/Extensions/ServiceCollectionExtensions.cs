@@ -1,10 +1,5 @@
 ﻿using Beary.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Beary.Data.Extensions;
 
@@ -14,5 +9,11 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddSingleton<IWriteContent, WriteRepository>();
+    }
+
+    public static IServiceCollection UseBearyReadRepository(this IServiceCollection services)
+    {
+        return services
+            .AddSingleton<IReadContent, ReadRepository>();
     }
 }
