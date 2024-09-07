@@ -59,7 +59,21 @@ internal class Index : SearchIndex
         return stats.Value;
     }
 
-    internal async Task<IEnumerable<Data.Entities.SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors)
+    internal async Task<IEnumerable<Entities.SearchResult>> GetAllEmbeddings()
+    {
+        var searchOptions = new SearchOptions
+        {
+            IncludeTotalCount = true,
+            Size = 5000,
+            QueryType = SearchQueryType.Full
+        };
+
+        var queryResponse = await SearchClient.SearchAsync<Document>("*", searchOptions).ConfigureAwait(false);
+        var pagedResults = queryResponse.Value.GetResults();
+        return pagedResults.Select(r => r.Document.AsSearchResult(r.Score ?? 0.0)).ToList();
+    }
+
+    internal async Task<IEnumerable<Entities.SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors)
     {
         var searchOptions = new SearchOptions
         {
@@ -81,7 +95,7 @@ internal class Index : SearchIndex
             .ConfigureAwait(false);
 
         var pagedResults = queryResponse.Value.GetResults();
-        return pagedResults.Select(r => r.Document.AsSearchResult(r.Score ?? 1.0)).ToList();
+        return pagedResults.Select(r => r.Document.AsSearchResult(r.Score ?? 0.0)).ToList();
     }
 
 }

@@ -15,6 +15,7 @@ internal static class ChatContentExtensions
                     ChatRole.User => ChatMessage.CreateUserMessage(part),
                     ChatRole.Agent => ChatMessage.CreateAssistantMessage(part),
                     ChatRole.System => ChatMessage.CreateSystemMessage(part),
+                    ChatRole.Context => ChatMessage.CreateAssistantMessage(part),
                     _ => throw new InvalidOperationException($"Invald Role {c.Role}")
                 };
                 return message;

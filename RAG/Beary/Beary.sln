@@ -23,11 +23,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bimp", "Bimp\Bimp.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AskBeary", "AskBeary\AskBeary.csproj", "{D0C6A766-138E-4315-A328-89D97A4A51B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beary.Embeddings.LocalServer", "Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj", "{A783D182-2ACB-4E54-AB91-47EA5F0AF223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Embeddings.LocalServer", "Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj", "{A783D182-2ACB-4E54-AB91-47EA5F0AF223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beary.Chat", "Beary.Chat\Beary.Chat.csproj", "{9ADA46AC-25F1-4FDB-927E-087E395242BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Chat", "Beary.Chat\Beary.Chat.csproj", "{9ADA46AC-25F1-4FDB-927E-087E395242BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beary.Chat.AzureGpt", "Beary.Chat.AzureGpt\Beary.Chat.AzureGpt.csproj", "{C1ECD48D-3545-460E-93F8-92ABA98EE166}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Chat.AzureGpt", "Beary.Chat.AzureGpt\Beary.Chat.AzureGpt.csproj", "{C1ECD48D-3545-460E-93F8-92ABA98EE166}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cluster", "Cluster\Cluster.csproj", "{44AA87FD-36B7-4660-A310-633030158867}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -75,6 +77,10 @@ Global
 		{C1ECD48D-3545-460E-93F8-92ABA98EE166}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1ECD48D-3545-460E-93F8-92ABA98EE166}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1ECD48D-3545-460E-93F8-92ABA98EE166}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44AA87FD-36B7-4660-A310-633030158867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44AA87FD-36B7-4660-A310-633030158867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44AA87FD-36B7-4660-A310-633030158867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44AA87FD-36B7-4660-A310-633030158867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,6 +96,7 @@ Global
 		{A783D182-2ACB-4E54-AB91-47EA5F0AF223} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
 		{9ADA46AC-25F1-4FDB-927E-087E395242BD} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
 		{C1ECD48D-3545-460E-93F8-92ABA98EE166} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
+		{44AA87FD-36B7-4660-A310-633030158867} = {3E2B637F-E0F6-4839-B592-B45874C92F3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C25F8F2-81A5-4EBA-BC93-2AFC31261121}

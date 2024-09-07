@@ -29,7 +29,8 @@ internal class Document
             ArticleId = this.ArticleId,
             ElementIndex = this.ElementIndex,
             Score = score,
-            Content = this.Content
+            Content = this.Content,
+            Embedding = this.Vector
         };
     }
 }

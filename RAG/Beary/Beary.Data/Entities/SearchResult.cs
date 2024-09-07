@@ -9,6 +9,7 @@ public class SearchResult
     public string Content { get; set; }
     public string ArticleId { get; set; }
     public double Score { get; set; }
+    public IEnumerable<Single>? Embedding { get; set; }
 
 
     override public string ToString()

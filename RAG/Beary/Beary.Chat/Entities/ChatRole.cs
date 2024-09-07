@@ -4,5 +4,6 @@ public enum ChatRole
 {
     User,
     Agent,
-    System
+    System,
+    Context
 }

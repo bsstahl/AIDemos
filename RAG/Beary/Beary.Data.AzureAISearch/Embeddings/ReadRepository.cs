@@ -1,4 +1,5 @@
-﻿using Beary.Data.Interfaces;
+﻿using Beary.Data.Entities;
+using Beary.Data.Interfaces;
 using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
@@ -43,6 +44,13 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments
     {
         return await this.IndexClient
             .GetDocumentCount()
+            .ConfigureAwait(false);
+    }
+
+    public async Task<IEnumerable<SearchResult>> GetAllEmbeddings()
+    {
+        return await this.IndexClient
+            .GetAllEmbeddings()
             .ConfigureAwait(false);
     }
 }

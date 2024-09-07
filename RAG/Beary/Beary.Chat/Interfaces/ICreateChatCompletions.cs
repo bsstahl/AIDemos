@@ -6,5 +6,5 @@ public interface ICreateChatCompletions
 {
     // Execute an asynchronous chat completion request using a
     // history of chat messages as the input and return the results.
-    Task<ChatContent> CreateChatCompletionsAsync(IEnumerable<ChatContent> chatContext);
+    Task<ChatContent> CreateChatCompletionsAsync(IEnumerable<ChatContent> chatContent);
 }
