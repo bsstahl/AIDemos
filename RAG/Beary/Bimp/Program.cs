@@ -5,6 +5,7 @@ using Beary.Data.AzureAISearch.Extensions;
 using Beary.Data.Extensions;
 using Beary.ValueTypes;
 using Beary.Embeddings.LocalServer.Extensions;
+using Bimp.BlogPostData;
 
 namespace Bimp;
 
@@ -49,29 +50,28 @@ internal class Program
     {
         var blogPosts = await _blogPostRepo.GetAllPosts();
 
+        int i = 0;
         foreach (var article in blogPosts)
         {
+            i++;
             var articleText = article.GetFullArticleText();
 
             var tokens = SharpToken.GptEncoding
                 .GetEncodingForModel("gpt-4")
                 .Encode(articleText);
             var tokenCount = TokenCount.From(tokens.Count);
+            var chunkTextGroups = article.GetChunkGroups();
 
             var embeddings = new List<Beary.Entities.ContentChunk>();
-            foreach (var chunk in article.Chunks)
-            {
-                var embedding = await _embeddingsClient
-                    .GetEmbedding(chunk.ChunkText, article.Id)
-                    .ConfigureAwait(false);
-
-                if (embedding is not null)
-                    embeddings.Add(embedding);
-            }
+            var embeddingResults = await _embeddingsClient
+                .GetEmbeddings(chunkTextGroups, article.Id)
+                .ConfigureAwait(false);
+            embeddings.AddRange(embeddingResults);
 
             await _writeRepo.SaveAsync(Identifier.From(article.Id),
                 ArticleContent.From(articleText), tokenCount, embeddings);
 
+            Console.WriteLine($"Processed article {i} of {blogPosts.Count()}");
         }
     }
 }

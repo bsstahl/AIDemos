@@ -37,9 +37,11 @@ public class Client(IHttpClientFactory httpClientFactory) : IGetEmbeddings
 
         var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         var embeddingResponse = JsonSerializer.Deserialize<EmbeddingResponse>(responseBody);
-        return embeddingResponse?.data
+        var result = embeddingResponse?.data
             .Select(d => new ContentChunk($"{baseId}_{d.index}",
                 d.index, payload.input[d.index], d.embedding)) ?? [];
+        
+        return result;
     }
 }
 

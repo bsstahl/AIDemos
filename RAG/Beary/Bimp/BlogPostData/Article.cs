@@ -44,4 +44,9 @@ internal class Article
         _contentChunks.Add(new ArticleChunk() { ChunkIndex = paragraphIndex, ChunkText = paragraphText, IsHeader = isHeader });
     }
 
+    public void AddChunks(IEnumerable<ArticleChunk> chunks)
+    {
+        _contentChunks.AddRange(chunks);
+    }
+
 }

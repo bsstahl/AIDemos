@@ -9,13 +9,14 @@ internal class BlogPostRenderer : TextRendererBase<BlogPostRenderer>
     public BlogPostRenderer(TextWriter writer)
         : base(writer)
     {
-        ObjectRenderers.Add(new CodeBlockRenderer());
         ObjectRenderers.Add(new ListRenderer());
-        ObjectRenderers.Add(new HeadingRenderer());
+        ObjectRenderers.Add(new CodeBlockRenderer());
         ObjectRenderers.Add(new HtmlBlockRenderer());
-        ObjectRenderers.Add(new ParagraphRenderer());
         ObjectRenderers.Add(new QuoteBlockRenderer());
         ObjectRenderers.Add(new ThematicBreakRenderer());
+        ObjectRenderers.Add(new ParagraphRenderer());
+        ObjectRenderers.Add(new FencedCodeBlockRenderer());
+        ObjectRenderers.Add(new HeadingRenderer());
 
         // Default inline renderers
         ObjectRenderers.Add(new AutolinkInlineRenderer());
@@ -49,13 +50,7 @@ internal abstract class BlogPostObjectRenderer<T> : MarkdownObjectRenderer<BlogP
 internal class CodeBlockRenderer : BlogPostObjectRenderer<CodeBlock>
 { }
 
-internal class ListRenderer : BlogPostObjectRenderer<ListBlock>
-{ }
-
 internal class HtmlBlockRenderer : BlogPostObjectRenderer<HtmlBlock>
-{ }
-
-internal class ParagraphRenderer : BlogPostObjectRenderer<ParagraphBlock>
 { }
 
 internal class QuoteBlockRenderer : BlogPostObjectRenderer<QuoteBlock>
@@ -64,25 +59,51 @@ internal class QuoteBlockRenderer : BlogPostObjectRenderer<QuoteBlock>
 internal class ThematicBreakRenderer : BlogPostObjectRenderer<ThematicBreakBlock>
 { }
 
+internal class ParagraphRenderer : BlogPostObjectRenderer<ParagraphBlock>
+{ }
+
+
+internal class ListRenderer : MarkdownObjectRenderer<BlogPostRenderer, ListBlock>
+{
+    protected override void Write(BlogPostRenderer renderer, ListBlock listBlock)
+    {
+        WriteList(renderer, listBlock, 0);
+    }
+
+    private void WriteList(BlogPostRenderer renderer, ListBlock listBlock, int indentLevel)
+    {
+        foreach (var item in listBlock)
+        {
+            if (item is ListItemBlock listItem)
+            {
+                renderer.Write(new string(' ', indentLevel * 2));
+                renderer.Write("- ");
+                foreach (var subItem in listItem)
+                {
+                    if (subItem is ParagraphBlock paragraph)
+                    {
+                        renderer.WriteChildren(paragraph.Inline);
+                        // renderer.WriteLeafInline(paragraph.Inline);
+                        renderer.WriteLine();
+                    }
+                    else if (subItem is ListBlock subListBlock)
+                    {
+                        WriteList(renderer, subListBlock, indentLevel + 1);
+                    }
+                }
+            }
+        }
+    }
+}
 
 internal class HeadingRenderer : MarkdownObjectRenderer<BlogPostRenderer, HeadingBlock>
 {
-    //protected override void Write(BlogPostRenderer renderer, HeadingBlock obj)
-    //{
-    //    var headerChars = new String('#', obj.Level);
-    //    var headerText = obj.Inline?.FirstChild?.ToString() ?? string.Empty;
-    //    if (!string.IsNullOrWhiteSpace(headerText))
-    //        renderer.Write($"{headerChars} {headerText}");
-    //}
-
     protected override void Write(BlogPostRenderer renderer, HeadingBlock obj)
     {
         // Determine the heading level (e.g., <h1>, <h2>, etc.)
-        // var headingTag = "h" + obj.Level;
         var headingTag = new string('#', obj.Level);
 
         // Open the heading tag
-        // renderer.Write($"<{headingTag}>");
         renderer.Write($"{headingTag} ");
 
         // Render the inline elements within the heading
@@ -90,10 +111,8 @@ internal class HeadingRenderer : MarkdownObjectRenderer<BlogPostRenderer, Headin
         {
             WriteInline(renderer, inline);
         }
-
-        // Close the heading tag
-        // renderer.Write($"</{headingTag}>");
     }
+
     private void WriteInline(BlogPostRenderer renderer, Inline inline)
     {
         switch (inline)
@@ -203,6 +222,17 @@ internal class LinkInlineRenderer : MarkdownObjectRenderer<BlogPostRenderer, Lin
         //renderer.Write("]");
         // renderer.Write($"({link.Url})");
         // renderer.Write(link.Url?.ToString() ?? "link");
+    }
+}
+
+internal class FencedCodeBlockRenderer : MarkdownObjectRenderer<BlogPostRenderer, FencedCodeBlock>
+{
+    protected override void Write(BlogPostRenderer renderer, FencedCodeBlock obj)
+    {
+        var openingFence = new string(obj.FencedChar, obj.OpeningFencedCharCount) + obj.Info ?? string.Empty;
+        var closingFence = new string(obj.FencedChar, obj.ClosingFencedCharCount);
+        var text = string.Join("\r\n", obj.Lines.Lines.Where(l => !string.IsNullOrEmpty(l.ToString())));
+        renderer.Write($"{openingFence}\r\n{text}\r\n{closingFence}");
     }
 }
 

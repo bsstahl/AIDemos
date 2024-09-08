@@ -5,7 +5,9 @@ namespace Beary.ValueTypes;
 public class ResultCount : ValueOf<int, ResultCount>
 {
     const int defaultResultCount = 5;
-    const int maxResultCount = 25;
+    const int maxResultCount = 30;
+
+    public static int MaxValue => maxResultCount;
 
     public ResultCount()
     {

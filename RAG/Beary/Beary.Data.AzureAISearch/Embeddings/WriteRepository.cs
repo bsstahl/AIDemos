@@ -47,5 +47,6 @@ public class WriteRepository : IWriteEmbeddingsSearchDocuments
         };
 
         await this.IndexClient.AddDocument(document).ConfigureAwait(false);
+        Console.WriteLine(document.Id + " added to index.");
     }
 }

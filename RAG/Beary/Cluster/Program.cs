@@ -10,6 +10,7 @@ using Cluster.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualBasic;
+using System.Text;
 using static Azure.Core.HttpHeader;
 
 namespace Cluster;
@@ -48,16 +49,19 @@ internal class Program
     {
         const string userPrompt = "In one sentence, describe the common characteristics of the following paragraphs?";
         const string systemPrompt = "You are an expert at categorizing the paragraphs of multiple related documents, highlighting key themes and information while avoiding redundancy. You analyze content for main ideas, synthesize common themes, ensure logical structure, and balance brevity with completeness.";
+        const int maxSampleParagraphs = 300;
+        const int k = 4;
 
         // Fetch all embeddings from the Azure AI Search service
         var embeddings = await _embeddingsReadRepo.GetAllEmbeddings();
 
         // Calculate the Clusters
 
-        int k = 10;
         var kmeans = new KMeans(k);
         var clusters = kmeans.Learn(embeddings.AsEmbeddingsArray());
+        var samplesPerCluster = maxSampleParagraphs / k;
 
+        var allResults = new List<string>();
         foreach (var cluster in clusters)
         {
             var content = new List<ChatContent>()
@@ -65,17 +69,22 @@ internal class Program
                 ChatContent.From(systemPrompt, ChatRole.System)
             };
 
-            var clusterCount = Convert.ToInt32(Math.Floor(cluster.Proportion * Convert.ToDouble(embeddings.Count())));
-            var sampleCount = Math.Min(clusterCount, 5);
-            var samples = await _embeddingsReadRepo.GetNearestNeighbors(cluster.CentroidVector(), ResultCount.From(sampleCount));
-            
+            int clusterActualCount = Convert.ToInt32(Math.Floor(cluster.Proportion * Convert.ToDouble(embeddings.Count())));
+            var maxSampleCount = Math.Min(ResultCount.MaxValue, Math.Min(clusterActualCount, Math.Max(samplesPerCluster, 5)));
+            var samples = await _embeddingsReadRepo.GetNearestNeighbors(cluster.CentroidVector(), ResultCount.From(maxSampleCount));
+
             content.AddRange(samples.AsChatContents(ChatRole.User));
             content.Add(ChatContent.From(userPrompt, ChatRole.User));
 
             var result = await _chatClient.CreateChatCompletionsAsync(content);
-            
-            result.OutputToUser();
+            allResults.Add($"\"{result.Value.Replace("\"", "\\\"")}\"");
+
+            result.OutputToUser(maxSampleCount, clusterActualCount);
         }
+
+        var path = $"c:\\s\\Temp\\BlogClusters\\{Path.GetRandomFileName()}.csv";
+        File.WriteAllText(path, string.Join("\r\n", allResults));
+        Console.WriteLine($"Output written to: {path}");
     }
 
     internal async Task GetArticleClusters()
