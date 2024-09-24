@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Chat.AzureGpt", "Bear
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cluster", "Cluster\Cluster.csproj", "{44AA87FD-36B7-4660-A310-633030158867}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bimp.Test", "Bimp.Test\Bimp.Test.csproj", "{1537C098-19D6-4159-9956-48D4EC33C745}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bimp.Test", "Bimp.Test\Bimp.Test.csproj", "{1537C098-19D6-4159-9956-48D4EC33C745}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beary.Data.Axioms", "Beary.Data.Axioms\Beary.Data.Axioms.csproj", "{D1352F9F-3FCF-40B8-9F8D-837600312C33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{1537C098-19D6-4159-9956-48D4EC33C745}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1537C098-19D6-4159-9956-48D4EC33C745}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1537C098-19D6-4159-9956-48D4EC33C745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1352F9F-3FCF-40B8-9F8D-837600312C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1352F9F-3FCF-40B8-9F8D-837600312C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1352F9F-3FCF-40B8-9F8D-837600312C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1352F9F-3FCF-40B8-9F8D-837600312C33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{C1ECD48D-3545-460E-93F8-92ABA98EE166} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
 		{44AA87FD-36B7-4660-A310-633030158867} = {3E2B637F-E0F6-4839-B592-B45874C92F3A}
 		{1537C098-19D6-4159-9956-48D4EC33C745} = {EB9AE411-2975-452D-B953-C14FF2475823}
+		{D1352F9F-3FCF-40B8-9F8D-837600312C33} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C25F8F2-81A5-4EBA-BC93-2AFC31261121}

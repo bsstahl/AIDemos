@@ -31,14 +31,22 @@ public class ChatEngine
     {
         var maxTokenCount = TokenCount.From(4096);
 
-        var text = this.GetUserInput();
-        var articles = await this.GetRelevantArticles(text, maxTokenCount);
-        _chatContents.AddRange(articles.AsChatContents(ChatRole.Context));
-        _chatContents.Add(ChatContent.From(text, ChatRole.User));
-        _chatContents.OutputToUser();
+        bool done = false;
+        while (!done)
+        {
+            var text = this.GetUserInput();
+            if (text is not null)
+            {
+                var articles = await this.GetRelevantArticles(text, maxTokenCount);
+                _chatContents.AddRange(articles.AsChatContents(ChatRole.Context));
+                _chatContents.Add(ChatContent.From(text, ChatRole.User));
+                _chatContents.OutputToUser();
+            }
+            done = (text is null);
 
-        var chatResponse = await _chatClient.CreateChatCompletionsAsync(_chatContents);
-        chatResponse.OutputToUser();
+            var chatResponse = await _chatClient.CreateChatCompletionsAsync(_chatContents);
+            chatResponse.OutputToUser();
+        };
     }
 
     private async Task<IEnumerable<Beary.Entities.Article>> GetRelevantArticles(string text, TokenCount maxTokenCount)
@@ -51,13 +59,16 @@ public class ChatEngine
         return articles;
     }
 
-    private string GetUserInput()
+    private string? GetUserInput()
     {
+        var response = Console.ReadLine();
+        return string.IsNullOrWhiteSpace(response) ? null : response;
+
         // return "I'm thinking about gating my code check-ins to require 80% test coverage. What do you think of this?";
 
-        return "What is the best way to learn about my problem domain?";
+        // return "Best ways to learn about my problem domain?";
         // return "Tell me more";
-        
+
         // return "What are some critical questions that development teams should ask themselves?";
         // return "What are the goals of these conversations?";
 
