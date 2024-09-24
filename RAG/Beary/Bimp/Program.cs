@@ -6,11 +6,13 @@ using Beary.Data.Extensions;
 using Beary.ValueTypes;
 using Beary.Embeddings.LocalServer.Extensions;
 using Bimp.BlogPostData;
+using Beary.Entities;
 
 namespace Bimp;
 
 /// <summary>
-/// Beary Import - Grab data from the blog post repository and import it into Azure Search.
+/// Beary Import - Grab data from the blog post repository and 
+/// import it into Azure Search.
 /// </summary>
 internal class Program
 {
@@ -26,8 +28,11 @@ internal class Program
             .AddSingleton<Program>()
             .AddHttpClient()
             .UseLocalServerEmbeddingsModel()
+            .UseBearyReadRepository()
             .UseBearyWriteRepository()
+            .UseAzureAIContentReadRepo()
             .UseAzureAIContentWriteRepo()
+            .UseAzureAIEmbeddingsReadRepo()
             .UseAzureAIEmbeddingsWriteRepo()
             .BuildServiceProvider();
 
@@ -49,6 +54,7 @@ internal class Program
     async Task Execute()
     {
         var blogPosts = await _blogPostRepo.GetAllPosts();
+        var encodingModel = SharpToken.GptEncoding.GetEncodingForModel("gpt-4");
 
         int i = 0;
         foreach (var article in blogPosts)
@@ -56,9 +62,7 @@ internal class Program
             i++;
             var articleText = article.GetFullArticleText();
 
-            var tokens = SharpToken.GptEncoding
-                .GetEncodingForModel("gpt-4")
-                .Encode(articleText);
+            var tokens = encodingModel.Encode(articleText);
             var tokenCount = TokenCount.From(tokens.Count);
             var chunkTextGroups = article.GetChunkGroups();
 
@@ -69,7 +73,9 @@ internal class Program
             embeddings.AddRange(embeddingResults);
 
             await _writeRepo.SaveAsync(Identifier.From(article.Id),
-                ArticleContent.From(articleText), tokenCount, embeddings);
+                ArticleTitle.From(article.Title),
+                ArticleContent.From(articleText),
+                tokenCount, embeddings);
 
             Console.WriteLine($"Processed article {i} of {blogPosts.Count()}");
         }

@@ -34,6 +34,7 @@ internal class Index : SearchIndex
         {
             new SimpleField("Id", SearchFieldDataType.String) { IsKey = true },
             new SearchableField("Content") { IsFilterable = true, IsSortable = true },
+            new SearchableField("Title") { IsFilterable = true, IsSortable = true },
             new SimpleField("TokenCount", SearchFieldDataType.Int32) { IsFilterable = true }
         };
     }
@@ -48,5 +49,21 @@ internal class Index : SearchIndex
     {
         var result = await SearchClient.GetDocumentAsync<Document>(id.Value).ConfigureAwait(false);
         return result.Value;
+    }
+
+    internal async Task<bool> ArticleExists(Identifier id)
+    {
+        try
+        {
+            _ = await SearchClient
+                .GetDocumentAsync<Document>(id.Value)
+                .ConfigureAwait(false);
+
+            return true;
+        }
+        catch (Azure.RequestFailedException)
+        {
+            return false;
+        }
     }
 }

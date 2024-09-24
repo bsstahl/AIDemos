@@ -29,11 +29,33 @@ public class ContentWriteRepository_Save_Should
 
         var id = Guid.NewGuid();
         var content = string.Empty.GetRandom();
+        var title = string.Empty.GetRandom();
         var tokenCount = Int32.MaxValue.GetRandom();
 
         var target = new Content.WriteRepository(searchServiceName, apiKey);
         await target.SaveAsync(
             Identifier.From(id),
+            ArticleTitle.From(title),
+            ArticleContent.From(content),
+            TokenCount.From(tokenCount));
+    }
+
+    [Fact]
+    public async Task NotFailIfTitleIsNotSupplied()
+    {
+        // This may be a temporary requirement
+
+        var searchServiceName = _config["SearchService:Name"];
+        var apiKey = _config["SearchService:ApiKey"];
+
+        var id = Guid.NewGuid();
+        var content = string.Empty.GetRandom();
+        var tokenCount = Int32.MaxValue.GetRandom();
+
+        var target = new Content.WriteRepository(searchServiceName, apiKey);
+        await target.SaveAsync(
+            Identifier.From(id),
+            null!,
             ArticleContent.From(content),
             TokenCount.From(tokenCount));
     }
@@ -45,12 +67,14 @@ public class ContentWriteRepository_Save_Should
         var apiKey = _config["SearchService:ApiKey"];
 
         var id = Guid.NewGuid();
+        var title = string.Empty.GetRandom();
         var content = string.Empty.GetRandom();
         var tokenCount = Int32.MaxValue.GetRandom();
 
         var target = new Content.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             null!,
+            ArticleTitle.From(title),
             ArticleContent.From(content),
             TokenCount.From(tokenCount)));
     }
@@ -62,12 +86,14 @@ public class ContentWriteRepository_Save_Should
         var apiKey = _config["SearchService:ApiKey"];
 
         var id = Guid.NewGuid();
+        var title = string.Empty.GetRandom();
         var content = string.Empty.GetRandom();
         var tokenCount = Int32.MaxValue.GetRandom();
 
         var target = new Content.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             Identifier.From(id),
+            ArticleTitle.From(title),
             null!,
             TokenCount.From(tokenCount)));
     }
@@ -79,12 +105,14 @@ public class ContentWriteRepository_Save_Should
         var apiKey = _config["SearchService:ApiKey"];
 
         var id = Guid.NewGuid();
+        var title = string.Empty.GetRandom();
         var content = string.Empty.GetRandom();
         var tokenCount = Int32.MaxValue.GetRandom();
 
         var target = new Content.WriteRepository(searchServiceName, apiKey);
         await Assert.ThrowsAsync<ArgumentNullException>(() => target.SaveAsync(
             Identifier.From(id),
+            ArticleTitle.From(title),
             ArticleContent.From(content),
             null!));
     }

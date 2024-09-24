@@ -6,4 +6,5 @@ namespace Beary.Data.Interfaces;
 public interface IReadContentSearchDocuments
 {
     Task<Article> GetArticle(Identifier articleId);
+    Task<bool> ArticleExists(Identifier articleId);
 }

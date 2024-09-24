@@ -30,15 +30,18 @@ public class WriteRepository : IWriteContentSearchDocuments
         _apiKey = apiKey;
     }
 
-    public async Task SaveAsync(Identifier id, ArticleContent content, TokenCount tokenCount)
+    public async Task SaveAsync(Identifier id, ArticleTitle title, ArticleContent content, TokenCount tokenCount)
     {
         ArgumentNullException.ThrowIfNull(id, nameof(id));
         ArgumentNullException.ThrowIfNull(content, nameof(content));
         ArgumentNullException.ThrowIfNull(tokenCount, nameof(tokenCount));
 
+        string titleText = title?.Value ?? string.Empty;
+
         var document = new Document
         {
             Id = id.Value,
+            Title = titleText,
             Content = content.Value,
             TokenCount = tokenCount.Value
         };

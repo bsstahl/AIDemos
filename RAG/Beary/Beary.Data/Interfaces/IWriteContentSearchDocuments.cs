@@ -4,5 +4,5 @@ namespace Beary.Data.Interfaces;
 
 public interface IWriteContentSearchDocuments
 {
-    Task SaveAsync(Identifier id, ArticleContent content, TokenCount tokenCount);
+    Task SaveAsync(Identifier id, ArticleTitle title, ArticleContent content, TokenCount tokenCount);
 }

@@ -61,5 +61,8 @@ public class ReadRepository : IReadContent
         return await _contentReadRepo.GetArticle(id);
     }
 
-
+    public async Task<bool> ArticleExists(Identifier id)
+    {
+        return await _contentReadRepo.ArticleExists(id);
+    }
 }

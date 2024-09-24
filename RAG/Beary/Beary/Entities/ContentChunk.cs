@@ -9,6 +9,9 @@ public class ContentChunk
     public ArticleContent ChunkText { get; set; }
     public Vector? Embedding { get; set; }
 
+    public bool HasEmbeddingValue => (this.Embedding is not null) 
+        && (this.Embedding.Value.Any());
+
     public ContentChunk(string id, int index, string chunkText, IEnumerable<Single>? embedding)
         : this(Identifier.From(id), ElementIndex.From(index), ArticleContent.From(chunkText), Vector.From(embedding))
     { }

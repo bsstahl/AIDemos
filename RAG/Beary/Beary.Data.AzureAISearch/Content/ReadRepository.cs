@@ -39,6 +39,13 @@ public class ReadRepository : IReadContentSearchDocuments
         ArgumentNullException.ThrowIfNull(articleId, nameof(articleId));
 
         var results = await IndexClient.ReadById(articleId).ConfigureAwait(false);
-        return new Article(articleId.Value, results.Content, results.TokenCount);
+        return new Article(articleId.Value, results.Title, results.Content, results.TokenCount);
     }
+
+    public async Task<bool> ArticleExists(Identifier articleId)
+    {
+        ArgumentNullException.ThrowIfNull(articleId, nameof(articleId));
+        return await IndexClient.ArticleExists(articleId).ConfigureAwait(false);
+    }
+
 }

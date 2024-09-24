@@ -1,6 +1,6 @@
 ﻿using Beary.Entities;
 
-namespace AskBeary.Extensions;
+namespace Beary.Search.Extensions;
 
 internal static class ContentChunkExtensions
 {

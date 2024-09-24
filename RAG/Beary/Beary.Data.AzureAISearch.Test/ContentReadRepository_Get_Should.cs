@@ -28,6 +28,7 @@ public class ContentReadRepository_Get_Should
         var apiKey = _config["SearchService:ApiKey"];
 
         var articleId = Guid.NewGuid();
+        var title = string.Empty.GetRandom();
         var content = string.Empty.GetRandom();
         var tokenCount = Int32.MaxValue.GetRandom();
 
@@ -35,6 +36,7 @@ public class ContentReadRepository_Get_Should
         var writeRepo = new Content.WriteRepository(searchServiceName, apiKey);
         await writeRepo.SaveAsync(
             Identifier.From(articleId),
+            ArticleTitle.From(title),
             ArticleContent.From(content),
             TokenCount.From(tokenCount));
 
@@ -43,6 +45,32 @@ public class ContentReadRepository_Get_Should
         var article = await readRepo.GetArticle(Identifier.From(articleId));
 
         Assert.Equal(content, article!.Content!.Value);
+    }
+
+    [Fact]
+    public async Task SuccessfullyReadTheTitleOfAnExistingArticle()
+    {
+        var searchServiceName = _config["SearchService:Name"];
+        var apiKey = _config["SearchService:ApiKey"];
+
+        var articleId = Guid.NewGuid();
+        var title = string.Empty.GetRandom();
+        var content = string.Empty.GetRandom();
+        var tokenCount = Int32.MaxValue.GetRandom();
+
+        // Create the article
+        var writeRepo = new Content.WriteRepository(searchServiceName, apiKey);
+        await writeRepo.SaveAsync(
+            Identifier.From(articleId),
+            ArticleTitle.From(title),
+            ArticleContent.From(content),
+            TokenCount.From(tokenCount));
+
+        // Read the article
+        var readRepo = new Content.ReadRepository(searchServiceName, apiKey);
+        var article = await readRepo.GetArticle(Identifier.From(articleId));
+
+        Assert.Equal(title, article!.Title!.Value);
     }
 
 

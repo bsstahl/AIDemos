@@ -7,6 +7,7 @@ namespace Beary.Builders;
 public class ArticleBuilder
 {
     private string? _id;
+    private string? _title;
     private string? _content;
     private int? _tokenCount;
 
@@ -21,12 +22,18 @@ public class ArticleBuilder
         _tokenCount.ThrowIfNull(nameof(_tokenCount));
 
         var chunks = _chunkBuilders?.Select(x => x.Build());
-        return new Article(_id!, _content!, _tokenCount!.Value, chunks);
+        return new Article(_id!, _title!, _content!, _tokenCount!.Value, chunks);
     }
 
     public ArticleBuilder Id(string id)
     {
         _id = id;
+        return this;
+    }
+
+    public ArticleBuilder Title(string title)
+    {
+        _title = title;
         return this;
     }
 

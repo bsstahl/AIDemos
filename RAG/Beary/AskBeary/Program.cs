@@ -2,6 +2,7 @@
 using Beary.Data.AzureAISearch.Extensions;
 using Beary.Data.Extensions;
 using Beary.Embeddings.LocalServer.Extensions;
+using Beary.Search.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,6 +22,7 @@ internal class Program
             .AddHttpClient()
             .UseAzureGptChatClient()
             .UseLocalServerEmbeddingsModel()
+            .UseBearySearch()
             .UseBearyReadRepository()
             .UseAzureAIEmbeddingsReadRepo()
             .UseAzureAIContentReadRepo()

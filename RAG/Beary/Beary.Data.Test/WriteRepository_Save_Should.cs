@@ -41,7 +41,7 @@ public class WriteRepository_Save_Should
             .Build();
 
         var target = _services.GetRequiredService<Beary.Interfaces.IWriteContent>();
-        await target.SaveAsync(article.Id!, article.Content!, article.TokenCount!, article.Chunks!);
+        await target.SaveAsync(article.Id!, article.Title!, article.Content!, article.TokenCount!, article.Chunks!);
     }
 
 }
