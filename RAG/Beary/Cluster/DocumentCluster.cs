@@ -1,6 +1,6 @@
-﻿using Beary.Chat.Entities;
+﻿using Beary.Entities;
+using Beary.Chat.Entities;
 using Beary.Chat.Interfaces;
-using Beary.Data.Entities;
 using Beary.ValueTypes;
 using Cluster.Extensions;
 using System.Text;

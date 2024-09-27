@@ -19,7 +19,7 @@ public class ReadRepository : IReadContent
     }
 
     // Orchestrates the 2 underlying repositories and contains the logic to determine
-    // which articles to return based on semantic search results.
+    // which articles to return based on vector search results.
     // Process steps:
     // 1. Get the search results from the Azure AI Search repository.
     // 2. Determine the n most relevant, unique articles (sometimes the same article
@@ -39,7 +39,7 @@ public class ReadRepository : IReadContent
         while (tokenCount < maxTokenCount.Value && i < nearestNeighbors.Count())
         {
             // TODO: Ignore the article if the results are below a minimum score
-            var articleId = Identifier.From(embeddingResults[i].ArticleId);
+            var articleId = Identifier.From(embeddingResults[i].ItemId);
             if (!triedArticleIds.Contains(articleId))
             {
                 triedArticleIds.Add(articleId);

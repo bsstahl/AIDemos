@@ -4,6 +4,7 @@ using System.Text;
 using Beary.Entities;
 using Beary.Interfaces;
 using Beary.Embeddings.LocalServer.Entities;
+using Beary.Embeddings.LocalServer.Extensions;
 
 namespace Beary.Embeddings.LocalServer;
 
@@ -14,17 +15,27 @@ public class Client(IHttpClientFactory httpClientFactory) : IGetEmbeddings
     const string url = "http://localhost:1234/v1/embeddings";
 
     public async Task<ContentChunk?> GetEmbedding(string inputText, string baseId)
+        => await GetEmbedding(inputText, baseId, false).ConfigureAwait(false);
+
+    public async Task<ContentChunk?> GetEmbedding(string inputText, string baseId, bool sanitizeInputs)
     {
-        var embeddings = await GetEmbeddings(new string[] { inputText }, baseId).ConfigureAwait(false);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(inputText, nameof(inputText));
+        var inputData = sanitizeInputs ? new string[] { inputText.Sanitize() } : new string[] { inputText };
+        var embeddings = await GetEmbeddings(inputData, baseId).ConfigureAwait(false);
         return embeddings.FirstOrDefault();
     }
 
     public async Task<IEnumerable<ContentChunk>> GetEmbeddings(IEnumerable<string> inputText, string baseId)
+        => await GetEmbeddings(inputText, baseId, false).ConfigureAwait(false);
+
+    public async Task<IEnumerable<ContentChunk>> GetEmbeddings(IEnumerable<string> inputText, string baseId, bool sanitizeInputs)
     {
+        ArgumentNullException.ThrowIfNull(inputText, nameof(inputText));
+
         var payload = new
         {
             model = modelName,
-            input = inputText.ToArray()
+            input = sanitizeInputs ? inputText.Sanitize().ToArray() : inputText.ToArray()
         };
 
         var jsonPayload = JsonSerializer.Serialize(payload);

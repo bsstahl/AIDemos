@@ -1,5 +1,5 @@
 ﻿using Azure.Search.Documents.Indexes;
-using Beary.Data.Entities;
+using Beary.Entities;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
 
@@ -26,7 +26,7 @@ internal class Document
         return new SearchResult()
         {
             Id = this.Id,
-            ArticleId = this.ArticleId,
+            ItemId = this.ArticleId,
             ElementIndex = this.ElementIndex,
             Score = score,
             Content = this.Content,

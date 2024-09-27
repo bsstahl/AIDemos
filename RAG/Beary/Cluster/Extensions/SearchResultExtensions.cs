@@ -1,5 +1,5 @@
 ﻿using Beary.Chat.Entities;
-using Beary.Data.Entities;
+using Beary.Entities;
 
 namespace Cluster.Extensions;
 

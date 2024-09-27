@@ -1,5 +1,5 @@
-﻿using Beary.Data.Entities;
-using Beary.Data.Interfaces;
+﻿using Beary.Data.Interfaces;
+using Beary.Entities;
 using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
@@ -30,7 +30,7 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments
         _apiKey = apiKey;
     }
 
-    public async Task<IEnumerable<Beary.Data.Entities.SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors)
+    public async Task<IEnumerable<Beary.Entities.SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors)
     {
         ArgumentNullException.ThrowIfNull(queryVector, nameof(queryVector));
         ArgumentNullException.ThrowIfNull(numberOfNeighbors, nameof(numberOfNeighbors));

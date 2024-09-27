@@ -1,11 +1,11 @@
 ﻿using Accord.Collections;
-using Beary.Data.Entities;
 using Beary.Data.Interfaces;
 using Beary.Interfaces;
 using Beary.ValueTypes;
 using Microsoft.Extensions.Configuration;
 using Beary.Data.Axioms.Extensions;
 using Accord.MachineLearning;
+using Beary.Entities;
 
 namespace Beary.Data.Axioms;
 
@@ -43,7 +43,7 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments
                     Content = axiom,
                     Embedding = embedding?.Embedding?.Value,
                     Id = $"{id}_0",
-                    ArticleId = id,
+                    ItemId = id,
                     ElementIndex = i,
                     Score = 0.0
                 };

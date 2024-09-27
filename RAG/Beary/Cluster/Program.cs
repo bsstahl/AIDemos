@@ -1,6 +1,5 @@
 ﻿using Accord.MachineLearning;
 using Beary.Chat.AzureGpt.Extensions;
-using Beary.Chat.Entities;
 using Beary.Chat.Interfaces;
 using Beary.Data.Axioms.Extensions;
 using Beary.Data.Interfaces;
@@ -58,7 +57,7 @@ internal class Program
         Console.WriteLine($"Output written to: {path}");
     }
 
-    private async Task<IEnumerable<DocumentCluster>> GetClusters(IEnumerable<Beary.Data.Entities.SearchResult> embeddings, int k)
+    private async Task<IEnumerable<DocumentCluster>> GetClusters(IEnumerable<Beary.Entities.SearchResult> embeddings, int k)
     {
         var results = new List<DocumentCluster>();
 
