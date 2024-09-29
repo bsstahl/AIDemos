@@ -2,13 +2,12 @@
 using Beary.Chat.Entities;
 using Beary.Chat.Interfaces;
 using Microsoft.Extensions.Configuration;
-using OpenAI.Chat;
 
 namespace Beary.Chat.AzureGpt;
 
 public class Client : ICreateChatCompletions
 {
-    private readonly ChatClient _chatClient;
+    private readonly OpenAI.Chat.ChatClient _chatClient;
 
     public Client(IConfiguration config)
     {
