@@ -41,11 +41,10 @@ public class ChatEngine
                     ? chatContents
                     : null as IEnumerable<ChatContent>;
 
-                var chatResponses = await _chatClient.GetChatResponse(text, supportingDocuments, previousContext);
-                // TODO: Log all new information 
+                var chatResponses = await _chatClient
+                    .GetChatResponse(text!, supportingDocuments, previousContext);
                 
                 chatContents = chatResponses.ToList();
-
                 chatContents.GetLastAgentResponse()?.OutputToUser();
             }
 
