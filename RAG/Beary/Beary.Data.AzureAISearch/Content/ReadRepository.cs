@@ -1,4 +1,4 @@
-﻿using Beary.Data.Interfaces;
+﻿using Beary.Documents.Interfaces;
 using Beary.Entities;
 using Beary.ValueTypes;
 
@@ -34,18 +34,21 @@ public class ReadRepository : IReadContentSearchDocuments
         _apiKey = apiKey;
     }
 
-    public async Task<Article> GetArticle(Identifier articleId)
+    public async Task<Article> GetArticle(string articleId)
     {
         ArgumentNullException.ThrowIfNull(articleId, nameof(articleId));
+        var id = Identifier.From(articleId);
 
-        var results = await IndexClient.ReadById(articleId).ConfigureAwait(false);
-        return new Article(articleId.Value, results.Title, results.Content, results.TokenCount);
+        var results = await IndexClient.ReadById(id).ConfigureAwait(false);
+        return new Article(id.Value, results.Title, results.Content, results.TokenCount);
     }
 
-    public async Task<bool> ArticleExists(Identifier articleId)
+    public async Task<bool> ArticleExists(string articleId)
     {
         ArgumentNullException.ThrowIfNull(articleId, nameof(articleId));
-        return await IndexClient.ArticleExists(articleId).ConfigureAwait(false);
+        var id = Identifier.From(articleId);
+
+        return await IndexClient.ArticleExists(id).ConfigureAwait(false);
     }
 
 }

@@ -1,5 +1,5 @@
 using Beary.Builders;
-using Beary.Data.Interfaces;
+using Beary.Documents.Interfaces;
 using Beary.Data.Test.Extensions;
 using Beary.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -27,7 +27,7 @@ public class WriteRepository_Save_Should
         _apiKey = _config["SearchService:ApiKey"];
 
         _services = new ServiceCollection()
-            .AddSingleton<IWriteContent, WriteRepository>()
+            // .AddSingleton<IWriteContent, WriteRepository>() TODO: Restore if needed
             .AddSingleton<IWriteContentSearchDocuments, Content.WriteRepository>(c => new Content.WriteRepository(_searchServiceName, _apiKey))
             .AddSingleton<IWriteEmbeddingsSearchDocuments, Embeddings.WriteRepository>(c => new Embeddings.WriteRepository(_searchServiceName, _apiKey))
             .BuildServiceProvider();

@@ -1,8 +1,7 @@
 ﻿using Beary.Data.AzureAISearch.Extensions;
-using Beary.Data.Extensions;
+using Beary.Documents.Extensions;
 using Beary.Embeddings.LocalServer.Extensions;
 using Beary.Interfaces;
-using Beary.Search.Extensions;
 using Beary.ValueTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,29 +22,14 @@ internal class Program
             .UseLocalServerEmbeddingsModel()
             .UseAzureAIEmbeddingsReadRepo()
             .UseAzureAIContentReadRepo()
-            .UseBearySearch()
-            .UseBearyReadRepository()
-            .AddHttpClient()
+            .UseBearyDocuments()
             .BuildServiceProvider();
 
         var searchKey = args.FirstOrDefault() ?? throw new ArgumentException("SearchKey");
 
-        var program = services.GetRequiredService<Program>();
-        var results = await program.GetArticles(searchKey);
+        var program = services.GetRequiredService<Beary.Documents.Search>();
+        var results = await program.GetRelevantArticles(searchKey, 10000);
 
         results.ToList().ForEach(r => Console.WriteLine(r.Title));
-    }
-
-    private readonly IFindDocuments _searchClient;
-
-    public Program(IFindDocuments searchClient)
-    {
-        _searchClient = searchClient;
-    }
-
-    public async Task<IEnumerable<Beary.Entities.Article>> GetArticles(string searchKey)
-    {
-        var maxTokenCount = TokenCount.From(10000);
-        return await _searchClient.GetRelevantArticles(searchKey, maxTokenCount);
     }
 }

@@ -13,15 +13,10 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-		<PackageReference Include="Markdig" Version="0.37.0" />
-		<PackageReference Include="SharpToken" Version="2.0.3" />
-		<PackageReference Include="YamlDotNet" Version="16.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Beary.Data.AzureAISearch\Beary.Data.AzureAISearch.csproj" />
-	  <ProjectReference Include="..\Beary.Data\Beary.Data.csproj" />
-	  <ProjectReference Include="..\Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj" />
+	  <ProjectReference Include="..\Beary.Articles.FileSystem\Beary.Articles.FileSystem.csproj" />
 	  <ProjectReference Include="..\Beary\Beary.csproj" />
 	</ItemGroup>
 

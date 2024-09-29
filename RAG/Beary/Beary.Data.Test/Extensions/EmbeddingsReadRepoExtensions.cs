@@ -1,4 +1,4 @@
-﻿using Beary.Data.Interfaces;
+﻿using Beary.Documents.Interfaces;
 
 namespace Beary.Data.Test.Extensions;
 

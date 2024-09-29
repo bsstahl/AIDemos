@@ -12,4 +12,10 @@ public class ChatContent : ValueOf<string, ChatContent>
         result.Role = role;
         return result;
     }
+
+    protected override void Validate()
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(this.Value, nameof(this.Value));
+        base.Validate();
+    }
 }

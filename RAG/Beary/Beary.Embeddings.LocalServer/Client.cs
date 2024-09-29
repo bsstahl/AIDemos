@@ -20,9 +20,8 @@ public class Client(IHttpClientFactory httpClientFactory) : IGetEmbeddings
     public async Task<ContentChunk?> GetEmbedding(string inputText, string baseId, bool sanitizeInputs)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(inputText, nameof(inputText));
-        var inputData = sanitizeInputs ? new string[] { inputText.Sanitize() } : new string[] { inputText };
-        var embeddings = await GetEmbeddings(inputData, baseId).ConfigureAwait(false);
-        return embeddings.FirstOrDefault();
+        var embeddings = await GetEmbeddings(new string[] { inputText }, baseId, sanitizeInputs).ConfigureAwait(false);
+        return embeddings.First();
     }
 
     public async Task<IEnumerable<ContentChunk>> GetEmbeddings(IEnumerable<string> inputText, string baseId)

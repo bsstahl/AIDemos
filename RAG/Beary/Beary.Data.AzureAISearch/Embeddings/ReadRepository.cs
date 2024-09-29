@@ -1,4 +1,4 @@
-﻿using Beary.Data.Interfaces;
+﻿using Beary.Documents.Interfaces;
 using Beary.Entities;
 using Beary.ValueTypes;
 
@@ -30,13 +30,15 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments
         _apiKey = apiKey;
     }
 
-    public async Task<IEnumerable<Beary.Entities.SearchResult>> GetNearestNeighbors(Vector queryVector, ResultCount numberOfNeighbors)
+    public async Task<IEnumerable<Beary.Entities.SearchResult>> GetNearestNeighbors(IEnumerable<float> queryVector, int neighborCount)
     {
         ArgumentNullException.ThrowIfNull(queryVector, nameof(queryVector));
-        ArgumentNullException.ThrowIfNull(numberOfNeighbors, nameof(numberOfNeighbors));
+        
+        var vector = Vector.From(queryVector);
+        var numberOfNeighbors = ResultCount.From(neighborCount);
 
         return await IndexClient
-            .GetNearestNeighbors(queryVector, numberOfNeighbors)
+            .GetNearestNeighbors(vector, numberOfNeighbors)
             .ConfigureAwait(false);
     }
 

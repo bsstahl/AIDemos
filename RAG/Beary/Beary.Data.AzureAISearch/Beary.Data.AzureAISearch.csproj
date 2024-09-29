@@ -15,7 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Beary.Data\Beary.Data.csproj" />
+		<ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
 		<ProjectReference Include="..\Beary\Beary.csproj" />
 	</ItemGroup>
 

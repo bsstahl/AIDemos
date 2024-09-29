@@ -3,9 +3,9 @@ using Beary.ValueTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
-using Beary.Data.Test.Extensions;
 using Serilog;
 using Xunit.Abstractions;
+using Beary.Data.AzureAISearch.Test.Extensions;
 
 namespace Beary.Data.AzureAISearch.Test;
 

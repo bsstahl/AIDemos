@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Beary.Data.Interfaces;
+﻿using Beary.Documents.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Beary.Data.Axioms.Extensions;
 

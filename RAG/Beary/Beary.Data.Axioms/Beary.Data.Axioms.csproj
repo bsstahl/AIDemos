@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Beary.Chat\Beary.Chat.csproj" />
-    <ProjectReference Include="..\Beary.Data\Beary.Data.csproj" />
+    <ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 using Beary.Chat.AzureGpt.Extensions;
 using Beary.Chat.Interfaces;
 using Beary.Data.Axioms.Extensions;
-using Beary.Data.Interfaces;
+using Beary.Documents.Interfaces;
 using Beary.Embeddings.LocalServer.Extensions;
 using Beary.ValueTypes;
 using Cluster.Extensions;
@@ -68,7 +68,7 @@ internal class Program
         foreach (var cluster in clusterCollection)
         {
             int clusterActualCount = Convert.ToInt32(Math.Floor(cluster.Proportion * Convert.ToDouble(embeddings.Count())));
-            var elements = await _embeddingsReadRepo.GetNearestNeighbors(cluster.CentroidVector(), ResultCount.From(clusterActualCount));
+            var elements = await _embeddingsReadRepo.GetNearestNeighbors(cluster.CentroidVector().Value, clusterActualCount);
             var centroidVector = Vector.From(cluster.Centroid.Select(f => Convert.ToSingle(f)));
             var documentCluster = new DocumentCluster(cluster.Index, null, centroidVector, elements);
             results.Add(documentCluster);

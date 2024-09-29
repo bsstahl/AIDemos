@@ -1,12 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Beary.Articles.FileSystem.Extensions;
+using Beary.Documents;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Beary.Interfaces;
-using Beary.Data.AzureAISearch.Extensions;
-using Beary.Data.Extensions;
-using Beary.ValueTypes;
-using Beary.Embeddings.LocalServer.Extensions;
-using Bimp.BlogPostData;
-using Beary.Entities;
 
 namespace Bimp;
 
@@ -24,60 +19,13 @@ internal class Program
 
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(config)
-            .AddSingleton<BlogPostData.Repository>()
+            .UseBearyFileSystemRepository()
             .AddSingleton<Program>()
-            .AddHttpClient()
-            .UseLocalServerEmbeddingsModel()
-            .UseBearyReadRepository()
-            .UseBearyWriteRepository()
-            .UseAzureAIContentReadRepo()
-            .UseAzureAIContentWriteRepo()
-            .UseAzureAIEmbeddingsReadRepo()
-            .UseAzureAIEmbeddingsWriteRepo()
+            // .UseBearyReadRepository() TODO: Restore if needed
+            // .UseBearyWriteRepository()  TODO: Restore if needed
             .BuildServiceProvider();
 
-        var program = services.GetRequiredService<Program>();
+        var program = services.GetRequiredService<Import>();
         await program.Execute();
-    }
-
-    private readonly BlogPostData.Repository _blogPostRepo;
-    private readonly IWriteContent _writeRepo;
-    private readonly IGetEmbeddings _embeddingsClient;
-
-    public Program(BlogPostData.Repository blogPostRepo, IWriteContent writeRepo, IGetEmbeddings embeddingsClient)
-    {
-        _blogPostRepo = blogPostRepo;
-        _writeRepo = writeRepo;
-        _embeddingsClient = embeddingsClient;
-    }
-
-    async Task Execute()
-    {
-        var blogPosts = await _blogPostRepo.GetAllPosts();
-        var encodingModel = SharpToken.GptEncoding.GetEncodingForModel("gpt-4");
-
-        int i = 0;
-        foreach (var article in blogPosts)
-        {
-            i++;
-            var articleText = article.GetFullArticleText();
-
-            var tokens = encodingModel.Encode(articleText);
-            var tokenCount = TokenCount.From(tokens.Count);
-            var chunkTextGroups = article.GetChunkGroups();
-
-            var embeddings = new List<Beary.Entities.ContentChunk>();
-            var embeddingResults = await _embeddingsClient
-                .GetEmbeddings(chunkTextGroups, article.Id)
-                .ConfigureAwait(false);
-            embeddings.AddRange(embeddingResults);
-
-            await _writeRepo.SaveAsync(Identifier.From(article.Id),
-                ArticleTitle.From(article.Title),
-                ArticleContent.From(articleText),
-                tokenCount, embeddings);
-
-            Console.WriteLine($"Processed article {i} of {blogPosts.Count()}");
-        }
     }
 }
