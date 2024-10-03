@@ -1,10 +1,15 @@
-﻿var container = new ServiceCollection()
+﻿using System;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+
+var config = new ConfigurationBuilder()
+    .AddUserSecrets<Program>()
+    .Build();
+
+var container = new ServiceCollection()
+    .AddSingleton<Solutionizer.Agents.Engine>()
+    .AddSingleton<IConfiguration>(c => config)
     .BuildServiceProvider();
 
-// TODO: Ask the user to describe the problem
-// TODO: Ask the Snowden agent for the type of problem
-// TODO: Determine which agent to use to solve the problem
-// TODO: Ask the solver agent to determine the path to solve the problem
-// TODO: Put the user on the path
-
-
+var prog = container.GetRequiredService<Solutionizer.Agents.Engine>();
+await prog.Execute().ConfigureAwait(false);

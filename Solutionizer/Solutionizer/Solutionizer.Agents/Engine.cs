@@ -1,37 +1,53 @@
 ﻿using AutoGen;
 using AutoGen.Core;
-using AutoGen.OpenAI;
+using Microsoft.Extensions.Configuration;
+using Microsoft.SemanticKernel.Agents;
 
 namespace Solutionizer.Agents;
 
 public class Engine
 {
+    private readonly IConfiguration _config;
+
+    public Engine(IConfiguration config)
+    {
+        _config = config;
+    }
+
 
     public async Task Execute()
     {
-        var openAIKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY") ?? throw new Exception("Please set OPENAI_API_KEY environment variable.");
-        var gpt35Config = new OpenAIConfig(openAIKey, "gpt-3.5-turbo");
+        // TODO: Ask the user to describe the problem
+        // TODO: Ask the Snowden agent for the type of problem
+        // TODO: Determine which agent to use to solve the problem
+        // TODO: Ask the solver agent to determine the path to solve the problem
+        // TODO: Put the user on the path
 
-        var assistantAgent = new AssistantAgent(
-            name: "assistant",
-            systemMessage: "You are an assistant that help user to do some tasks.",
-            llmConfig: new ConversableAgentConfig
-            {
-                Temperature = 0,
-                ConfigList = [gpt35Config],
-            })
-            .RegisterPrintMessage(); // register a hook to print message nicely to console
+        var gptConfig = new LLMConfig(_config);
 
-        // set human input mode to ALWAYS so that user always provide input
-        var userProxyAgent = new UserProxyAgent(
-            name: "user",
-            humanInputMode: HumanInputMode.ALWAYS)
+        var userProxyAgent = new UserAgent(gptConfig)
             .RegisterPrintMessage();
 
+        var problemGeneratorAgent = new ProblemGeneratorAgent(gptConfig)
+            .RegisterPrintMessage();
+
+        var snowdenAgent = new SnowdenAgent(gptConfig);
+            // .RegisterPrintMessage();
+
+#pragma warning disable SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+        var groupChat = new AgentGroupChat(snowdenAgent, userProxyAgent, problemGeneratorAgent);
+#pragma warning restore SKEXP0110 // Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+
+        //var assistantAgent = new AssistantAgent(
+        //    name: "helper",
+        //    systemMessage: "You help to solve problems by walking us through the appropriate steps 1 at a time.",
+        //    llmConfig: gptConfig.AsConversableAgentConfig())
+        //        .RegisterPrintMessage(); // register a hook to print message nicely to console
+
         // start the conversation
-        await userProxyAgent.InitiateChatAsync(
-            receiver: assistantAgent,
-            message: "Hey assistant, please do me a favor.",
-            maxRound: 10);
+        await snowdenAgent.InitiateChatAsync(
+            receiver: problemGeneratorAgent,
+            message: "What is our problem today?",
+            maxRound: 5);
     }
 }
