@@ -21,8 +21,7 @@ public class ChatEngine
 
     public async Task Execute()
     {
-        var maxTokenCount = 4092;
-        var chatContents = new List<ChatContent>();
+        List<ChatContent>? chatContents = null;  // Start with a null context
 
         bool done = false;
         while (!done)
@@ -32,22 +31,10 @@ public class ChatEngine
 
             if (!done)
             {
-                IEnumerable<Document> documents = await _searchClient
-                    .GetRelevantArticles(text!, maxTokenCount);
-
-                var supportingDocuments = documents.Select(d => d.FullText);
-
-                var previousContext = chatContents.HasUserContext()
-                    ? chatContents
-                    : null as IEnumerable<ChatContent>;
-
-                var chatResponses = await _chatClient
-                    .GetChatResponse(text!, supportingDocuments, previousContext);
-                
+                var chatResponses = await _chatClient.GetChatResponse(text!, chatContents);
+                chatResponses.OutputToUser();
                 chatContents = chatResponses.ToList();
-                chatContents.GetLastAgentResponse()?.OutputToUser();
             }
-
         };
     }
 

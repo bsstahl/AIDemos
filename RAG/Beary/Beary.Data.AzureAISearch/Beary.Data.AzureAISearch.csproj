@@ -15,6 +15,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Beary.Chat\Beary.Chat.csproj" />
 		<ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
 		<ProjectReference Include="..\Beary\Beary.csproj" />
 	</ItemGroup>

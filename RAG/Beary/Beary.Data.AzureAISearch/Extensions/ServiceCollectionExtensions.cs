@@ -1,4 +1,5 @@
-﻿using Beary.Documents.Interfaces;
+﻿using Beary.Chat.Interfaces;
+using Beary.Documents.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -45,6 +46,13 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection UseAzureAIEmbeddingsReadRepo(this IServiceCollection serviceCollection)
     {
         return serviceCollection
+            .AddSingleton<IGetRelevantDocuments>(c =>
+            {
+                var config = c.GetRequiredService<IConfiguration>();
+                var searchServiceName = config["SearchService:Name"];
+                var apiKey = config["SearchService:ApiKey"];
+                return new Embeddings.ReadRepository(searchServiceName, apiKey);
+            })
             .AddSingleton<IReadEmbeddingsSearchDocuments>(c =>
             {
                 var config = c.GetRequiredService<IConfiguration>();

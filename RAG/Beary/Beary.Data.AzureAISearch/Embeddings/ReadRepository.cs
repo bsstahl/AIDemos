@@ -1,10 +1,11 @@
-﻿using Beary.Documents.Interfaces;
+﻿using Beary.Chat.Interfaces;
+using Beary.Documents.Interfaces;
 using Beary.Entities;
 using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
 
-public class ReadRepository : IReadEmbeddingsSearchDocuments
+public class ReadRepository : IReadEmbeddingsSearchDocuments, IGetRelevantDocuments
 {
     private readonly string _searchServiceName;
     private readonly string _apiKey;
@@ -54,5 +55,10 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments
         return await this.IndexClient
             .GetAllEmbeddings()
             .ConfigureAwait(false);
+    }
+
+    public Task<IEnumerable<SearchResult>> GetMostRelevant(IEnumerable<float> queryVector, int numberOfNeighbors)
+    {
+        return this.GetNearestNeighbors(queryVector, numberOfNeighbors);
     }
 }
