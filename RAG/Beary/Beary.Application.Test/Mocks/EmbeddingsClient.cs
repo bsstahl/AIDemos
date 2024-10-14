@@ -1,6 +1,5 @@
 ﻿using Beary.Entities;
 using Beary.Interfaces;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Beary.Application.Test.Mocks;
 

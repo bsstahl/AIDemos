@@ -1,7 +1,5 @@
 ﻿using Beary.Application.Interfaces;
 using Beary.ValueTypes;
-using Moq;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Beary.Application.Test.Mocks;
 

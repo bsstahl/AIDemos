@@ -31,7 +31,8 @@ public class ChatEngine
 
             if (!done)
             {
-                var chatResponses = await _chatClient.GetChatResponse(text!, chatContents);
+                var relevantDocuments = new List<string>(); // TODO: Fetch relevant docs
+                var chatResponses = await _chatClient.GetChatResponse(text!, relevantDocuments, chatContents);
                 chatResponses.OutputToUser();
                 chatContents = chatResponses.ToList();
             }

@@ -9,7 +9,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection UseAzureGptChatClient(this IServiceCollection services)
     {
         return services
-            .AddSingleton<ICreateChatCompletions, AzureGpt.Client>()
-            .AddSingleton<IDisambiguateQueries, AzureGpt.Client>();
+            .AddSingleton<ICreateChatCompletions, AzureGpt.Client>();
     }
 }
