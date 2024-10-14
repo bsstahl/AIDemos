@@ -1,4 +1,4 @@
-﻿using Beary.Chat.Entities;
+﻿using Beary.Entities;
 using OpenAI.Chat;
 
 namespace Beary.Chat.AzureGpt.Extensions;

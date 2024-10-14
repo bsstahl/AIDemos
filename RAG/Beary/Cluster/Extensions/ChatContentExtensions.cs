@@ -1,5 +1,4 @@
-﻿using Beary.Chat.Entities;
-using System.Text;
+﻿using Beary.Entities;
 
 namespace Cluster.Extensions;
 

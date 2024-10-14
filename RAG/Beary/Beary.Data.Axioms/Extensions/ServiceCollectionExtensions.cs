@@ -1,4 +1,4 @@
-﻿using Beary.Documents.Interfaces;
+﻿using Beary.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Beary.Data.Axioms.Extensions;

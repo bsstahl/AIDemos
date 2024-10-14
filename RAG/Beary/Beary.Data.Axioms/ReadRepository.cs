@@ -1,5 +1,5 @@
 ﻿using Accord.Collections;
-using Beary.Documents.Interfaces;
+using Beary.Application.Interfaces;
 using Beary.Interfaces;
 using Beary.ValueTypes;
 using Microsoft.Extensions.Configuration;

@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
+	  <ProjectReference Include="..\Beary.Application\Beary.Application.csproj" />
 	</ItemGroup>
 
 </Project>

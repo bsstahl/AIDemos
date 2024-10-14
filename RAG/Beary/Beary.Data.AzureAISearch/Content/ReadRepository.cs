@@ -1,4 +1,4 @@
-﻿using Beary.Documents.Interfaces;
+﻿using Beary.Application.Interfaces;
 using Beary.Entities;
 using Beary.ValueTypes;
 

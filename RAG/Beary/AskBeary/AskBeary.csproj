@@ -16,10 +16,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Beary.Application\Beary.Application.csproj" />
 		<ProjectReference Include="..\Beary.Chat.AzureGpt\Beary.Chat.AzureGpt.csproj" />
-		<ProjectReference Include="..\Beary.Chat\Beary.Chat.csproj" />
 		<ProjectReference Include="..\Beary.Data.AzureAISearch\Beary.Data.AzureAISearch.csproj" />
-		<ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
 		<ProjectReference Include="..\Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj" />
 		<ProjectReference Include="..\Beary\Beary.csproj" />
 	</ItemGroup>

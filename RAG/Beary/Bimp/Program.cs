@@ -1,5 +1,5 @@
 ﻿using Beary.Articles.FileSystem.Extensions;
-using Beary.Documents;
+using Beary.Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

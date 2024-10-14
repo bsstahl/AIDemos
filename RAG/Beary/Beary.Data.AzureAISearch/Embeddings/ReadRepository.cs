@@ -1,11 +1,11 @@
-﻿using Beary.Chat.Interfaces;
-using Beary.Documents.Interfaces;
+﻿using Beary.Application.Interfaces;
 using Beary.Entities;
+using Beary.Interfaces;
 using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
 
-public class ReadRepository : IReadEmbeddingsSearchDocuments, IGetRelevantDocuments
+public class ReadRepository : IReadEmbeddingsSearchDocuments, IFindRelevantDocuments
 {
     private readonly string _searchServiceName;
     private readonly string _apiKey;

@@ -1,7 +1,7 @@
-﻿using Beary.Articles.FileSystem.Entities;
+﻿using Beary.Entities;
+using Beary.Articles.FileSystem.Entities;
 using Beary.Articles.FileSystem.Extensions;
-using Beary.Documents.Entities;
-using Beary.Documents.Interfaces;
+using Beary.Application.Interfaces;
 using Markdig;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,7 +63,7 @@ internal class Repository : IReadSourceDocuments
             var categories = postMetadata.categories ?? Array.Empty<string>().ToList();
             var contentChunks = content.GetContentChunks();
 
-            var newPost = new Article(postMetadata.id.ToString(), postMetadata.title, articleDescription, null, postMetadata.isPublished, postMetadata.includeAlways, categories, tags);
+            var newPost = new Beary.Articles.FileSystem.Entities.Article(postMetadata.id.ToString(), postMetadata.title, articleDescription, null, postMetadata.isPublished, postMetadata.includeAlways, categories, tags);
             newPost.AddChunks(contentChunks);
             results.Add(new BlogPostSection(newPost, postMetadata));
         }

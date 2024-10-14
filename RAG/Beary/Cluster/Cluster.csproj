@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Beary.Application\Beary.Application.csproj" />
 		<ProjectReference Include="..\Beary.Chat.AzureGpt\Beary.Chat.AzureGpt.csproj" />
-		<ProjectReference Include="..\Beary.Chat\Beary.Chat.csproj" />
 		<ProjectReference Include="..\Beary.Data.Axioms\Beary.Data.Axioms.csproj" />
 		<ProjectReference Include="..\Beary.Data.AzureAISearch\Beary.Data.AzureAISearch.csproj" />
 		<ProjectReference Include="..\Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj" />

@@ -1,5 +1,5 @@
-﻿using Beary.Chat.Interfaces;
-using Beary.Documents.Interfaces;
+﻿using Beary.Application.Interfaces;
+using Beary.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -46,7 +46,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection UseAzureAIEmbeddingsReadRepo(this IServiceCollection serviceCollection)
     {
         return serviceCollection
-            .AddSingleton<IGetRelevantDocuments>(c =>
+            .AddSingleton<IFindRelevantDocuments>(c =>
             {
                 var config = c.GetRequiredService<IConfiguration>();
                 var searchServiceName = config["SearchService:Name"];

@@ -1,6 +1,7 @@
-﻿using Beary.Chat.AzureGpt.Extensions;
-using Beary.Chat.Entities;
-using Beary.Chat.Interfaces;
+﻿using Beary.Application.Interfaces;
+using Beary.Chat.AzureGpt.Extensions;
+using Beary.Entities;
+using Beary.Interfaces;
 using Microsoft.Extensions.Configuration;
 
 namespace Beary.Chat.AzureGpt;

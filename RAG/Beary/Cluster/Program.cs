@@ -1,9 +1,9 @@
 ﻿using Accord.MachineLearning;
 using Beary.Chat.AzureGpt.Extensions;
-using Beary.Chat.Interfaces;
 using Beary.Data.Axioms.Extensions;
-using Beary.Documents.Interfaces;
+using Beary.Application.Interfaces;
 using Beary.Embeddings.LocalServer.Extensions;
+using Beary.Interfaces;
 using Beary.ValueTypes;
 using Cluster.Extensions;
 using Microsoft.Extensions.Configuration;

@@ -1,16 +1,16 @@
 ﻿using AskBeary.Extensions;
-using Beary.Documents.Entities;
-using Beary.Chat.Entities;
-using Beary.Chat.Extensions;
+using Beary.Application;
+using Beary.Entities;
+using Beary.Application.Extensions;
 
 namespace AskBeary;
 
 public class ChatEngine
 {
-    private readonly Beary.Chat.MultiShot _chatClient;
-    private readonly Beary.Documents.Search _searchClient;
+    private readonly Beary.Application.MultiShot _chatClient;
+    private readonly Beary.Application.Search _searchClient;
 
-    public ChatEngine(Beary.Documents.Search searchClient, Beary.Chat.MultiShot chatClient)
+    public ChatEngine(Beary.Application.Search searchClient, MultiShot chatClient)
     {
         ArgumentNullException.ThrowIfNull(searchClient, nameof(searchClient));
         ArgumentNullException.ThrowIfNull(chatClient, nameof(chatClient));

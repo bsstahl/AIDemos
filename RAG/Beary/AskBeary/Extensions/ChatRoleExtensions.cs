@@ -1,4 +1,4 @@
-﻿using Beary.Chat.Entities;
+﻿using Beary.Entities;
 
 namespace AskBeary.Extensions;
 

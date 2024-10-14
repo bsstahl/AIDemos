@@ -1,7 +1,6 @@
 ﻿using Beary.Chat.AzureGpt.Extensions;
-using Beary.Chat.Extensions;
 using Beary.Data.AzureAISearch.Extensions;
-using Beary.Documents.Extensions;
+using Beary.Application.Extensions;
 using Beary.Embeddings.LocalServer.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

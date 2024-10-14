@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Beary.Chat.Interfaces;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Beary.Interfaces;
+using Beary.Application.Interfaces;
 
 namespace Beary.Chat.AzureGpt.Extensions;
 

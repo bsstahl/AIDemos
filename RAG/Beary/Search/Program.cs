@@ -1,10 +1,8 @@
 ﻿using Beary.Data.AzureAISearch.Extensions;
-using Beary.Documents.Extensions;
 using Beary.Embeddings.LocalServer.Extensions;
-using Beary.Interfaces;
-using Beary.ValueTypes;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Beary.Application.Extensions;
 
 namespace Search;
 
@@ -27,7 +25,7 @@ internal class Program
 
         var searchKey = args.FirstOrDefault() ?? throw new ArgumentException("SearchKey");
 
-        var program = services.GetRequiredService<Beary.Documents.Search>();
+        var program = services.GetRequiredService<Beary.Application.Search>();
         var results = await program.GetRelevantArticles(searchKey, 10000);
 
         results.ToList().ForEach(r => Console.WriteLine(r.Title));

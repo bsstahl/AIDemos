@@ -1,4 +1,4 @@
-﻿using Beary.Documents.Interfaces;
+﻿using Beary.Application.Interfaces;
 using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
