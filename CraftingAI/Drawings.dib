@@ -1,0 +1,30 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"mermaid","items":[{"aliases":[],"languageName":"mermaid","name":"mermaid"}]}}
+
+#!markdown
+
+## Gradient Descent
+
+#!markdown
+
+With a few minor changes, this could be generalized to any optimization model:
+
+* Specific to Gradient Descent:
+   * Compute Gradient of MSE: Gradient descent specifically involves calculating the gradient of the cost function to determine the direction of parameter updates. Other algorithms might not use gradients.
+   * Update Model Parameters: While parameter updates are common, the method of updating can differ. For example, algorithms like genetic algorithms, simulated annealing, or evolutionary strategies use different approaches than gradient descent.
+* Generalization with Adjustments:
+   * By replacing the "Compute Gradient of MSE" step with a more generic "Determine Update Direction," and adjusting the "Update Model Parameters" step to reflect the specific algorithm's update mechanism, the flowchart can be adapted for broader use.
+
+#!mermaid
+
+flowchart TD
+
+    B[Initialize Parameters\rto random values] --> C[Compute Predictions]
+    C --> D[Calculate Error]
+    D --> E[Compute Error Gradient]
+    E --> F[Update Parameters]
+    F --> G{Convergence?}
+    G -->|No| C
+    G -->|Yes| H[Training Complete]
+    
