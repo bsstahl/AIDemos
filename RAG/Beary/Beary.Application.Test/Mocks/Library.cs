@@ -2,6 +2,10 @@
 using Beary.Entities;
 using Beary.Interfaces;
 using Beary.ValueTypes;
+using System.Buffers.Text;
+using System;
+using System.Reflection;
+using Beary.Application.Test.Extensions;
 
 namespace Beary.Application.Test.Mocks;
 
@@ -19,7 +23,7 @@ internal class Library : IReadSourceDocuments, IReadEmbeddingsSearchDocuments, I
 
     public Task<bool> ArticleExists(string articleId)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(_articles.Any(a => a.Id.Value.Equals(articleId)));
     }
 
     public Task<IEnumerable<Document>> GetAllDocuments()
@@ -40,12 +44,15 @@ internal class Library : IReadSourceDocuments, IReadEmbeddingsSearchDocuments, I
 
     public Task<Article> GetArticle(string articleId)
     {
-        return Task.FromResult(_articles.First(a => a.Id.Value == articleId));
+        var article = _articles
+            .Where(a => a.Id is not null)
+            .FirstOrDefault(a => a.Id!.Value.Equals(articleId));
+        return Task.FromResult(article);
     }
 
     public Task<long> GetDocumentCount()
     {
-        throw new NotImplementedException();
+        return Task.FromResult(Convert.ToInt64(_articles.Length));
     }
 
     public Task<IEnumerable<SearchResult>> GetNearestNeighbors(IEnumerable<float> queryVector, int numberOfNeighbors)
@@ -93,20 +100,29 @@ internal class Library : IReadSourceDocuments, IReadEmbeddingsSearchDocuments, I
     {
         var article1Id = "c7f2f5d3-c0b8-400d-9692-b4594223924c";
         var article1Title = $"Title of article {article1Id}";
+        var article1Chunk1Text = "This is the content";
+        var article1Chunk1Vector = article1Chunk1Text.GetTextEmbedding();
+        var article1Chunk2Text = $"of article {article1Id}";
+        var article1Chunk2Vector = article1Chunk2Text.GetTextEmbedding();
+
+        var article1Embeddings = new List<ContentChunk>()
+        {
+            new ContentChunk($"{article1Id}_0", 0, article1Chunk1Text, article1Chunk1Vector),
+            new ContentChunk($"{article1Id}_1", 1, article1Chunk2Text, article1Chunk2Vector)
+        };
 
         var article2Id = "6a05260c-66ca-4ed0-b2ea-5a7b7790109c";
         var article2Title = $"Title of article {article2Id}";
+        var article2Chunk1Text = "This is some content";
+        var article2Chunk1Vector = article2Chunk1Text.GetTextEmbedding();
+        var article2Chunk2Text = $"from article {article2Id}";
+        var article2Chunk2Vector = article2Chunk2Text.GetTextEmbedding();
 
-        var article1EmbeddingTask = _embeddingsClient
-            .GetEmbeddings(new[] { "This is the content", $"of article {article1Id}" }, article1Id);
-
-        var article2EmbeddingTask = _embeddingsClient
-            .GetEmbeddings(new[] { "This is some content", $"from article {article2Id}" }, article2Id);
-
-        Task.WaitAll(article1EmbeddingTask, article2EmbeddingTask);
-
-        var article1Embeddings = article1EmbeddingTask.Result;
-        var article2Embeddings = article2EmbeddingTask.Result;
+        var article2Embeddings = new List<ContentChunk>()
+        {
+            new ContentChunk($"{article2Id}_0", 0, article2Chunk1Text, article2Chunk1Vector),
+            new ContentChunk($"{article2Id}_1", 1, article2Chunk2Text, article2Chunk2Vector)
+        };
 
         var article1Text = string.Join(" ", article1Embeddings.Select(a => a.ChunkText));
         var article2Text = string.Join(" ", article2Embeddings.Select(a => a.ChunkText));

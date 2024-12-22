@@ -14,7 +14,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection UseBearyChat(this IServiceCollection services)
     {
         return services
-            .AddSingleton<Beary.Application.OneShot>()
             .AddSingleton<Beary.Application.MultiShot>();
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Regression.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Xunit.Abstractions;
 
@@ -16,18 +17,19 @@ public class LinearModel_Train_Should
     [Fact]
     public void ReturnTheCorrectParameterValues()
     {
-        var trainingSet = new Dictionary<double, double>
+        var trainingSet = new Dictionary<double[], double>
         {
-            { 1.0, 2.0 },
-            { 4.0, 5.0 },
-            { 5.0, 6.0 },
-            { 6.0, 7.0 },
-            { 7.0, 8.0 },
-            { 9.0, 10.0 },
-            { 10.0, 11.0 }
+            { [1.0], 2.0 },
+            { [4.0], 5.0 },
+            { [5.0], 6.0 },
+            { [6.0], 7.0 },
+            { [7.0], 8.0 },
+            { [9.0], 10.0 },
+            { [10.0], 11.0 }
         };
 
-        var target = LinearModel.Train(trainingSet);
+        var target = new Linear.Model();
+        var isTrained = target.Train(trainingSet);
         _output.WriteLine(JsonSerializer.Serialize(target));
 
         // Model has been trained to at least 9 digits of precision
@@ -42,25 +44,26 @@ public class LinearModel_Train_Should
     [Fact]
     public void CorrectlyPredictTheTestSet()
     {
-        var trainingSet = new Dictionary<double, double>
+        var trainingSet = new Dictionary<double[], double>
         {
-            { 1.0, 2.0 },
-            { 4.0, 8.0 },
-            { 5.0, 10.0 },
-            { 6.0, 12.0 },
-            { 7.0, 14.0 },
-            { 9.0, 18.0 },
-            { 10.0, 20.0 }
+            { [1.0], 2.0 },
+            { [4.0], 8.0 },
+            { [5.0], 10.0 },
+            { [6.0], 12.0 },
+            { [7.0], 14.0 },
+            { [9.0], 18.0 },
+            { [10.0], 20.0 }
         };
 
-        var testSet = new Dictionary<double, double>
+        var testSet = new Dictionary<double[], double>
         {
-            { 2.0, 4.0 },
-            { 3.0, 6.0 },
-            { 8.0, 16.0 }
+            { [2.0], 4.0 },
+            { [3.0], 6.0 },
+            { [8.0], 16.0 }
         };
 
-        var target = LinearModel.Train(trainingSet);
+        var target = new Linear.Model();
+        var isTrained = target.Train(trainingSet);
         _output.WriteLine(JsonSerializer.Serialize(target));
 
         Assert.True(target.TrainingConverged);
@@ -75,23 +78,24 @@ public class LinearModel_Train_Should
     [Fact]
     public void CorrectlyPredictTheTestSetIfSlopeIsNegativeAndInterceptIsPositive()
     {
-        var trainingSet = new Dictionary<double, double>
+        var trainingSet = new Dictionary<double[], double>
         {
-            {-10.0,   37.0 },
-            {  4.0,  -12.0 },
-            {  6.0,  -19.0 },
-            {  7.0,  -22.5 },
-            {  9.0,  -29.5 }
+            {[-10.0],   37.0 },
+            {[  4.0],  -12.0 },
+            {[  6.0],  -19.0 },
+            {[  7.0],  -22.5 },
+            {[  9.0],  -29.5 }
         };
 
-        var testSet = new Dictionary<double, double>
+        var testSet = new Dictionary<double[], double>
         {
-            { -6.0,  23.0 },
-            {  3.0,  -8.5 },
-            {  8.0, -26.0 }
+            { [-6.0],  23.0 },
+            { [ 3.0],  -8.5 },
+            { [ 8.0], -26.0 }
         };
 
-        var target = LinearModel.Train(trainingSet);
+        var target = new Linear.Model();
+        var isTrained = target.Train(trainingSet);
         _output.WriteLine(JsonSerializer.Serialize(target));
 
         Assert.True(target.TrainingConverged);
@@ -106,23 +110,24 @@ public class LinearModel_Train_Should
     [Fact]
     public void CorrectlyPredictTheTestSetIfSlopeIsPositiveAndInterceptIsNegative()
     {
-        var trainingSet = new Dictionary<double, double>
+        var trainingSet = new Dictionary<double[], double>
         {
-            { -9.0,  -29.5 },
-            { -4.0,  -17.0 },
-            {  6.0,    8.0 },
-            {  7.0,   10.5 },
-            {  8.0,   13.0 }
+            { [-9.0],  -29.5 },
+            { [-4.0],  -17.0 },
+            { [ 6.0],    8.0 },
+            { [ 7.0],   10.5 },
+            { [ 8.0],   13.0 }
         };
 
-        var testSet = new Dictionary<double, double>
+        var testSet = new Dictionary<double[], double>
         {
-            { -5.0, -19.5 },
-            {  3.0,   0.5 },
-            { 10.0,  18.0 }
+            { [-5.0], -19.5 },
+            { [ 3.0],   0.5 },
+            { [10.0],  18.0 }
         };
 
-        var target = LinearModel.Train(trainingSet);
+        var target = new Linear.Model();
+        var isTrained = target.Train(trainingSet);
         _output.WriteLine(JsonSerializer.Serialize(target));
 
         Assert.True(target.TrainingConverged);
@@ -137,23 +142,24 @@ public class LinearModel_Train_Should
     [Fact]
     public void CorrectlyPredictTheTestSetIfSlopeAndInterceptAreNegative()
     {
-        var trainingSet = new Dictionary<double, double>
+        var trainingSet = new Dictionary<double[], double>
         {
-            { -9.0,   20.0 },
-            { -4.0,    5.0 },
-            {  6.0,  -25.0 },
-            {  7.0,  -28.0 },
-            {  8.0,  -31.0 }
+            { [-9.0],   20.0 },
+            { [-4.0],    5.0 },
+            { [ 6.0],  -25.0 },
+            { [ 7.0],  -28.0 },
+            { [ 8.0],  -31.0 }
         };
 
-        var testSet = new Dictionary<double, double>
+        var testSet = new Dictionary<double[], double>
         {
-            { -5.0,   8.0 },
-            {  3.0,  -16.0 },
-            { 10.0,  -37.0 }
+            { [-5.0],   8.0 },
+            { [ 3.0],  -16.0 },
+            { [10.0],  -37.0 }
         };
 
-        var target = LinearModel.Train(trainingSet);
+        var target = new Linear.Model();
+        var isTrained = target.Train(trainingSet);
         _output.WriteLine(JsonSerializer.Serialize(target));
 
         Assert.True(target.TrainingConverged);
@@ -168,21 +174,23 @@ public class LinearModel_Train_Should
     [Fact]
     public void ReturnIntermediateResultsIfACallbackIsSupplied()
     {
-        var trainingSet = new Dictionary<double, double>
+        var trainingSet = new Dictionary<double[], double>
         {
-            { 1.0, 2.0 },
-            { 4.0, 5.0 },
-            { 5.0, 6.0 },
-            { 6.0, 7.0 },
-            { 7.0, 8.0 },
-            { 9.0, 10.0 },
-            { 10.0, 11.0 }
+            { [1.0], 2.0 },
+            { [4.0], 5.0 },
+            { [5.0], 6.0 },
+            { [6.0], 7.0 },
+            { [7.0], 8.0 },
+            { [9.0], 10.0 },
+            { [10.0], 11.0 }
         };
 
         var intermediateIterationCounts = new List<int>();
-        var intermediateModels = new List<LinearModel>();
+        var intermediateModels = new List<IPredictScalarValues>();
         var intermediateErrors = new List<double>();
-        var target = LinearModel.Train(trainingSet, callback: (i, model, error) =>
+
+        var target = new Linear.Model();
+        var isTrained = target.Train(trainingSet, callback: (i, model, error) =>
         {
             intermediateIterationCounts.Add(i);
             intermediateModels.Add(model);

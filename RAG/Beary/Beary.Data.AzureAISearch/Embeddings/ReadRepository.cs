@@ -5,7 +5,7 @@ using Beary.ValueTypes;
 
 namespace Beary.Data.AzureAISearch.Embeddings;
 
-public class ReadRepository : IReadEmbeddingsSearchDocuments, IFindRelevantDocuments
+public class ReadRepository : IReadEmbeddingsSearchDocuments
 {
     private readonly string _searchServiceName;
     private readonly string _apiKey;
@@ -57,8 +57,4 @@ public class ReadRepository : IReadEmbeddingsSearchDocuments, IFindRelevantDocum
             .ConfigureAwait(false);
     }
 
-    public Task<IEnumerable<SearchResult>> GetMostRelevant(IEnumerable<float> queryVector, int numberOfNeighbors)
-    {
-        return this.GetNearestNeighbors(queryVector, numberOfNeighbors);
-    }
 }

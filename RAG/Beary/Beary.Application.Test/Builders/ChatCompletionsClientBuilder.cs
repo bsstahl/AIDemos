@@ -20,11 +20,15 @@ internal class ChatCompletionsClientBuilder
         return this;
     }
 
-    internal ChatCompletionsClientBuilder SetupSingleRequestAndResponse(string request, string response)
+    internal ChatCompletionsClientBuilder SetupSingleRequestAndResponse(string request, ChatRole requestRole, string response)
     {
-        // TODO: Fix this so that it actually works
+        var query = new List<ChatContent>() 
+        { 
+            ChatContent.From(request, requestRole) 
+        };
+        
         _client
-            .Setup(c => c.CreateChatCompletionsAsync(It.IsAny<IEnumerable<ChatContent>>()))
+            .Setup(c => c.CreateChatCompletionsAsync(query))
             .Returns(Task.FromResult(ChatContent.From(response, ChatRole.Agent)));
 
         return this;

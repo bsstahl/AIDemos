@@ -12,7 +12,7 @@ namespace Beary.Application.Test;
 public class MultiShot_GetChatResponse_Should
 {
     [Fact]
-    public async Task NotFailIfNoDocumentsAndNoContextAreSupplied()
+    public async Task NotFailIfNoPreviousContextIsSupplied()
     {
         var configElements = new List<KeyValuePair<string, string?>>();
 
@@ -29,16 +29,15 @@ public class MultiShot_GetChatResponse_Should
             .AddSingleton<IConfiguration>(config)
             .AddSingleton<MultiShot>()
             .AddSingleton<IGetEmbeddings, Application.Test.Mocks.EmbeddingsClient>()
-            .AddSingleton<IFindRelevantDocuments, Application.Test.Mocks.SearchClient>()
             .AddSingleton<ICreateChatCompletions>(c => mockChatClient.Object)
             .AddSingleton<IReadEmbeddingsSearchDocuments, Application.Test.Mocks.Library>()
-            //.AddSingleton<IReadContentSearchDocuments, Application.Test.Mocks.Library>()
+            .AddSingleton<IReadContentSearchDocuments, Application.Test.Mocks.Library>()
             .BuildServiceProvider();
 
         string userQuery = string.Empty.GetRandom();
 
         var target = services.GetRequiredService<MultiShot>();
-        var actual = await target.GetChatResponse(userQuery, documents: null, previousContext: null);
+        var actual = await target.GetChatResponse(userQuery, previousContext: null);
 
         Assert.NotEmpty(actual);
     }
@@ -64,10 +63,9 @@ public class MultiShot_GetChatResponse_Should
             .AddSingleton<IConfiguration>(config)
             .AddSingleton<MultiShot>()
             .AddSingleton<IGetEmbeddings, Application.Test.Mocks.EmbeddingsClient>()
-            .AddSingleton<IFindRelevantDocuments, Application.Test.Mocks.SearchClient>()
             .AddSingleton<ICreateChatCompletions>(c => mockChatClient.Object)
             .AddSingleton<IReadEmbeddingsSearchDocuments, Application.Test.Mocks.Library>()
-            //.AddSingleton<IReadContentSearchDocuments, Application.Test.Mocks.Library>()
+            .AddSingleton<IReadContentSearchDocuments, Application.Test.Mocks.Library>()
             .BuildServiceProvider();
 
         string userQuery = string.Empty.GetRandom();
@@ -85,8 +83,40 @@ public class MultiShot_GetChatResponse_Should
         };
 
         var target = services.GetRequiredService<MultiShot>();
-        var actual = await target.GetChatResponse(userQuery, documents, previousContext);
+        var actual = await target.GetChatResponse(userQuery, previousContext);
 
         Assert.Equal(expectedResponse, actual.GetLastAgentResponse()?.Value);
+    }
+
+    [Fact]
+    public async Task ThrowIfTheEmbeddingReturnsEmpty()
+    {
+        var configElements = new List<KeyValuePair<string, string?>>();
+
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(configElements)
+            .Build();
+
+        var expectedRespose = string.Empty.GetRandom();
+        var mockChatClient = new ChatCompletionsClientBuilder()
+            .SetupResponseToAnyQuery(expectedRespose)
+            .Build();
+
+        var embeddingsClient = new Application.Test.Mocks.EmbeddingsClient();
+        embeddingsClient.SetupResult([]);
+
+        var services = new ServiceCollection()
+            .AddSingleton<IConfiguration>(config)
+            .AddSingleton<MultiShot>()
+            .AddSingleton<IGetEmbeddings>(c => embeddingsClient)
+            .AddSingleton<ICreateChatCompletions>(c => mockChatClient.Object)
+            .AddSingleton<IReadEmbeddingsSearchDocuments, Application.Test.Mocks.Library>()
+            .AddSingleton<IReadContentSearchDocuments, Application.Test.Mocks.Library>()
+            .BuildServiceProvider();
+
+        string userQuery = string.Empty.GetRandom();
+
+        var target = services.GetRequiredService<MultiShot>();
+        await Assert.ThrowsAsync<InvalidOperationException>(() => target.GetChatResponse(userQuery, previousContext: null));
     }
 }

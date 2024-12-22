@@ -1,5 +1,5 @@
-﻿using Regression;
-using Regression.Extensions;
+﻿using Regression.Extensions;
+using Regression.Interfaces;
 
 namespace GD;
 
@@ -11,17 +11,20 @@ internal class Program
     {
         var data = GetLinearData(@".\Data\LinearData.csv");
         var (trainingSet, testSet) = data.Split(0.8f);
-        var trainedModel = LinearModel.Train(trainingSet, callback: LogResult);
-        var testError = trainedModel.Test(testSet);
+
+        var model = new Regression.Linear.Model();
+        bool isTrained = model.Train(trainingSet, callback: LogResult);
+        var testError = model.Test(testSet);
+
         Console.WriteLine($"Test Error: {testError}");
         SaveResults(@"c:\s\temp\LinearTrainingResults.csv", _trainingResults);
     }
 
-    static void LogResult(int iteration, LinearModel model, double mse)
+    static void LogResult(int iteration, IPredictScalarValues model, double mse)
     {
-        var result = new TrainingResult(iteration, model.M, model.B, mse);
+        var result = new TrainingResult(iteration, model.Weights[0], model.Biases[0], mse);
         if (iteration % 10000 == 0)
-            Console.WriteLine($"Iteration: {iteration}, M: {model.M}, B: {model.B}, MSE: {mse}");
+            Console.WriteLine($"Iteration: {iteration}, M: {model.Weights[0]}, B: {model.Biases[0]}, MSE: {mse}");
         _trainingResults.Add(result);
     }
 

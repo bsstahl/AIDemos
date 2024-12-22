@@ -7,25 +7,25 @@ namespace Beary.Application;
 
 public class MultiShot
 {
-    public MultiShot(IGetEmbeddings embeddingClient, IFindRelevantDocuments searchClient, ICreateChatCompletions chatClient, IReadEmbeddingsSearchDocuments embeddingsReadRepo)
+    public MultiShot(IGetEmbeddings embeddingClient, IReadEmbeddingsSearchDocuments embeddingsReadRepo, IReadContentSearchDocuments contentReadRepo, ICreateChatCompletions chatClient)
     {
         ArgumentNullException.ThrowIfNull(embeddingClient, nameof(embeddingClient));
-        ArgumentNullException.ThrowIfNull(searchClient, nameof(searchClient));
-        ArgumentNullException.ThrowIfNull(chatClient, nameof(chatClient));
         ArgumentNullException.ThrowIfNull(embeddingsReadRepo, nameof(embeddingsReadRepo));
+        ArgumentNullException.ThrowIfNull(contentReadRepo, nameof(contentReadRepo));
+        ArgumentNullException.ThrowIfNull(chatClient, nameof(chatClient));
 
         _embeddingClient = embeddingClient;
-        _searchClient = searchClient;
-        _chatClient = chatClient;
         _embeddingsReadRepo = embeddingsReadRepo;
+        _contentReadRepo = contentReadRepo;
+        _chatClient = chatClient;
     }
 
     private readonly ICreateChatCompletions _chatClient;
-    private readonly IFindRelevantDocuments _searchClient;
     private readonly IGetEmbeddings _embeddingClient;
     private readonly IReadEmbeddingsSearchDocuments _embeddingsReadRepo;
+    private readonly IReadContentSearchDocuments _contentReadRepo;
 
-    public async Task<IEnumerable<ChatContent>> GetChatResponse(string userQuery, IEnumerable<string> documents, IEnumerable<ChatContent>? previousContext)
+    public async Task<IEnumerable<ChatContent>> GetChatResponse(string userQuery, IEnumerable<ChatContent>? previousContext)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(userQuery, nameof(userQuery));
 
@@ -37,7 +37,20 @@ public class MultiShot
             : previousContext.Select(c => c).ToList();
 
         // Add new documents
-        documents.ToList().ForEach(d => chatContents.Add(ChatContent.From(d, ChatRole.Context)));
+        var embedding = await _embeddingClient.GetEmbeddings(new string[] { queryText }, "user");
+        var queryEmbedding = embedding.FirstOrDefault()?.Embedding?.Value ?? throw new InvalidOperationException("Unable to retrieve embedding");
+        var documentChunks = await _embeddingsReadRepo.GetNearestNeighbors(queryEmbedding, Constants.Search.MaxNeighbors);
+        var documentIds = documentChunks.Select(c => c.ItemId).Distinct().ToList();
+
+        var documentTasks = documentIds
+            .Select(id => _contentReadRepo.GetArticle(id))
+            .ToArray();
+        Task.WaitAll(documentTasks);
+
+        var documents = documentTasks
+            .Where(t => t.Result?.Content?.Value is not null)
+            .Select(t => t.Result?.Content?.Value);
+        documents?.ToList().ForEach(d => chatContents.Add(ChatContent.From(d!, ChatRole.Context)));
 
         // Add disambiguated user query
         chatContents.Add(ChatContent.From(queryText, ChatRole.User));

@@ -8,14 +8,10 @@ namespace AskBeary;
 public class ChatEngine
 {
     private readonly Beary.Application.MultiShot _chatClient;
-    private readonly Beary.Application.Search _searchClient;
 
-    public ChatEngine(Beary.Application.Search searchClient, MultiShot chatClient)
+    public ChatEngine(MultiShot chatClient)
     {
-        ArgumentNullException.ThrowIfNull(searchClient, nameof(searchClient));
         ArgumentNullException.ThrowIfNull(chatClient, nameof(chatClient));
-
-        _searchClient = searchClient;
         _chatClient = chatClient;
     }
 
@@ -31,8 +27,7 @@ public class ChatEngine
 
             if (!done)
             {
-                var relevantDocuments = new List<string>(); // TODO: Fetch relevant docs
-                var chatResponses = await _chatClient.GetChatResponse(text!, relevantDocuments, chatContents);
+                var chatResponses = await _chatClient.GetChatResponse(text!, chatContents);
                 chatResponses.OutputToUser();
                 chatContents = chatResponses.ToList();
             }
