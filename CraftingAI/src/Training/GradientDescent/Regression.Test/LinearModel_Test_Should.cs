@@ -36,7 +36,7 @@ public class LinearModel_Test_Should
 
         var target = new Linear.Model();
         var isTrained = target.Train(trainingSet);
-        var actual = target.Test(testSet);
+        var (actual, predictions) = target.Test(testSet);
 
         _output.WriteLine($"Actual Error: {actual}");
         _output.WriteLine(JsonSerializer.Serialize(target));
@@ -66,7 +66,7 @@ public class LinearModel_Test_Should
 
         var target = new Linear.Model();
         var isTrained = target.Train(trainingSet);
-        var actual = target.Test(testSet);
+        var (actual, predictions) = target.Test(testSet);
 
         _output.WriteLine($"Actual Error: {actual}");
         _output.WriteLine(JsonSerializer.Serialize(target));
@@ -96,7 +96,7 @@ public class LinearModel_Test_Should
 
         var target = new Linear.Model();
         var isTrained = target.Train(trainingSet);
-        var actual = target.Test(testSet);
+        var (actual, predictions) = target.Test(testSet);
 
         _output.WriteLine($"Actual Error: {actual}");
         _output.WriteLine(JsonSerializer.Serialize(target));
@@ -126,7 +126,7 @@ public class LinearModel_Test_Should
 
         var target = new Linear.Model();
         var isTrained = target.Train(trainingSet);
-        var actual = target.Test(testSet);
+        var (actual, predictions) = target.Test(testSet);
 
         _output.WriteLine($"Actual Error: {actual}");
         _output.WriteLine(JsonSerializer.Serialize(target));
@@ -157,7 +157,7 @@ public class LinearModel_Test_Should
         var convergenceThreshold = 0.0001;
         var target = new Linear.Model();
         var isTrained = target.Train(trainingSet, convergenceThreshold);
-        var actual = target.Test(testSet);
+        var (actual, predictions) = target.Test(testSet);
 
         _output.WriteLine($"Actual Error: {actual}");
         _output.WriteLine(JsonSerializer.Serialize(target));

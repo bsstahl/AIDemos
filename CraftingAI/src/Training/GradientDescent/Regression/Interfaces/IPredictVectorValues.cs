@@ -1,17 +1,17 @@
 ﻿namespace Regression.Interfaces;
 
-public interface IPredictScalarValues
+public interface IPredictVectorValues
 {
     public double[] Weights { get; }
     public double[] Biases { get; }
 
     public IActivateNeurons ActivationFunction { get; set; }
 
-    double Predict(double[] x);
+    double[] Predict(double[] x);
 
-    (double, IEnumerable<IScalarPrediction>) Test(IDictionary<double[], double> testSet);
+    (double[], IEnumerable<IVectorPrediction>) Test(IDictionary<double[], double> testSet);
 
     bool Train(IDictionary<double[], double> trainingSet, 
         double convergenceThreshold = Constants.Training.DefaultConvergenceThreshold, 
-        Action<int, IPredictScalarValues, double>? callback = null);
+        Action<int, IPredictVectorValues, double>? callback = null);
 }

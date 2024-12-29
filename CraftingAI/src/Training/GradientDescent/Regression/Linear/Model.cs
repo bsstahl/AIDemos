@@ -15,13 +15,19 @@ public class Model : IPredictScalarValues
     public bool TrainingConverged { get; set; }
     public int TrainingIterations { get; set; }
     public double ConvergenceThreshold { get; set; }
+    public IActivateNeurons ActivationFunction { get; set; }
 
     double[] IPredictScalarValues.Weights => [this.M];
     double[] IPredictScalarValues.Biases => [this.B];
 
-    public double Predict(double x) => M * x + B;
+    public double Predict(double x) => this.ActivationFunction.Activate(M * x + B);
     public double Predict(double[] x) => Predict(x[0]);
 
+
+    public Model(IActivateNeurons? activationFunction = null)
+    {
+        this.ActivationFunction = activationFunction ?? new Activations.None();
+    }
 
     private IEnumerable<ScalarPrediction> Predict(IDictionary<double[], double> trainingSet)
     {
@@ -40,13 +46,13 @@ public class Model : IPredictScalarValues
         return result;
     }
 
-    public double Test(IDictionary<double[], double> testSet)
+    public (double, IEnumerable<IScalarPrediction>) Test(IDictionary<double[], double> testSet)
     {
         // Make a prediction for each item in the set using the current model
         // The return value includes the input, the predicted value, and the expected value
         // Then calculate the error for the test set based on those predictions
         var predictions = Predict(testSet);
-        return predictions.CalculateMeanSquaredError();
+        return (predictions.CalculateMeanSquaredError(), predictions);
     }
 
     public bool Train(IDictionary<double[], double> trainingSet, 
@@ -76,7 +82,7 @@ public class Model : IPredictScalarValues
             var deltaB = predictions.CalculateBiasErrorGradient()[0];
 
             // Output intermediate results periodically
-            if (callback is not null && (this.TrainingIterations < 100 || this.TrainingIterations % 100 == 0))
+            if (callback is not null && (this.TrainingIterations < 100 || this.TrainingIterations % 1000 == 0))
             {
                 // Calculate the error for the test set
                 var testError = predictions.CalculateMeanSquaredError();

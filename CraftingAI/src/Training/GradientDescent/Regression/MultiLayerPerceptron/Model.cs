@@ -1,7 +1,7 @@
 ﻿using Regression.Extensions;
 using Regression.Interfaces;
 
-namespace Regression.LinearPerceptron;
+namespace Regression.MultiLayerPerceptron;
 
 public class Model : IPredictScalarValues
 {
@@ -21,6 +21,7 @@ public class Model : IPredictScalarValues
     double[] IPredictScalarValues.Biases => [this.Bias];
 
     private readonly int _inputCount;
+    private readonly IPredictScalarValues _outputLayer;
 
     public Model(int inputCount, double[] startingWeights, double startingBias, IActivateNeurons? activationFunction = null)
     {
@@ -28,6 +29,7 @@ public class Model : IPredictScalarValues
         this.Weights = startingWeights;
         this.Bias = startingBias;
         this.ActivationFunction = activationFunction ?? new Activations.Sigmoid();
+        _outputLayer = new LinearPerceptron.Model(inputCount, startingWeights, startingBias, this.ActivationFunction);
     }
 
     public double Predict(double[] inputs)
@@ -117,4 +119,27 @@ public class Model : IPredictScalarValues
         TrainingIterations = this.TrainingIterations,
         ConvergenceThreshold = this.ConvergenceThreshold
     };
+
+
+    internal class Layer : IPredictVectorValues
+    {
+        public double[] Weights { get; }
+        public double[] Biases { get; }
+        public IActivateNeurons ActivationFunction { get; set; }
+
+        public double[] Predict(double[] x)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (double[], IEnumerable<IVectorPrediction>) Test(IDictionary<double[], double> testSet)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Train(IDictionary<double[], double> trainingSet, double convergenceThreshold = 1E-10, Action<int, IPredictVectorValues, double>? callback = null)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }
