@@ -14,17 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Regression\Regression.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Data\house-votes-84.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Data\LinearData.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Data\Params_HouseVotes_SimplePerceptron.json">
+    <None Update="Data\TrainedLinearPerceptron_638711033951901946.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

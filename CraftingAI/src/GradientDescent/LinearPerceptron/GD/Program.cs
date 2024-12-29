@@ -1,71 +1,69 @@
-﻿using GD.Interfaces;
-using Regression.Interfaces;
+﻿using GD.Extensions;
+
 namespace GD;
+
 internal class Program
 {
-    static List<(int, IPredictScalarValues, double)> _trainingResults = new();
+    static List<(int, Model, double)> _trainingResults = new();
+    static Random _random = new Random();
 
     static void Main(string[] args)
     {
-        var menuSelection = SelectMenuItem();
-        IRegressionStrategy? model = GetModelStrategy(menuSelection);
+        var data = GetVotingData(@".\Data\house-votes-84.csv");
+        var (trainingSet, testSet) = data.Split(0.8f);
 
-        if (model is not null)
+        var inputCount = trainingSet.First().Key.Length;
+        var activationFunction = new Activations.Sigmoid();
+
+        double[]? startingWeights = null;
+        double? startingBias = null;
+        bool isTrained = false;
+
+        bool continueTraining = (args.Any() && args.Length > 1 && bool.TryParse(args[1], out var result)) ? result : false;
+
+        // Load trained model if one is supplied in arguments
+        if (args.Any() && !string.IsNullOrWhiteSpace(args[0]))
         {
-            var trainedModel = model.Process(LogResult);
-
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TrainedModel.json");
-            var json = System.Text.Json.JsonSerializer.Serialize(trainedModel);
-            File.WriteAllText(filePath, json);
-            Console.WriteLine("Model file written to " + filePath);
-
-            TryIt(trainedModel);
-        }
-    }
-
-    private static IRegressionStrategy? GetModelStrategy(int menuSelection)
-    {
-        IRegressionStrategy? model;
-        if (menuSelection == 1)
-            model = new Strategies.LinearRegressionStrategy(@".\Data\LinearData.csv");
-        else if (menuSelection == 2)
-            model = new Strategies.SimplePerceptronStrategy(@".\Data\house-votes-84.csv");
-        else if (menuSelection == 3) // TODO: Load trained model
-            model = new Strategies.SimplePerceptronStrategy(@".\Data\house-votes-84.csv", @".\Data\Params_HouseVotes_SimplePerceptron.json");
-        else if (menuSelection == 4)
-            model = new Strategies.MultilayerPerceptronStrategy(@".\Data\house-votes-84.csv");
-        else if (menuSelection == 5) // TODO: Load trained model
-            model = new Strategies.MultilayerPerceptronStrategy(@".\Data\house-votes-84.csv");
-        else if (menuSelection == 6)
-            model = null;
-        else
-            throw new NotImplementedException();
-
-        return model;
-    }
-
-    private static int SelectMenuItem()
-    {
-        Console.WriteLine("1. Linear Regression - Distance Travelled");
-        Console.WriteLine("2. Simple Perceptron - Train Congressional Votes");
-        Console.WriteLine("3. Simple Perceptron - Predict Congressional Votes");
-        Console.WriteLine("4. Multilayer Perceptron - Train Congressional Votes");
-        Console.WriteLine("5. Multilayer Perceptron - Predict Congressional Votes");
-        Console.WriteLine("6. Exit");
-
-        var result = 0;
-        while (result < 1 || result > 6)
-        {
-            Console.Write("Select an option: ");
-            var option = Console.ReadLine();
-            if (!int.TryParse(option, out result))
-                Console.WriteLine("Invalid selection. Please try again.");
+            // Load model from file
+            var jsonModel = File.ReadAllText(args[0]);
+            var parameters = System.Text.Json.JsonSerializer.Deserialize<Model>(jsonModel);
+            startingWeights = parameters?.Weights;
+            startingBias = parameters?.Bias;
+            isTrained = parameters?.TrainingConverged ?? false;
         }
 
-        return result;
+        if (startingWeights is null || startingBias is null)
+        {
+            // Set parameters to start with random values near 0.5
+            startingWeights = Enumerable.Range(0, inputCount)
+            .Select(_ => _random.GetRandomDouble(0.45, 0.55))
+            .ToArray();
+            startingBias = _random.GetRandomDouble(-0.05, 0.05);
+            isTrained = false;
+        }
+
+        Model model = new Model(trainingSet.First().Key.Length, startingWeights, startingBias.Value, activationFunction);
+
+        // Skip training if the model is already trained unless the user wants to continue training
+        if (!isTrained || continueTraining)
+        {
+            isTrained = model.Train(trainingSet, callback: LogResult);
+            model.Save(); // Write updated parameters to file
+        }
+
+        var (Error, predictions) = model.Test(testSet);
+
+        Console.WriteLine($"Test Error (of {predictions.Count()} predictions): {Error}");
+        foreach (var prediction in predictions)
+        {
+            if (Math.Abs(prediction.Error ?? 1.0) > 0.25)
+                Console.WriteLine($"Failed Prediction: Expected={prediction.Expected} Predicted={prediction.Predicted}");
+        }
+
+        TryIt(model);
     }
 
-    private static void TryIt(IPredictScalarValues trainedModel)
+    private static void TryIt(Model trainedModel)
     {
         var done = false;
         do
@@ -108,13 +106,20 @@ internal class Program
             : null;
     }
 
-    static void LogResult(int iteration, IPredictScalarValues model, double mse)
+    static void LogResult(int iteration, Model model, double mse)
     {
         _trainingResults.Add((iteration, model, mse));
-        if (model.Weights.Length == 1)
-            Console.WriteLine($"Iteration: {iteration} - M: {model.Weights[0]:0.000000000} - Bias: {model.Biases:0.000000000} - MSE: {mse:0.000000000}");
-        else
-            Console.WriteLine($"Iteration: {iteration} - MSE: {mse:0.000000000}");
+        Console.WriteLine($"Iteration: {iteration} - MSE: {mse:0.000000000}");
+    }
+
+    static private IDictionary<double[], double> GetVotingData(string dataPath)
+    {
+        var rawData = File.ReadAllLines(dataPath);
+        return rawData
+            .Select(line => line.Split(','))
+            .Where(d => double.TryParse(d[0], out _))
+            .Select(a => a.Select(v => double.Parse(v)).ToArray())
+            .ToDictionary(p => p[1..17], p => p[0]);
     }
 
 }
