@@ -1,32 +1,81 @@
-﻿namespace GD;
+﻿using GD.Extensions;
+using GD.Interfaces;
+
+namespace GD;
 
 internal class Program
 {
-    static List<(int, Model, double)> _trainingResults = new();
+    private readonly List<(int, Model, double)> _trainingResults = new();
 
-    static void Main(string[] args)
+    private static void Main(string[] args)
     {
-        var model = new Strategies.MultilayerPerceptronStrategy(@".\Data\house-votes-84.csv");
+        const int hiddenLayerNodes = 3;
+        const string dataFilePath = @".\Data\house-votes-84.csv";
+        const float trainingSetPercentage = 0.8f;
+        const double testTolerance = 0.25;
 
-        if (model is not null)
-        {
-            var trainedModel = model.Process(LogResult);
+        var continueTraining = args.ContinueTraining();
+        var parameterFilePath = args.ParameterPath();
+        var activationFunction = new Activations.Sigmoid();
 
-            var filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TrainedModel.json");
-            var json = System.Text.Json.JsonSerializer.Serialize(trainedModel);
-            File.WriteAllText(filePath, json);
-            Console.WriteLine("Model file written to " + filePath);
-
-            TryIt(trainedModel);
-        }
+        var prog = new Program();
+        prog.Execute(hiddenLayerNodes, dataFilePath, activationFunction, trainingSetPercentage, parameterFilePath, continueTraining, testTolerance);
     }
 
-    private static void TryIt(IPredictScalarValues trainedModel)
+    private void Execute(int hiddenLayerNodes, string dataFilePath, IActivateNeurons activationFunction, float trainingSetPercentage, string parameterPath, bool continueTraining, double testTolerance)
+    {
+        List<(int, Model, double)> _trainingResults = new();
+
+        var data = GetVotingData(dataFilePath);
+        var (trainingSet, testSet) = data.Split(trainingSetPercentage);
+        Model model = GetModel(trainingSet.First().Key.Length, hiddenLayerNodes, parameterPath, activationFunction);
+
+        // Skip training if the model is already trained
+        var isTrained = model.TrainingConverged;
+        if (!isTrained || continueTraining)
+        {
+            isTrained = model.Train(trainingSet, callback: LogResult);
+            if (isTrained)
+                Console.WriteLine($"Parameters written to {model.Save()}");
+        }
+
+        var (error, predictions) = model.Test(testSet);
+
+        var failedPredictions = predictions.Where(p => p.Failed(testTolerance));
+        Console.WriteLine($"Failed {failedPredictions.Count()} of {predictions.Count()} predictions. Error: {error}");
+        failedPredictions.ToList().ForEach(p => Console.WriteLine($"Expected: {p.Expected} Predicted: {p.Predicted}"));
+
+        Console.WriteLine($"Model file written to {model.Save()}");
+
+        TryIt(model);
+    }
+
+    private static Model GetModel(int inputCount, int hiddenLayerNodes, string parameterPath, IActivateNeurons activationFunction)
+    {
+        double[]? startingWeights = null;
+        double[]? startingBiases = null;
+        bool isTrained = false;
+
+        // Load trained model if one is supplied in arguments
+        if (!string.IsNullOrEmpty(parameterPath))
+        {
+            // Load model from file
+            var jsonModel = File.ReadAllText(parameterPath);
+            var parameters = System.Text.Json.JsonSerializer.Deserialize<Model>(jsonModel);
+            startingWeights = parameters?.Weights;
+            startingBiases = parameters?.Biases;
+            isTrained = parameters?.TrainingConverged ?? false;
+        }
+
+        return new Model(inputCount, hiddenLayerNodes, startingWeights, startingBiases, activationFunction);
+    }
+
+    void TryIt(Model trainedModel)
     {
         var done = false;
         do
         {
-            var inputValues = GetInputValues(trainedModel.Weights.Length);
+            var inputValues = GetInputValues(trainedModel.InputCount);
             done = inputValues is null;
             if (!done)
             {
@@ -36,7 +85,7 @@ internal class Program
         } while (!done);
     }
 
-    static double[]? GetInputValues(int length)
+    double[]? GetInputValues(int length)
     {
         double[]? values = null;
         bool done = false;
@@ -64,10 +113,19 @@ internal class Program
             : null;
     }
 
-    static void LogResult(int iteration, IPredictScalarValues model, double mse)
+    static private IDictionary<double[], double> GetVotingData(string dataPath)
+    {
+        var rawData = File.ReadAllLines(dataPath);
+        return rawData
+            .Select(line => line.Split(','))
+            .Where(d => double.TryParse(d[0], out _))
+            .Select(a => a.Select(v => double.Parse(v)).ToArray())
+            .ToDictionary(p => p[1..17], p => p[0]);
+    }
+
+    void LogResult(int iteration, Model model, double mse)
     {
         _trainingResults.Add((iteration, model, mse));
         Console.WriteLine($"Iteration: {iteration} - MSE: {mse:0.000000000}");
     }
-
 }

@@ -18,4 +18,16 @@ public static class DataSetExtensions
 
         return (trainingSet, testSet);
     }
+
+    public static IDictionary<double[], double?[]> AsTrainingSet(this double[][] inputData, double?[][] expected)
+    {
+        if (!inputData.Length.Equals(expected.Length))
+            throw new ArgumentException("The number of input data items must match the number of expected data items", nameof(expected));
+
+        var trainingSet = new Dictionary<double[], double?[]>();
+        for (int i = 0; i < inputData.Length; i++)
+            trainingSet.Add(inputData[i], expected[i]);
+
+        return trainingSet;
+    }
 }

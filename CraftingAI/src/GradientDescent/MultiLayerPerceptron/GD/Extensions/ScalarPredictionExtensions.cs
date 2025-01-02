@@ -1,6 +1,6 @@
 ﻿namespace GD.Extensions;
 
-public static class LinearPredictionExtensions
+public static class ScalarPredictionExtensions
 {
     public static double[] CalculateWeightsErrorGradient(this IEnumerable<ScalarPrediction> predictions)
     {

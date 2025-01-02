@@ -19,6 +19,9 @@ public class ScalarPrediction
     public double? BiasErrors
         => Expected.HasValue ? Error : null;
 
+    public bool Passed(double testTolerance) => Error.HasValue && Math.Abs(Error.Value) < testTolerance;
+    public bool Failed(double testTolerance) => !Passed(testTolerance);
+
     public ScalarPrediction(int inputNodeCount, double[] input, double value, double? expected)
     {
         InputNodeCount = inputNodeCount;
