@@ -17,7 +17,7 @@ internal class Program
         bool isTrained = model.Train(trainingSet, callback: LogResult);
 
         // We don't log the individual test results here because they would have little meaning
-        // Each value will always be "off" a bit since this is not a classification problem
+        // Each prediction would always be "off" a bit since this is not a classification problem
         var testError = model.Test(testSet);
 
         // The goal of this process is to minimize this error so we can
