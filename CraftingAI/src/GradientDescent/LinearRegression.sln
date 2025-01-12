@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Regression.Test", "LinearRegression\Regression.Test\Regression.Test.csproj", "{92F9A27C-6E8B-4AB4-8B6F-FAB5C0DC46C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GD", "LinearRegression\GD\GD.csproj", "{E85E8EC0-A9F3-4141-A13C-4160203E1CD7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92F9A27C-6E8B-4AB4-8B6F-FAB5C0DC46C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92F9A27C-6E8B-4AB4-8B6F-FAB5C0DC46C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92F9A27C-6E8B-4AB4-8B6F-FAB5C0DC46C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92F9A27C-6E8B-4AB4-8B6F-FAB5C0DC46C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E85E8EC0-A9F3-4141-A13C-4160203E1CD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E85E8EC0-A9F3-4141-A13C-4160203E1CD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E85E8EC0-A9F3-4141-A13C-4160203E1CD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E85E8EC0-A9F3-4141-A13C-4160203E1CD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
