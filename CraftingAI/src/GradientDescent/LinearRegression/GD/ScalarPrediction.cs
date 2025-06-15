@@ -7,15 +7,15 @@ public class ScalarPrediction
     public double? Expected { get; set; }
 
     public double? Error
-        => Expected.HasValue ? Expected.Value - Predicted : null;
+        => this.Expected.HasValue ? this.Expected.Value - this.Predicted : null;
 
     public double? WeightError
-        => Error.HasValue
+        => this.Error.HasValue
             ? this.Input * this.Error.Value
             : null;
 
     public double? BiasError
-        => Expected.HasValue ? Error : null;
+        => this.Expected.HasValue ? this.Error : null;
 
     public ScalarPrediction(double input, double value, double? expected)
     {

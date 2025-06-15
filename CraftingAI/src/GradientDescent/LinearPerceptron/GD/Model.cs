@@ -44,7 +44,8 @@ public class Model
     public double Predict(double[] inputs)
     {
         // return FeatureWeightedParameters * x + RawParameters;
-        return this.ActivationFunction.Activate(inputs.Select((x, i) => this.Weights[i] * x).Sum() + this.Bias);
+        return this.ActivationFunction.Activate(inputs.Select((x, i) 
+            => this.Weights[i] * x).Sum() + this.Bias);
     }
 
     private IEnumerable<ScalarPrediction> Predict(IDictionary<double[], double> trainingSet)
@@ -54,7 +55,7 @@ public class Model
         var result = new List<ScalarPrediction>();
         foreach (var item in trainingSet)
         {
-            var prediction = Predict(item.Key);
+            var prediction = this.Predict(item.Key);
             result.Add(new ScalarPrediction(item.Key.Length, item.Key, prediction, item.Value));
         }
         return result;
