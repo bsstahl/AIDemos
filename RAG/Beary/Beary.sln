@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Articles.FileSystem",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Beary.Documents.Test", "Beary.Documents.Test\Beary.Documents.Test.csproj", "{D81C9551-EA26-4761-9EC3-8AF3E8CDC48F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BearyMC", "BearyMC\BearyMC.csproj", "{A3B0E096-3C66-DD7D-75C7-3125E1CE259A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,10 @@ Global
 		{D81C9551-EA26-4761-9EC3-8AF3E8CDC48F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D81C9551-EA26-4761-9EC3-8AF3E8CDC48F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D81C9551-EA26-4761-9EC3-8AF3E8CDC48F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3B0E096-3C66-DD7D-75C7-3125E1CE259A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3B0E096-3C66-DD7D-75C7-3125E1CE259A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3B0E096-3C66-DD7D-75C7-3125E1CE259A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3B0E096-3C66-DD7D-75C7-3125E1CE259A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{967A5845-344F-4D4D-9F80-16AF6F5AE69B} = {20CD871D-18E8-4E66-BBED-0A9E76054441}
 		{D0CCEB61-68A4-497E-9500-B4DF10A73538} = {5B2E858F-2E75-4841-AD3F-CB95FD0E720D}
 		{D81C9551-EA26-4761-9EC3-8AF3E8CDC48F} = {EB9AE411-2975-452D-B953-C14FF2475823}
+		{A3B0E096-3C66-DD7D-75C7-3125E1CE259A} = {3E2B637F-E0F6-4839-B592-B45874C92F3A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3C25F8F2-81A5-4EBA-BC93-2AFC31261121}

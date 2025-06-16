@@ -1,0 +1,14 @@
+{
+  "inputs": [],
+  "servers": {
+    "MinimalMcpServer": {
+      "type": "stdio",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/BearyMC.csproj"
+      ]
+    }
+  }
+}
