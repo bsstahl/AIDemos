@@ -66,7 +66,7 @@ namespace ChutesAndLadders.Demos
             }
 
 
-            // Run the linear strategy against the best one found genetically
+            // Run the base strategy against the best one found genetically
             var rootStrategy = new ChutesAndLadders.Strategy.Genetic.Engine("GeneticRoot");
             // rootStrategy.LoadLinearDNA();
             rootStrategy.LoadBestPathDNA();

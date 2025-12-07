@@ -1,5 +1,6 @@
 ﻿using Beary.Chat.AzureGpt.Extensions;
 using Beary.Chat.Extensions;
+using Beary.Data.Axioms.Extensions;
 using Beary.Data.AzureAISearch.Extensions;
 using Beary.Documents.Extensions;
 using Beary.Embeddings.LocalServer.Extensions;
@@ -24,8 +25,9 @@ internal class Program
             .UseLocalServerEmbeddingsModel()
             .UseBearyDocuments()
             .UseBearyChat()
-            .UseAzureAIEmbeddingsReadRepo()
-            .UseAzureAIContentReadRepo()
+            //.UseAzureAIEmbeddingsReadRepo()
+            //.UseAzureAIContentReadRepo()
+            .UseAxiomRepository()
             .BuildServiceProvider();
 
         var engine = services.GetRequiredService<ChatEngine>();

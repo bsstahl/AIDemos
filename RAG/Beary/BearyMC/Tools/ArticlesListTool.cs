@@ -4,19 +4,22 @@ using ModelContextProtocol.Server;
 
 namespace BearyMC.Tools;
 
+[McpServerToolType]
 public class ArticlesListTool
 {
-    [McpServerTool, Description("Returns a list of relevant articles from my blog, Cognitive Inheritance.")]
-    public async static Task<string> GetArticleList(ILogger<ArticlesListTool> logger, 
-        Beary.Documents.Search searchClient, [Description("The phrase to perform a vector search on")]string searchQuery)
+    [McpServerTool, Description("Gets a list of relevant articles from the blog, Cognitive Inheritance.")]
+    public async static Task<string> GetArticleList(
+        ILogger<ArticlesListTool> logger,
+        Beary.Documents.Search searchClient,
+        [Description("The phrase to perform a vector search on")]string searchQuery)
     {
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
         ArgumentNullException.ThrowIfNull(searchClient, nameof(searchClient));
+        ArgumentNullException.ThrowIfNullOrEmpty(searchQuery, nameof(searchQuery));
 
         logger.LogInformation("Received request to get articles for query: {SearchQuery}", searchQuery);
 
         var result = await searchClient.GetRelevantArticles(searchQuery, 4096);
-
         if (result is null || !result.Any())
         {
             logger.LogWarning("No articles found for query: {SearchQuery}", searchQuery);
