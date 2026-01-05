@@ -1,22 +1,47 @@
 ﻿namespace KMeans;
 
-public sealed class Engine
+public sealed class Engine : IClusterVectors
 {
     private readonly Random _random;
+    private readonly Action<string>? _intermediateResultsDelegate;
 
-    public Engine(int? randomSeed = null)
+    public Engine(Action<string>? intermediateResultsDelegate = null, int? randomSeed = null)
     {
+        _intermediateResultsDelegate = intermediateResultsDelegate;
         _random = randomSeed.HasValue ? new Random(randomSeed.Value) : new Random();
+    }
+
+    public async Task<KMeansResult> Fit(IReadOnlyList<VectorPoint> points, int minK, int maxK, int maxIterations = 100, float tolerance = 1e-4f)
+    {
+        KMeansResult? bestResult = null;
+        float bestScore = float.NegativeInfinity;
+
+        for (int k = minK; k <= maxK; k++)
+        {
+            var fitResult = await this.Fit(points, k, maxIterations, tolerance);
+            var score = await this.GetSilhouetteScore(points, fitResult);
+
+            if (score > bestScore)
+            {
+                bestScore = score;
+                bestResult = fitResult;
+                _intermediateResultsDelegate?.Invoke($"K={k} - Silhouette Score: {score} *** New best");
+            }
+            else
+                _intermediateResultsDelegate?.Invoke($"K={k} - Silhouette Score: {score}");
+        }
+
+        return bestResult;
     }
 
     public Task<KMeansResult> Fit(IReadOnlyList<VectorPoint> points, int k, int maxIterations = 100, float tolerance = 1e-4f)
     {
-        if (k <= 0) throw new ArgumentOutOfRangeException(nameof(k));
-        if (maxIterations <= 0) throw new ArgumentOutOfRangeException(nameof(maxIterations));
-        if (tolerance < 0) throw new ArgumentOutOfRangeException(nameof(tolerance));
+        ArgumentOutOfRangeException.ThrowIfLessThan(k, 2, nameof(k));
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxIterations, 1, nameof(maxIterations));
+        ArgumentOutOfRangeException.ThrowIfLessThan(tolerance, 0f, nameof(tolerance));
 
-        if (points == null) throw new ArgumentNullException(nameof(points));
-        if (points.Count < k) throw new ArgumentException("Number of points must be >= k.", nameof(points));
+        ArgumentNullException.ThrowIfNull(points, nameof(points));
+        ArgumentOutOfRangeException.ThrowIfLessThan(points.Count, k, nameof(points));
 
         int dim = points[0].Features.Length;
         EnsureAllSameDimension(points, dim);
