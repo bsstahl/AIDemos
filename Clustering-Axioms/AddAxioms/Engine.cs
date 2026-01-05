@@ -1,10 +1,12 @@
-﻿namespace AddAxioms;
+﻿using AxiomVectorRepository;
+
+namespace AddAxioms;
 
 internal class Engine
 {
 	private readonly IReadAxioms _readRepo;
 	private readonly IGetTextEmbeddings _embedder;
-	private readonly IWriteAxiomEmbeddings _writeRepo;
+    private readonly IWriteAxiomEmbeddings _writeRepo;
 
 	public Engine(IReadAxioms readRepo, IGetTextEmbeddings embedder, IWriteAxiomEmbeddings writeRepo)
     {

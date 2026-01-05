@@ -1,13 +1,10 @@
 ﻿using Qdrant.Client;
 using Qdrant.Client.Grpc;
 
-namespace AddAxioms;
+namespace AxiomVectorRepository;
 
 internal class WriteRepo : IWriteAxiomEmbeddings
 {
-    private const string _collectionName = "axioms_collection";
-    private const ulong _vectorSize = 768;
-
     private readonly QdrantClient _client;
 
     public WriteRepo(QdrantClient client)
@@ -19,13 +16,13 @@ internal class WriteRepo : IWriteAxiomEmbeddings
     {
         var vectorConfig = new VectorParams
         {
-            Size = _vectorSize,
+            Size = Constants.VectorSize,
             Distance = Distance.Cosine
         };
 
-        var collectionExists = await _client.CollectionExistsAsync(_collectionName);
+        var collectionExists = await _client.CollectionExistsAsync(Constants.CollectionName);
         if (!collectionExists)
-		    await _client.CreateCollectionAsync(_collectionName, vectorConfig);
+		    await _client.CreateCollectionAsync(Constants.CollectionName, vectorConfig);
 
         var point = new PointStruct
         {
@@ -37,6 +34,6 @@ internal class WriteRepo : IWriteAxiomEmbeddings
                 }
         };
 
-        await _client.UpsertAsync(_collectionName, new[] { point });
+        await _client.UpsertAsync(Constants.CollectionName, new[] { point });
     }
 }

@@ -9,21 +9,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AxiomVectorRepository\AxiomVectorRepository.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Data\Axioms.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\KMeans\KMeans.csproj" />
   </ItemGroup>
 
 </Project>
