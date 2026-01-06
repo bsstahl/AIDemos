@@ -1,9 +1,0 @@
-﻿
-namespace AddAxioms
-{
-    internal interface IGetTextEmbeddings
-    {
-        Task<Single[]> GetEmbeddingAsync(String textToEmbed);
-        Task<IEnumerable<Single[]>> GetEmbeddingsAsync(IEnumerable<String> dataToEmbed);
-    }
-}

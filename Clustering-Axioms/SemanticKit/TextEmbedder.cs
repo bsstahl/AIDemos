@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace AddAxioms;
+namespace SemanticKit;
 
 internal class TextEmbedder : IGetTextEmbeddings
 {

@@ -1,12 +1,11 @@
 <Solution>
-  <Folder Name="/Libraries/">
-    <Project Path="KMeans/KMeans.csproj" Id="9dbc1834-37e3-4ca5-8b55-aa8f1b8b0cd3" />
-  </Folder>
   <Folder Name="/Services/">
     <Project Path="AxiomVectorRepository/AxiomVectorRepository.csproj" Id="89e02d35-b84d-4010-91ea-5e04ff49b7c0" />
+    <Project Path="KMeans/KMeans.csproj" Id="9dbc1834-37e3-4ca5-8b55-aa8f1b8b0cd3" />
+    <Project Path="SemanticKit/SemanticKit.csproj" Id="233d43e8-269d-4555-bf8f-1301b80addca" />
   </Folder>
   <Folder Name="/UI/">
     <Project Path="AddAxioms/AddAxioms.csproj" />
-    <Project Path="Cluster/Cluster.csproj" />
+    <Project Path="Clustering/Clustering.csproj" />
   </Folder>
 </Solution>

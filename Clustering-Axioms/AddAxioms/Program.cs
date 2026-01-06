@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using AxiomVectorRepository;
+using SemanticKit;
 
 namespace AddAxioms;
 

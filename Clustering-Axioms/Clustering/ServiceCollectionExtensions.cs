@@ -1,7 +1,7 @@
 ﻿using AxiomVectorRepository;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Cluster;
+namespace Clustering;
 
 internal static class ServiceCollectionExtensions
 {
@@ -9,5 +9,6 @@ internal static class ServiceCollectionExtensions
         => services.AddSingleton<Engine>(s => new Engine(
             s.GetRequiredService<IGetAxiomVectors>(),
             s.GetRequiredService<KMeans.IClusterVectors>(),
+            s.GetRequiredService<SemanticKit.IGetChatCompletions>(),
             outputFolderPath));
 }

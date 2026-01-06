@@ -35,6 +35,17 @@ public class ReadRepo : IGetAxiomVectors
         return results;
     }
 
+    public async Task<IEnumerable<Axiom>> GetAxiomVectorsByIds(IEnumerable<String> ids)
+    {
+        var idList = ids.Select(i => new PointId() { Uuid = i }).ToList();
+        var queryResult = await _client.RetrieveAsync(
+            Constants.CollectionName,
+            idList,
+            withPayload: true,
+            withVectors: true);
+        return queryResult.Select(r => r.AsAxiom());
+    }
+
     public async Task<Axiom?> GetNearestAxiom(Single[] vector)
     {
         var result = await _client.QueryAsync(Constants.CollectionName,
