@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="GeneticDistance.Api/GeneticDistance.Api.csproj" />
+  <Project Path="GeneticDistance.AppHost/GeneticDistance.AppHost.csproj" />
+  <Project Path="GeneticDistance.Data.Qdrant/GeneticDistance.Data.Qdrant.csproj" Id="28974312-2368-49f6-9f48-740eb37b3c35" />
+  <Project Path="GeneticDistance.Domain/GeneticDistance.Domain.csproj" Id="df5fc5ae-9df1-4985-b4cf-0a0c8fb9205d" />
+  <Project Path="GeneticDistance.ServiceDefaults/GeneticDistance.ServiceDefaults.csproj" />
+</Solution>
