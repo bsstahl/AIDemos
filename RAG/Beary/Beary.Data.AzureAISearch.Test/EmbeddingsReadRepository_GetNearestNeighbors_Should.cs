@@ -72,7 +72,7 @@ public class EmbeddingsReadRepository_GetNearestNeighbors_Should
         var retryCount = await readRepo.WaitForDocumentIndexing(startingDocCount);
         Log.Logger.Information("Retry Count: {retryCount}", retryCount);
 
-        var actual = await readRepo.GetNearestNeighbors(Vector.From(searchVector), ResultCount.From(maxResultCount));
+        var actual = await readRepo.GetNearestNeighbors(searchVector, maxResultCount);
 
         actual.ToList().ForEach(d => Log.Logger.Information("{@document}", d));
 
