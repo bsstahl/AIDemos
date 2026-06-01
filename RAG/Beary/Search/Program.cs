@@ -22,10 +22,15 @@ internal class Program
             .UseBearyDocuments();
 
         var provider = config["BearyDb:Provider"];
+        if (string.IsNullOrWhiteSpace(provider))
+            throw new InvalidOperationException("Missing configuration key 'BearyDb:Provider'. Set it to 'AzureAISearch' or 'Qdrant' in your app configuration (for example, user secrets).");
+
         if (string.Equals(provider, "Qdrant", StringComparison.OrdinalIgnoreCase))
             services.UseQdrantBearyDb();
-        else
+        else if (string.Equals(provider, "AzureAISearch", StringComparison.OrdinalIgnoreCase))
             services.UseAzureAIBearyDb();
+        else
+            throw new InvalidOperationException($"Unsupported value '{provider}' for configuration key 'BearyDb:Provider'. Supported values are 'AzureAISearch' or 'Qdrant'.");
 
         var serviceProvider = services.BuildServiceProvider();
 
