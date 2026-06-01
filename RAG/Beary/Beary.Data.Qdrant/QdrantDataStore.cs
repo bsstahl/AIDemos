@@ -4,7 +4,7 @@ using Beary.ValueTypes;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using System.Security.Cryptography;
-using Google.Protobuf.WellKnownTypes;
+using Google.Protobuf.Collections;
 
 namespace Beary.Data.Qdrant;
 
@@ -53,7 +53,7 @@ internal sealed class QdrantDataStore : IBearyDataStore
         await _client.UpsertAsync(ContentCollectionName, new[] { point }).ConfigureAwait(false);
     }
 
-    public async Task SaveEmbeddingAsync(Identifier id, ElementIndex elementIndex, ArticleContent contentChunk, Identifier fullArticleId, Vector? embedding)
+    public async Task SaveEmbeddingAsync(Identifier id, ElementIndex elementIndex, ArticleContent contentChunk, Identifier fullArticleId, Beary.ValueTypes.Vector? embedding)
     {
         ArgumentNullException.ThrowIfNull(id);
         ArgumentNullException.ThrowIfNull(elementIndex);
@@ -119,7 +119,7 @@ internal sealed class QdrantDataStore : IBearyDataStore
             return 0;
 
         var info = await _client.GetCollectionInfoAsync(EmbeddingsCollectionName).ConfigureAwait(false);
-        return info.PointsCount;
+        return Convert.ToInt64(info.PointsCount);
     }
 
     public async Task<IEnumerable<SearchResult>> GetNearestNeighborsAsync(IEnumerable<float> queryVector, int neighborCount)
