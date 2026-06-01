@@ -17,6 +17,10 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Beary.Articles.FileSystem\Beary.Articles.FileSystem.csproj" />
+	  <ProjectReference Include="..\Beary.Data.AzureAISearch\Beary.Data.AzureAISearch.csproj" />
+	  <ProjectReference Include="..\Beary.Data.Qdrant\Beary.Data.Qdrant.csproj" />
+	  <ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
+	  <ProjectReference Include="..\Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj" />
 	  <ProjectReference Include="..\Beary\Beary.csproj" />
 	</ItemGroup>
 
