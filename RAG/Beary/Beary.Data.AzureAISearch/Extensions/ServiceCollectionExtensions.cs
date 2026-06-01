@@ -1,4 +1,6 @@
-﻿using Beary.Documents.Interfaces;
+using Beary.Data.Db;
+using Beary.Data.Db.Extensions;
+using Beary.Documents.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -52,5 +54,18 @@ public static class ServiceCollectionExtensions
                 var apiKey = config["SearchService:ApiKey"];
                 return new Embeddings.ReadRepository(searchServiceName, apiKey);
             });
+    }
+
+    public static IServiceCollection UseAzureAIBearyDb(this IServiceCollection serviceCollection)
+    {
+        return serviceCollection
+            .AddSingleton<IBearyDataStore>(c =>
+            {
+                var config = c.GetRequiredService<IConfiguration>();
+                var searchServiceName = config["SearchService:Name"];
+                var apiKey = config["SearchService:ApiKey"];
+                return new AzureAISearchDataStore(searchServiceName, apiKey);
+            })
+            .UseBearyDataStoreAbstraction();
     }
 }

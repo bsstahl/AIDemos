@@ -22,5 +22,6 @@
 		<ProjectReference Include="..\Beary.Documents\Beary.Documents.csproj" />
 		<ProjectReference Include="..\Beary.Embeddings.LocalServer\Beary.Embeddings.LocalServer.csproj" />
 		<ProjectReference Include="..\Beary\Beary.csproj" />
+		<ProjectReference Include="..\Beary.Data.Qdrant\Beary.Data.Qdrant.csproj" />
 	</ItemGroup>
 </Project>
