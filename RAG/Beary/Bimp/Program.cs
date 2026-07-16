@@ -1,5 +1,9 @@
 ﻿using Beary.Articles.FileSystem.Extensions;
+using Beary.Data.AzureAISearch.Extensions;
+using Beary.Data.Qdrant.Extensions;
 using Beary.Documents;
+using Beary.Documents.Extensions;
+using Beary.Embeddings.LocalServer.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -7,7 +11,7 @@ namespace Bimp;
 
 /// <summary>
 /// Beary Import - Grab data from the blog post repository and 
-/// import it into Azure Search.
+/// import it into the configured Beary data store.
 /// </summary>
 internal class Program
 {
@@ -20,12 +24,23 @@ internal class Program
         var services = new ServiceCollection()
             .AddSingleton<IConfiguration>(config)
             .UseBearyFileSystemRepository()
-            .AddSingleton<Program>()
-            // .UseBearyReadRepository() TODO: Restore if needed
-            // .UseBearyWriteRepository()  TODO: Restore if needed
-            .BuildServiceProvider();
+            .UseLocalServerEmbeddingsModel()
+            .UseBearyDocuments();
 
-        var program = services.GetRequiredService<Import>();
+        var provider = config["BearyDb:Provider"];
+        if (string.IsNullOrWhiteSpace(provider))
+            throw new InvalidOperationException("Missing configuration key 'BearyDb:Provider'. Set it to 'AzureAISearch' or 'Qdrant' in your app configuration (for example, user secrets).");
+
+        if (string.Equals(provider, "Qdrant", StringComparison.OrdinalIgnoreCase))
+            services.UseQdrantBearyDb();
+        else if (string.Equals(provider, "AzureAISearch", StringComparison.OrdinalIgnoreCase))
+            services.UseAzureAIBearyDb();
+        else
+            throw new InvalidOperationException($"Unsupported value '{provider}' for configuration key 'BearyDb:Provider'. Supported values are 'AzureAISearch' or 'Qdrant'.");
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var program = serviceProvider.GetRequiredService<Import>();
         await program.Execute();
     }
 }

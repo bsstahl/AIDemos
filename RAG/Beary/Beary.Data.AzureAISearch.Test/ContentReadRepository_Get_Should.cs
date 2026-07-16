@@ -42,7 +42,7 @@ public class ContentReadRepository_Get_Should
 
         // Read the article
         var readRepo = new Content.ReadRepository(searchServiceName, apiKey);
-        var article = await readRepo.GetArticle(Identifier.From(articleId));
+        var article = await readRepo.GetArticle(Identifier.From(articleId).Value);
 
         Assert.Equal(content, article!.Content!.Value);
     }
@@ -68,7 +68,7 @@ public class ContentReadRepository_Get_Should
 
         // Read the article
         var readRepo = new Content.ReadRepository(searchServiceName, apiKey);
-        var article = await readRepo.GetArticle(Identifier.From(articleId));
+        var article = await readRepo.GetArticle(Identifier.From(articleId).Value);
 
         Assert.Equal(title, article!.Title!.Value);
     }

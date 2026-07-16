@@ -9,7 +9,7 @@ internal static class ChatContentExtensions
     {
         return chatContent.Select(c => 
             {
-                var part = ChatMessageContentPart.CreateTextMessageContentPart(c.Value);
+                var part = ChatMessageContentPart.CreateTextPart(c.Value);
                 ChatMessage message = c.Role switch
                 {
                     ChatRole.User => ChatMessage.CreateUserMessage(part),
