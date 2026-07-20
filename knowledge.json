@@ -1,0 +1,16 @@
+{
+  "Question": "Does it bark?",
+  "Guess": null,
+  "Yes": {
+    "Question": null,
+    "Guess": "a dog",
+    "Yes": null,
+    "No": null
+  },
+  "No": {
+    "Question": null,
+    "Guess": "a cat",
+    "Yes": null,
+    "No": null
+  }
+}
