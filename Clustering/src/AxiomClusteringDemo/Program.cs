@@ -22,7 +22,11 @@ IReadOnlyList<IReadOnlyList<float>> vectors = axioms.Select(static axiom => axio
 var kMeans = new KMeans(k);
 KMeansResult result = kMeans.Fit(vectors);
 
-PrintSummary(axioms, result);
+double silhouette = SilhouetteScore.Calculate(vectors, result.Assignments);
+double daviesBouldin = DaviesBouldinIndex.Calculate(vectors, result.Assignments, result.Centroids);
+double calinskiHarabasz = CalinskiHarabaszScore.Calculate(vectors, result.Assignments, result.Centroids);
+
+PrintSummary(axioms, result, silhouette, daviesBouldin, calinskiHarabasz);
 
 static int ParseClusterCount(IReadOnlyList<string> args, int defaultClusterCount)
 {
@@ -105,9 +109,25 @@ static void EnsureValidEmbeddings(IReadOnlyList<Axiom> axioms)
     }
 }
 
-static void PrintSummary(IReadOnlyList<Axiom> axioms, KMeansResult result)
+static void PrintSummary(
+    IReadOnlyList<Axiom> axioms,
+    KMeansResult result,
+    double silhouette,
+    double daviesBouldin,
+    double calinskiHarabasz)
 {
     Console.WriteLine($"k-means completed in {result.Iterations} iteration(s). Converged: {result.Converged}");
+    Console.WriteLine();
+    Console.WriteLine("Cluster Quality Scores");
+    Console.WriteLine(new string('-', 72));
+    Console.WriteLine($"  Silhouette Score:        {silhouette,8:F4}  (higher is better, range: -1..1)");
+    Console.WriteLine($"  Davies-Bouldin Index:    {daviesBouldin,8:F4}  (lower is better)");
+
+    string chDisplay = double.IsPositiveInfinity(calinskiHarabasz)
+        ? "     ∞  (perfect cluster separation)"
+        : $"{calinskiHarabasz,8:F2}  (higher is better)";
+
+    Console.WriteLine($"  Calinski-Harabasz Score: {chDisplay}");
     Console.WriteLine();
 
     for (int clusterId = 0; clusterId < result.Centroids.Count; clusterId++)
