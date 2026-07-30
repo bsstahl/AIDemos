@@ -6,18 +6,20 @@ using System.Threading.Tasks;
 
 namespace ChutesAndLadders.Strategy.ShortestPath
 {
-    internal class Gameboard
+    internal sealed class Gameboard
     {
         List<Gamespace> _spaces = new List<Gamespace>();
 
         public Gameboard(int size, IEnumerable<KeyValuePair<int, int>> pathways)
         {
+            var pathwayList = pathways.ToArray();
             _spaces.Clear();
             for (int i = 1; i <= size; i++)
             {
                 var newSpace = new Gamespace() { Index = i };
-                if (pathways.Any(p => p.Key == i))
-                    newSpace.PathTo = pathways.Single(p => p.Key == i).Value;
+                var pathway = pathwayList.FirstOrDefault(p => p.Key == i);
+                if (!pathway.Equals(default(KeyValuePair<int, int>)))
+                    newSpace.PathTo = pathway.Value;
                 _spaces.Add(newSpace);
             }
         }

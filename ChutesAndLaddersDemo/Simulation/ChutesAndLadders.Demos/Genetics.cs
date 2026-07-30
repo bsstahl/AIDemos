@@ -40,10 +40,10 @@ public class Genetics
 
             // Create the next generation of Players/Strategies
             // by evolving based on the strategies of the top 2 players
-            var bestPlayers = players.OrderByDescending(p => p.WinCount).Take(2);
-            if (bestPlayers.First().WinCount > mostWins)
+            var bestPlayers = players.OrderByDescending(p => p.WinCount).Take(2).ToArray();
+            if (bestPlayers[0].WinCount > mostWins)
             {
-                var bestPlayer = bestPlayers.First();
+                var bestPlayer = bestPlayers[0];
                 mostWins = bestPlayer.WinCount;
                 Console.WriteLine($"Generation {generationCount} (most wins: {mostWins} -- Strategy: {bestPlayer.Strategy.Name})");
                 evolutionCount++;
@@ -52,8 +52,8 @@ public class Genetics
             if (updateDelegate != null)
                 updateDelegate.Invoke(generationCount, mostWins, evolutionCount);
 
-            var bestStrategy = bestPlayers.First().Strategy;
-            var runnerUpStrategy = bestPlayers.Last().Strategy;
+            var bestStrategy = bestPlayers[0].Strategy;
+            var runnerUpStrategy = bestPlayers[1].Strategy;
 
             players = new PlayerCollectionBuilder()
                 .Add("Player 1", bestStrategy)

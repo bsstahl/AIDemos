@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChutesAndLadders.Strategy.ShortestPath
 {
-    internal class Gamespace
+    internal sealed class Gamespace
     {
         public int Index { get; set; }
 

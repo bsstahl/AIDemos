@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChutesAndLadders.Strategy.ShortestPath
 {
-    public static class Extensions
+    public static class PathExtensions
     {
         internal static IEnumerable<Gamespace> PathOrigins(this IEnumerable<Gamespace> list)
         {
@@ -15,6 +15,7 @@ namespace ChutesAndLadders.Strategy.ShortestPath
 
         public static KeyValuePair<int, int> AddPair(this IList<KeyValuePair<int, int>> list, int start, int end)
         {
+            ArgumentNullException.ThrowIfNull(list);
             var newPair = new KeyValuePair<int, int>(start, end);
             list.Add(newPair);
             return newPair;
@@ -23,7 +24,7 @@ namespace ChutesAndLadders.Strategy.ShortestPath
         internal static void AppendGamespaceDistance(this StringBuilder sb, Gamespace s)
         {
             if (s.DistanceFromEnd.HasValue)
-                sb.Append(s.DistanceFromEnd.Value.ToString("00 "));
+                sb.Append(s.DistanceFromEnd.Value.ToString("00 ", System.Globalization.CultureInfo.InvariantCulture));
             else
                 sb.Append("?? ");
         }

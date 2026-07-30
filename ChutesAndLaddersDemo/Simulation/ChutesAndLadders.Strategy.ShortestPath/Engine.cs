@@ -19,6 +19,7 @@ namespace ChutesAndLadders.Strategy.ShortestPath
 
         public int GetMove(GameSituation situation)
         {
+            ArgumentNullException.ThrowIfNull(situation);
             var bestOption = _paths.FindClosestToEnd(situation.LegalMoves);
             //var bestOptionDistance = _paths[bestOption];
             //var maxOptionDistance = _paths[situation.LegalMoves.Max()];
