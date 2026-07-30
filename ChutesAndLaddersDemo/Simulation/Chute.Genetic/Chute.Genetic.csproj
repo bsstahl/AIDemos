@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ChutesAndLadders.Common\ChutesAndLadders.Common.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Demos\ChutesAndLadders.Demos.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.GamePlay\ChutesAndLadders.GamePlay.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.AgressivelyBad\ChutesAndLadders.Strategy.AgressivelyBad.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Genetic\ChutesAndLadders.Strategy.Genetic.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.GreedyRules\ChutesAndLadders.Strategy.GreedyRules.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Greedy\ChutesAndLadders.Strategy.Greedy.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Linear\ChutesAndLadders.Strategy.Linear.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Random\ChutesAndLadders.Strategy.Random.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.Rules\ChutesAndLadders.Strategy.Rules.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.ShortestPath\ChutesAndLadders.Strategy.ShortestPath.csproj" />
+    <ProjectReference Include="..\ChutesAndLadders.Strategy.TakeAllLadders\ChutesAndLadders.Strategy.TakeAllLadders.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+</Project>
