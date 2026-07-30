@@ -30,6 +30,8 @@ public class Genetics
 
         var engine = new SimulationCollection();
 
+        Console.WriteLine($"Executing {maxGenerations} generations using {simulationsPerGeneration} simulations/generation...\r\n");
+
         int mostWins = 0;
         int generationCount = 0;
         int evolutionCount = 0;
