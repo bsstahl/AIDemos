@@ -20,24 +20,27 @@ namespace ChutesAndLadders.GamePlay
 
         public SimulationResults RunSimulations(Player[] players, int maxExecutionCount, bool outputResults = false, string outputGameActionsFolder = null)
         {
-            if (maxExecutionCount < players.Count())
+            ArgumentNullException.ThrowIfNull(players, nameof(players));
+
+            var numPlayers = players.Length;
+            if (maxExecutionCount < numPlayers)
                 throw new ArgumentException("You must execute the simulation at least once per player");
 
-            double executionsPerPlayer = maxExecutionCount / players.Count();
+            double executionsPerPlayer = maxExecutionCount / (double)numPlayers;
             int executions = Convert.ToInt32(Math.Round(executionsPerPlayer));
 
-            var tasks = new Task<SimulationResults>[players.Count()];
-            for (int i = 0; i < players.Count(); i++)
+            var tasks = new Task<SimulationResults>[numPlayers];
+            for (int i = 0; i < numPlayers; i++)
             {
                 var playersForThisTask = players.DeepCopy().ToArray();
-
+                
                 if (!string.IsNullOrWhiteSpace(outputGameActionsFolder))
                 {
                     string gameActionFilePath = System.IO.Path.Combine(outputGameActionsFolder, $"GameActions_Player{i+1}First.csv");
-                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(playersForThisTask, executions, gameActionFilePath));
+                    tasks[i] = Task.Run(() => (new Simulation(_board, _maxStartingLocation)).Run(playersForThisTask, executions, gameActionFilePath));
                 }
                 else
-                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(playersForThisTask, executions));
+                    tasks[i] = Task.Run(() => (new Simulation(_board, _maxStartingLocation)).Run(playersForThisTask, executions));
 
                 players = players.Rotate();
             }

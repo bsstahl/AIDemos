@@ -51,9 +51,7 @@ public class Genetics
                 evolutionCount++;
             }
 
-            if (updateDelegate != null)
-                updateDelegate.Invoke(generationCount, mostWins, evolutionCount);
-
+            if (updateDelegate != null) updateDelegate.Invoke(generationCount, mostWins, evolutionCount);
             var bestStrategy = bestPlayers[0].Strategy;
             var runnerUpStrategy = bestPlayers[1].Strategy;
 
