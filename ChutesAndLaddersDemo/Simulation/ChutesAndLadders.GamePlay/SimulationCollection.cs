@@ -29,13 +29,15 @@ namespace ChutesAndLadders.GamePlay
             var tasks = new Task<SimulationResults>[players.Count()];
             for (int i = 0; i < players.Count(); i++)
             {
+                var playersForThisTask = players.DeepCopy().ToArray();
+
                 if (!string.IsNullOrWhiteSpace(outputGameActionsFolder))
                 {
                     string gameActionFilePath = System.IO.Path.Combine(outputGameActionsFolder, $"GameActions_Player{i+1}First.csv");
-                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(players.DeepCopy().ToArray(), executions, gameActionFilePath));
+                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(playersForThisTask, executions, gameActionFilePath));
                 }
                 else
-                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(players.DeepCopy().ToArray(), executions));
+                    tasks[i] = Task.Factory.StartNew(() => (new Simulation(_board, _maxStartingLocation)).Run(playersForThisTask, executions));
 
                 players = players.Rotate();
             }

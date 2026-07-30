@@ -1,3 +1,3 @@
 ﻿using ChutesAndLadders.Demos;
 
-Genetics.Evolution(1000, 1000, 0.1);
+Genetics.Evolution(1000, 600, 0.1);
