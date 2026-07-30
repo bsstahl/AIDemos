@@ -1,21 +1,21 @@
 ﻿<table>
     <tr>
         <td><label for="maxSimulations">Max Simulations:</label></td>
-        <td><input id="maxSimulations" type="number" bind=@MaxSimulations /></td>
+        <td><input id="maxSimulations" type="number" @bind="maxSimulations" /></td>
     </tr>
     <tr>
         <td colspan="2">
-            <button class="btn btn-primary" onclick="@RunSimulation">Go</button>
+            <button class="btn btn-primary" @onclick="RunSimulation">Go</button>
         </td>
     </tr>
 </table>
 
-@functions {
-    int MaxSimulations { get; set; }
+@code {
+    private int maxSimulations;
 
-    async Task RunSimulation(UIMouseEventArgs e)
+    private Task RunSimulation()
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
 }

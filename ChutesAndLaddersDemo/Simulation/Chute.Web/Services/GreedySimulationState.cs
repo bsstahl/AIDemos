@@ -6,14 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chute.Web.Services
 {
-    public class GreedySimulationState
+    internal static class GreedySimulationState
     {
-        // Lets components receive change notifications
-        public event Action OnChange;
-
-        private void NotifyStateChanged() => OnChange?.Invoke();
-
-        public async Task RunSimulation(int maxSimulations)
+        public static async Task RunSimulation(int maxSimulations)
         {
             Console.WriteLine($"Run({maxSimulations})");
             await Task.Run(() => new SimulationCollectionBuilder()
@@ -22,10 +17,7 @@ namespace Chute.Web.Services
                 .AddPlayer("Player3", new ChutesAndLadders.Strategy.Linear.Engine())
                 .MaxExecutionCount(maxSimulations)
                 .OutputResults(true)
-                .Run());
+                .Run()).ConfigureAwait(false);
         }
-
-
-
     }
 }
