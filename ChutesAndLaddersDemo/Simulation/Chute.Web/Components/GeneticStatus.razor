@@ -1,9 +1,9 @@
-﻿<p>Current generation: @generationCount</p>
-<p>Number of evolutionary updates: @evolutionCount</p>
-<p>Most wins: @mostWins</p>
+﻿<p>Current generation: @GenerationCount</p>
+<p>Number of evolutionary updates: @EvolutionCount</p>
+<p>Most wins: @MostWins</p>
 
-@functions {
-    [Parameter] int generationCount { get; set; }
-    [Parameter] int evolutionCount { get; set; }
-    [Parameter] int mostWins { get; set; }
+@code {
+    [Parameter] public int GenerationCount { get; set; }
+    [Parameter] public int EvolutionCount { get; set; }
+    [Parameter] public int MostWins { get; set; }
 }
