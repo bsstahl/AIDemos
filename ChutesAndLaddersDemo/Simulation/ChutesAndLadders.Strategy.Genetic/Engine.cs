@@ -46,6 +46,7 @@ public class Engine : Rules.Engine
 
     public Engine CrossoverWith(Engine crossoverTarget)
     {
+        ArgumentNullException.ThrowIfNull(crossoverTarget);
         var rnd = new Random();
         for (int i = 0; i < _genomeLength; i++)
             if (rnd.NextDouble() < _crossoverRate)
@@ -55,6 +56,7 @@ public class Engine : Rules.Engine
 
     public string ContrastWith(Engine contrastTarget)
     {
+        ArgumentNullException.ThrowIfNull(contrastTarget);
         var sb = new StringBuilder();
 
         for (int i = 0; i < _genomeLength; i++)
@@ -62,7 +64,7 @@ public class Engine : Rules.Engine
             var c = this.Genome[i];
             var c1 = contrastTarget.Genome[i];
             if (c.SelectedEndpoint != c1.SelectedEndpoint)
-                sb.AppendLine($"({c1.StartingPoint},{c1.Spin}) = {c.SelectedEndpoint} and {c1.SelectedEndpoint}");
+                sb.AppendLine(System.Globalization.CultureInfo.InvariantCulture, $"({c1.StartingPoint},{c1.Spin}) = {c.SelectedEndpoint} and {c1.SelectedEndpoint}");
         }
 
         return sb.ToString();

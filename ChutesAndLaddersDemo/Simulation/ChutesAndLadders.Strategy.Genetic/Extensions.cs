@@ -1,6 +1,6 @@
 ﻿namespace ChutesAndLadders.Strategy.Genetic;
 
-public static class Extensions
+public static class GeneticExtensions
 {
     public static int GetRandom(this IEnumerable<int> list)
     {

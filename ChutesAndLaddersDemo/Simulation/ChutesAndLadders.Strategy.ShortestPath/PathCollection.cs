@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChutesAndLadders.Strategy.ShortestPath
 {
-    internal class PathCollection
+    internal sealed class PathCollection
     {
         Gameboard _board;
 
@@ -40,7 +40,7 @@ namespace ChutesAndLadders.Strategy.ShortestPath
             return _board.ToString();
         }
 
-        private Gameboard CreateGameboard()
+        private static Gameboard CreateGameboard()
         {
             var pathways = new List<KeyValuePair<int, int>>();
             pathways.AddPair(1, 38);
