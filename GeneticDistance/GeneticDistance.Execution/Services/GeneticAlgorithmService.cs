@@ -14,6 +14,8 @@ public sealed class GeneticAlgorithmService
 {
 	private const int MaxRecoveryCharacteristicPasses = 4;
 	private const int MaxCandidateWordCount = 5;
+	// More than this many hyphens in a single token strongly indicates a fabricated compound.
+	private const int MaxHyphensPerToken = 1;
 
 	// Substrings (checked against the space-stripped candidate) that indicate the model
 	// returned a refusal or meta-response rather than a genuine lexical item.
@@ -489,6 +491,14 @@ public sealed class GeneticAlgorithmService
 		if (_refusalSubstrings.Any(s => stripped.Contains(s, StringComparison.OrdinalIgnoreCase)))
 		{
 			rejectionReason = "contains model refusal pattern";
+			return false;
+		}
+
+		// Reject fabricated hyphenated compounds (e.g. "nano-whole-systems-integration-successful").
+		// Real English allows at most one hyphen per token (e.g. "well-known", "up-to-date" splits to 3 words).
+		if (words.Any(w => w.Count(c => c == '-') > MaxHyphensPerToken))
+		{
+			rejectionReason = "contains fabricated hyphenated compound";
 			return false;
 		}
 
