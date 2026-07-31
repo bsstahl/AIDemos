@@ -9,15 +9,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Aspire.Qdrant.Client" Version="13.1.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+        <PackageReference Include="Aspire.Qdrant.Client" Version="13.4.6" />
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
-        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="13.1.1" />
-        <PackageReference Include="Microsoft.Extensions.AI" Version="10.2.0" />
+        <PackageReference Include="CommunityToolkit.Aspire.OllamaSharp" Version="13.4.0" />
+        <PackageReference Include="Microsoft.Extensions.AI" Version="10.8.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\GeneticDistance.Domain\GeneticDistance.Domain.csproj" />
+      <ProjectReference Include="..\GeneticDistance.ServiceDefaults\GeneticDistance.ServiceDefaults.csproj" />
     </ItemGroup>
 
 </Project>

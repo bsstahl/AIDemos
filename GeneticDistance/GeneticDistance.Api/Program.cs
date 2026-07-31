@@ -6,9 +6,10 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.AddServiceDefaults();
+
         // Add services to the container.
         builder.Services.AddControllers();
-        builder.Services.AddOpenApi();
 
         // Add Qdrant Client
         builder
@@ -27,14 +28,10 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
         app.UseHttpsRedirection();
         app.UseAuthorization();
 
+        app.MapDefaultEndpoints();
         app.MapControllers();
         app.Run();
     }
