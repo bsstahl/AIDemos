@@ -120,7 +120,11 @@ public class Repository : IEmbeddingRepository
 		var normalizedText = originalText.NormalizeText();
 		var existing = await GetByTextAsync(normalizedText);
 		if (existing?.Id is not null)
+		{
+			if (characteristics is not null && existing.Characteristics is null)
+				await BackfillCharacteristicsAsync(existing.Id, characteristics);
 			return existing.Id;
+		}
 
 		var point = new PointStruct
 		{
@@ -158,6 +162,29 @@ public class Repository : IEmbeddingRepository
 			shardKeySelector: null);
 
 		return id;
+	}
+
+	private async Task BackfillCharacteristicsAsync(string id, LexicalCharacteristics characteristics)
+	{
+		var payload = new Dictionary<string, Value>
+		{
+			[CharPartOfSpeechKey]        = new Value { StringValue = characteristics.PartOfSpeech.ToString() },
+			[CharRegisterKey]            = new Value { StringValue = characteristics.Register.ToString() },
+			[CharScientificDisciplineKey]= new Value { StringValue = characteristics.ScientificDiscipline.ToString() },
+			[CharMorphologyKey]          = new Value { StringValue = characteristics.Morphology.ToString() },
+			[CharAnimacyKey]             = new Value { StringValue = characteristics.Animacy.ToString() },
+			[CharPolarityKey]            = new Value { StringValue = characteristics.Polarity.ToString() },
+			[CharIdiomaticityKey]        = new Value { StringValue = characteristics.Idiomaticity.ToString() },
+			[CharConcretnessKey]         = new Value { StringValue = characteristics.Concreteness.ToString() }
+		};
+
+		await _client.SetPayloadAsync(
+			collectionName: CollectionName,
+			payload: payload,
+			ids: new[] { Guid.Parse(id) },
+			wait: true,
+			ordering: null,
+			shardKeySelector: null);
 	}
 
 	private async Task EnsureCollectionAsync()
