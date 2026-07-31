@@ -8,7 +8,19 @@ var apiKey = builder.AddParameter("apiKey", secret: true);
 // and set its lifetime to Persistent so the container is
 // not spun-down when the program ends. The container will
 // download automatically if not already downloaded.
-var qdrant = builder.AddQdrant("qdrant", apiKey)
+var qdrant = builder.AddQdrant("qdrant", apiKey, 6333, 6334)
+    .WithEndpoint("http", endpoint =>
+    {
+        endpoint.IsProxied = false;
+        endpoint.Port = 6333;
+        endpoint.TargetPort = 6333;
+    }, createIfNotExists: false)
+    .WithEndpoint("grpc", endpoint =>
+    {
+        endpoint.IsProxied = false;
+        endpoint.Port = 6334;
+        endpoint.TargetPort = 6334;
+    }, createIfNotExists: false)
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -16,6 +28,7 @@ var qdrant = builder.AddQdrant("qdrant", apiKey)
 // data volume, and persistent lifetime.
 var ollama = builder
     .AddOllama("ollama")
+    .WithEndpoint("http", endpoint => endpoint.Port = 11434, createIfNotExists: false)
     .WithDataVolume()
     .WithLifetime(ContainerLifetime.Persistent);
 
@@ -29,9 +42,6 @@ var embeddingModel = ollama
 var smallLanguageModel = ollama
     .AddModel("llama3.2:1b");
 
-var reasoningLanguageModel = ollama
-	.AddModel("gpt-oss:20b");
-
 // setup the applicaton builder with:
 // - a reference to the api project
 // - references to the Qdrant container & Ollama container
@@ -40,14 +50,13 @@ var reasoningLanguageModel = ollama
 //   to be ready before starting the api
 var api = builder
     .AddProject<Projects.GeneticDistance_Api>("api")
+	.WithEndpoint("http", endpoint => endpoint.Port = 61651, createIfNotExists: false)
     .WithReference(qdrant)
     .WithReference(ollama)
     .WithReference(embeddingModel)
     .WithReference(smallLanguageModel)
-    .WithReference(reasoningLanguageModel)
 	.WaitFor(qdrant)
     .WaitFor(embeddingModel)
-    .WaitFor(smallLanguageModel)
-    .WaitFor(reasoningLanguageModel);
+    .WaitFor(smallLanguageModel);
 
 builder.Build().Run();

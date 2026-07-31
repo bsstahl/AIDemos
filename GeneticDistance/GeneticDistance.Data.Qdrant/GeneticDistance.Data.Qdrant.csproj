@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Qdrant.Client" Version="1.18.1" />
     <ProjectReference Include="..\GeneticDistance.Domain\GeneticDistance.Domain.csproj" />
   </ItemGroup>
 
