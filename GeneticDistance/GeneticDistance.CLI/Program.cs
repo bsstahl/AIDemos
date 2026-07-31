@@ -29,7 +29,7 @@ internal static class Program
 		builder.Services.AddSingleton<OllamaApiClient>(sp =>
 		{
 			var options = sp.GetRequiredService<IOptions<CliDependencyOptions>>().Value;
-			return new OllamaApiClient(new Uri(options.OllamaEndpoint), defaultModel: "llama3.2:1b");
+			return new OllamaApiClient(new Uri(options.OllamaEndpoint), defaultModel: "qwen2.5:7b");
 		});
 		builder.Services.AddSingleton<IChatClient>(sp => sp.GetRequiredService<OllamaApiClient>());
 		builder.Services.AddSingleton<IEmbeddingGenerator<string, Embedding<float>>>(sp => sp.GetRequiredService<OllamaApiClient>());

@@ -16,12 +16,12 @@ POST {{ollama}}/api/chat
 Content-Type: application/json
 
 {
-  "model": "llama3.2:1b",
+  "model": "qwen2.5:7b",
   "stream": false,
   "messages": [
     {
       "role": "user",
-      "content": "Reply with exactly: hello from llama3.2:1b"
+      "content": "Reply with exactly: hello from qwen2.5:7b"
     }
   ]
 }

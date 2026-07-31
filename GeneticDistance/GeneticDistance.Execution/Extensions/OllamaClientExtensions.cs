@@ -10,8 +10,7 @@ public static class OllamaClientExtensions
     public static ChatOptions SlmChatOptions 
         => new ChatOptions
         {
-            ModelId = "qwen2.5:3b",
-            Temperature = 0.7f,
+            ModelId = "qwen2.5:7b",
             TopP = 0.95f,
             FrequencyPenalty = 0.0f,
             PresencePenalty = 0.0f
@@ -20,8 +19,7 @@ public static class OllamaClientExtensions
     public static ChatOptions ReasoningChatOptions 
         => new ChatOptions
         {
-            ModelId = "qwen2.5:3b",
-            Temperature = 0.3f,
+            ModelId = "qwen2.5:7b",
             TopP = 0.9f,
             FrequencyPenalty = 0.0f,
             PresencePenalty = 0.0f
