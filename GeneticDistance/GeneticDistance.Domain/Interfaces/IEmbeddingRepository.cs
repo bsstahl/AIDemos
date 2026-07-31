@@ -7,7 +7,7 @@ public interface IEmbeddingRepository
 	public Task<Expression?> GetByTextAsync(string normalizedText);
 	public Task<Expression?> GetByIdAsync(string id);
 
-	public Task<string> GetOrCreateAsync(string id, string originalText, float[] vector);
+	public Task<string> GetOrCreateAsync(string id, string originalText, float[] vector, LexicalCharacteristics? characteristics = null);
 
 	public Task<IReadOnlyList<Expression>> GetAllAsync(int batchSize = 500);
 }

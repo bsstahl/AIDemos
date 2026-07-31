@@ -12,10 +12,32 @@ namespace GeneticDistance.Execution.Services;
 
 public sealed class GeneticAlgorithmService
 {
+	private const int MaxRecoveryCharacteristicPasses = 4;
+	private const int MaxCandidateWordCount = 5;
+	// More than this many hyphens in a single token strongly indicates a fabricated compound.
+	private const int MaxHyphensPerToken = 1;
+
+	// Substrings (checked against the space-stripped candidate) that indicate the model
+	// returned a refusal or meta-response rather than a genuine lexical item.
+	private static readonly string[] _refusalSubstrings =
+	[
+		"couldnot", "couldnotdetermine", "cannotgenerate", "cannotprovide",
+		"unableto", "idonot", "idontknow", "idontunderstand",
+		"notpossible", "notvalid", "notapplicable"
+	];
+
+	// Individual words (checked against each space-separated token) that strongly
+	// indicate a meta-response.  These almost never appear in genuine lexical items.
+	private static readonly HashSet<string> _refusalWords = new(StringComparer.OrdinalIgnoreCase)
+	{
+		"sorry", "apologize", "apologies"
+	};
+
 	private sealed record PopulationMember(Expression Expression, LexicalCharacteristics Characteristics);
 	private sealed record PairDistance(PopulationMember First, PopulationMember Second, float Distance);
 	private sealed record GenerationEvaluation(PairDistance BestPair, float AverageDistance, IReadOnlyDictionary<PopulationMember, float> FitnessByMember);
-	private sealed record CreatedExpression(Expression Expression, bool ReusedEmbedding, int DuplicateAttemptsRejected);
+	private sealed record CreatedExpression(Expression Expression, LexicalCharacteristics Characteristics, bool ReusedEmbedding, int DuplicateAttemptsRejected);
+	private sealed record CreateExpressionAttemptResult(CreatedExpression? Created, int DuplicateAttemptsRejected);
 
 	private readonly IChatClient _chatClient;
 	private readonly IEmbeddingGenerator<string, Embedding<float>> _embeddingsClient;
@@ -171,7 +193,7 @@ public sealed class GeneticAlgorithmService
 
 			if (exclusionSet.Add(created.Expression.Text))
 			{
-				population.Add(new PopulationMember(created.Expression, characteristics));
+				population.Add(new PopulationMember(created.Expression, created.Characteristics));
 				_logger.LogDebug(
 					"Seeded population member '{Candidate}' (reusedEmbedding={ReusedEmbedding}, duplicateAttemptsRejected={DuplicateAttemptsRejected}).",
 					created.Expression.Text,
@@ -220,12 +242,12 @@ public sealed class GeneticAlgorithmService
 				continue;
 			}
 
-			nextGeneration.Add(new PopulationMember(created.Expression, mutatedCharacteristics));
+			nextGeneration.Add(new PopulationMember(created.Expression, created.Characteristics));
 			offspringReports.Add(new OffspringReport(
 				Parent: parent.Expression.Text,
 				Child: created.Expression.Text,
 				ReusedEmbedding: created.ReusedEmbedding,
-				Changes: DescribeMutation(parent.Characteristics, mutatedCharacteristics)));
+				Changes: DescribeMutation(parent.Characteristics, created.Characteristics)));
 		}
 
 		return (nextGeneration, survivors, offspringReports, duplicateAttemptsRejected);
@@ -238,21 +260,69 @@ public sealed class GeneticAlgorithmService
 		CancellationToken cancellationToken)
 	{
 		var duplicateAttemptsRejected = 0;
+		var rejectedCandidates = exclusions.ToHashSet(StringComparer.OrdinalIgnoreCase);
+		var currentCharacteristics = CloneCharacteristics(characteristics);
+
+		for (var recoveryPass = 1; recoveryPass <= MaxRecoveryCharacteristicPasses; recoveryPass++)
+		{
+			var attemptResult = await TryCreateExpressionAsync(
+				currentCharacteristics,
+				rejectedCandidates,
+				options,
+				cancellationToken);
+			duplicateAttemptsRejected += attemptResult.DuplicateAttemptsRejected;
+
+			if (attemptResult.Created is not null)
+			{
+				return attemptResult.Created with
+				{
+					DuplicateAttemptsRejected = duplicateAttemptsRejected
+				};
+			}
+
+			if (recoveryPass == MaxRecoveryCharacteristicPasses)
+				break;
+
+			currentCharacteristics = recoveryPass == MaxRecoveryCharacteristicPasses - 1
+				? LexicalCharacteristics.GetRandom()
+				: _generationStrategy.Transform(currentCharacteristics);
+
+			_logger.LogDebug(
+				"Unable to produce a unique candidate for characteristics after {RejectedAttempts} rejected attempts; retrying with diversified characteristics on recovery pass {RecoveryPass}.",
+				duplicateAttemptsRejected,
+				recoveryPass + 1);
+		}
+
+		throw new InvalidOperationException(
+			$"Unable to generate a unique candidate after {MaxRecoveryCharacteristicPasses * options.MaxCandidateAttemptsPerIndividual} attempts across diversified characteristics.");
+	}
+
+	private async Task<CreateExpressionAttemptResult> TryCreateExpressionAsync(
+		LexicalCharacteristics characteristics,
+		ISet<string> rejectedCandidates,
+		GeneticAlgorithmOptions options,
+		CancellationToken cancellationToken)
+	{
+		var duplicateAttemptsRejected = 0;
 
 		for (var attempt = 1; attempt <= options.MaxCandidateAttemptsPerIndividual; attempt++)
 		{
 			cancellationToken.ThrowIfCancellationRequested();
 
-			var rawCandidate = await _chatClient.GetCandidateAsync(characteristics, exclusions);
+			var rawCandidate = await _chatClient.GetCandidateAsync(characteristics, rejectedCandidates);
 			var candidate = NormalizeCandidate(rawCandidate);
 
-			if (string.IsNullOrWhiteSpace(candidate) || exclusions.Contains(candidate))
+			if (!TryValidateCandidate(candidate, rejectedCandidates, out var rejectionReason))
 			{
 				duplicateAttemptsRejected++;
+				if (!string.IsNullOrWhiteSpace(candidate))
+					rejectedCandidates.Add(candidate);
+
 				_logger.LogDebug(
-					"Rejected generated candidate '{Candidate}' on attempt {Attempt} (empty or already excluded).",
+					"Rejected generated candidate '{Candidate}' on attempt {Attempt} ({Reason}).",
 					candidate,
-					attempt);
+					attempt,
+					rejectionReason);
 				continue;
 			}
 
@@ -260,15 +330,18 @@ public sealed class GeneticAlgorithmService
 			if (existing?.Vector is not null && existing.Id is not null)
 			{
 				_logger.LogDebug("Reused existing embedding for candidate '{Candidate}' with id '{Id}'.", existing.Text, existing.Id);
-				return new CreatedExpression(
-					new Expression(existing.Id, existing.Text, existing.Vector, characteristics),
-					ReusedEmbedding: true,
-					DuplicateAttemptsRejected: duplicateAttemptsRejected);
+				return new CreateExpressionAttemptResult(
+					new CreatedExpression(
+						new Expression(existing.Id, existing.Text, existing.Vector, characteristics),
+						characteristics,
+						ReusedEmbedding: true,
+						DuplicateAttemptsRejected: duplicateAttemptsRejected),
+					duplicateAttemptsRejected);
 			}
 
 			var embeddingVector = await _embeddingsClient.GetEmbeddingAsync(candidate);
 			var candidateId = Guid.NewGuid().ToString("D");
-			var persistedId = await _embeddingRepository.GetOrCreateAsync(candidateId, candidate, embeddingVector);
+			var persistedId = await _embeddingRepository.GetOrCreateAsync(candidateId, candidate, embeddingVector, characteristics);
 			var persistedExpression = await _embeddingRepository.GetByIdAsync(persistedId)
 				?? throw new InvalidOperationException($"Embedding '{persistedId}' was persisted but could not be loaded.");
 
@@ -277,18 +350,20 @@ public sealed class GeneticAlgorithmService
 
 			_logger.LogDebug("Generated new candidate '{Candidate}' with id '{Id}'.", persistedExpression.Text, persistedExpression.Id);
 
-			return new CreatedExpression(
-				new Expression(
-					persistedExpression.Id,
-					persistedExpression.Text,
-					persistedExpression.Vector,
-					characteristics),
-				ReusedEmbedding: false,
-				DuplicateAttemptsRejected: duplicateAttemptsRejected);
+			return new CreateExpressionAttemptResult(
+				new CreatedExpression(
+					new Expression(
+						persistedExpression.Id,
+						persistedExpression.Text,
+						persistedExpression.Vector,
+						characteristics),
+					characteristics,
+					ReusedEmbedding: false,
+					DuplicateAttemptsRejected: duplicateAttemptsRejected),
+				duplicateAttemptsRejected);
 		}
 
-		throw new InvalidOperationException(
-			$"Unable to generate a unique candidate in {options.MaxCandidateAttemptsPerIndividual} attempts.");
+		return new CreateExpressionAttemptResult(null, duplicateAttemptsRejected);
 	}
 
 	private static GenerationEvaluation EvaluatePopulation(IReadOnlyList<PopulationMember> population)
@@ -368,6 +443,67 @@ public sealed class GeneticAlgorithmService
 		var firstLine = value.Split('\n', StringSplitOptions.RemoveEmptyEntries)[0];
 		var trimmed = firstLine.Trim().Trim('"', '\'', '`');
 		return trimmed.NormalizeText();
+	}
+
+	private static LexicalCharacteristics CloneCharacteristics(LexicalCharacteristics value)
+		=> new(
+			value.PartOfSpeech,
+			value.Register,
+			value.ScientificDiscipline,
+			value.Morphology,
+			value.Animacy,
+			value.Polarity,
+			value.Idiomaticity,
+			value.Concreteness);
+
+	private static bool TryValidateCandidate(string candidate, ISet<string> rejectedCandidates, out string rejectionReason)
+	{
+		if (string.IsNullOrWhiteSpace(candidate))
+		{
+			rejectionReason = "empty response";
+			return false;
+		}
+
+		if (rejectedCandidates.Contains(candidate))
+		{
+			rejectionReason = "already excluded";
+			return false;
+		}
+
+		var words = candidate.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+		if (words.Length is < 1 or > MaxCandidateWordCount)
+		{
+			rejectionReason = $"must be between 1 and {MaxCandidateWordCount} words";
+			return false;
+		}
+
+		// Detect model refusals / meta-responses.
+		// Check individual words for hard refusal indicators.
+		if (words.Any(w => _refusalWords.Contains(w)))
+		{
+			rejectionReason = "contains model refusal indicator word";
+			return false;
+		}
+
+		// Check the space-stripped form for concatenated refusal substrings
+		// (e.g. "couldnotdetermineliteralcandidate" returned as one token).
+		var stripped = candidate.Replace(" ", "", StringComparison.Ordinal);
+		if (_refusalSubstrings.Any(s => stripped.Contains(s, StringComparison.OrdinalIgnoreCase)))
+		{
+			rejectionReason = "contains model refusal pattern";
+			return false;
+		}
+
+		// Reject fabricated hyphenated compounds (e.g. "nano-whole-systems-integration-successful").
+		// Real English allows at most one hyphen per token (e.g. "well-known", "up-to-date" splits to 3 words).
+		if (words.Any(w => w.Count(c => c == '-') > MaxHyphensPerToken))
+		{
+			rejectionReason = "contains fabricated hyphenated compound";
+			return false;
+		}
+
+		rejectionReason = string.Empty;
+		return true;
 	}
 
 	private static void ValidateOptions(GeneticAlgorithmOptions options)

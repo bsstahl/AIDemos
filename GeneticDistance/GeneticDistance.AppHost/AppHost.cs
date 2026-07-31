@@ -40,7 +40,7 @@ var embeddingModel = ollama
 // Add the language model to Ollama
 // The model will be downloaded automatically if not already present.
 var smallLanguageModel = ollama
-    .AddModel("llama3.2:1b");
+    .AddModel("qwen2.5:7b");
 
 // setup the applicaton builder with:
 // - a reference to the api project
