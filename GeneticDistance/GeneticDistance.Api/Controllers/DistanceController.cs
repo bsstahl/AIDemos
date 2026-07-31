@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.AI;
-using GeneticDistance.Api.Extensions;
 using GeneticDistance.Domain.Entities;
 using GeneticDistance.Domain.ValueTypes;
+using GeneticDistance.Execution.Extensions;
 
 namespace GeneticDistance.Api.Controllers;
 
@@ -33,9 +33,7 @@ public class DistanceController : ControllerBase
         
         var sourceVector = request.SourceVector;
 
-        var exclusions = request
-            .AdditionalExclusions
-            .ToList();
+        var exclusions = (request.AdditionalExclusions ?? Enumerable.Empty<string>()).ToList();
         exclusions.Add(request.SourceText);
 
 		var candidate = await _chatClient.GetCandidateAsync(request.TargetCharacteristics, exclusions.Distinct());

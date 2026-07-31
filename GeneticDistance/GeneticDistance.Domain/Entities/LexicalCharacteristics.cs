@@ -45,13 +45,13 @@ public class LexicalCharacteristics
 	public static LexicalCharacteristics GetRandom()
 		=> new LexicalCharacteristics(
 			Enum.GetValues<PartOfSpeech>().GetRandom().ToString(),
-			Enum.GetValues<Animacy>().GetRandom().ToString(),
-			Enum.GetValues<Concreteness>().GetRandom().ToString(),
-			Enum.GetValues<Idiomaticity>().GetRandom().ToString(),
-			Enum.GetValues<Morphology>().GetRandom().ToString(),
-			Enum.GetValues<Polarity>().GetRandom().ToString(),
 			Enum.GetValues<Register>().GetRandom().ToString(),
-			Enum.GetValues<ScientificDiscipline>().GetRandom().ToString());
+			Enum.GetValues<ScientificDiscipline>().GetRandom().ToString(),
+			Enum.GetValues<Morphology>().GetRandom().ToString(),
+			Enum.GetValues<Animacy>().GetRandom().ToString(),
+			Enum.GetValues<Polarity>().GetRandom().ToString(),
+			Enum.GetValues<Idiomaticity>().GetRandom().ToString(),
+			Enum.GetValues<Concreteness>().GetRandom().ToString());
 }
 
 internal sealed class LexicalCharacteristicsJsonConverter : JsonConverter<LexicalCharacteristics>

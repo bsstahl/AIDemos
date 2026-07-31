@@ -3,9 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace GeneticDistance.Data.Qdrant;
 
-internal static class StringExtensions
+public static class StringExtensions
 {
-	internal static string NormalizeText(this string input)
+	public static string NormalizeText(this string input)
 	{
 		ArgumentNullException.ThrowIfNullOrWhiteSpace(input, nameof(input));
 

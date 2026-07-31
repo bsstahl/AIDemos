@@ -1,3 +1,9 @@
+using GeneticDistance.Data.Qdrant;
+using GeneticDistance.Domain.Interfaces;
+using GeneticDistance.Execution.Options;
+using GeneticDistance.Execution.Reporting;
+using GeneticDistance.Execution.Services;
+
 namespace GeneticDistance.Api;
 
 public class Program
@@ -24,6 +30,13 @@ public class Program
 
         // Add Ollama Embeddings Generator
         ollamaApiClient.AddEmbeddingGenerator();
+
+        builder.Services.Configure<GeneticAlgorithmOptions>(
+            builder.Configuration.GetSection(GeneticAlgorithmOptions.SectionName));
+        builder.Services.AddScoped<IEmbeddingRepository, Repository>();
+        builder.Services.AddScoped<IGenerationStrategy, RandomGenerationStrategy>();
+        builder.Services.AddScoped<GeneticAlgorithmService>();
+        builder.Services.AddSingleton<IGeneticAlgorithmReporter, NullGeneticAlgorithmReporter>();
 
         var app = builder.Build();
 

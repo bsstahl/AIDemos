@@ -16,7 +16,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\GeneticDistance.Execution\GeneticDistance.Execution.csproj" />
       <ProjectReference Include="..\GeneticDistance.Domain\GeneticDistance.Domain.csproj" />
+      <ProjectReference Include="..\GeneticDistance.Data.Qdrant\GeneticDistance.Data.Qdrant.csproj" />
       <ProjectReference Include="..\GeneticDistance.ServiceDefaults\GeneticDistance.ServiceDefaults.csproj" />
     </ItemGroup>
 

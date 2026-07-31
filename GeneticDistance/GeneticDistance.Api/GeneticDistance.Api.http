@@ -1,0 +1,45 @@
+@host = http://localhost:61651
+@ollama = http://localhost:11434
+@qdrant = http://localhost:6333
+@qdrantApiKey = {{$processEnv QDRANT_API_KEY}}
+
+### API health
+GET {{host}}/health
+Accept: application/json
+
+### Ollama model list
+GET {{ollama}}/api/tags
+Accept: application/json
+
+### Ollama chat test for candidate generation model
+POST {{ollama}}/api/chat
+Content-Type: application/json
+
+{
+  "model": "llama3.2:1b",
+  "stream": false,
+  "messages": [
+    {
+      "role": "user",
+      "content": "Reply with exactly: hello from llama3.2:1b"
+    }
+  ]
+}
+
+### Ollama embedding test
+POST {{ollama}}/api/embeddings
+Content-Type: application/json
+
+{
+  "model": "nomic-embed-text",
+  "prompt": "entropy"
+}
+
+### Qdrant collections
+GET {{qdrant}}/collections
+api-key: {{qdrantApiKey}}
+Accept: application/json
+
+### Run genetic algorithm demo
+POST {{host}}/genetic-algorithm/run
+Accept: application/json
