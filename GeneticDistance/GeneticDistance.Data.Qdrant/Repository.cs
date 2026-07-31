@@ -1,4 +1,5 @@
-﻿using GeneticDistance.Domain.Interfaces;
+﻿using GeneticDistance.Domain.Entities;
+using GeneticDistance.Domain.Interfaces;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 using DomainVector = GeneticDistance.Domain.ValueTypes.Vector;
@@ -12,6 +13,14 @@ public class Repository : IEmbeddingRepository
 	private const string CollectionName = "geneticdistance-embeddings";
 	private const string OriginalTextPayloadKey = "originalText";
 	private const string NormalizedTextPayloadKey = "normalizedText";
+	private const string CharPartOfSpeechKey = "char_partOfSpeech";
+	private const string CharRegisterKey = "char_register";
+	private const string CharScientificDisciplineKey = "char_scientificDiscipline";
+	private const string CharMorphologyKey = "char_morphology";
+	private const string CharAnimacyKey = "char_animacy";
+	private const string CharPolarityKey = "char_polarity";
+	private const string CharIdiomaticityKey = "char_idiomaticity";
+	private const string CharConcretnessKey = "char_concreteness";
 	private const int VectorDimensions = 768;
 
 	private readonly QdrantClient _client;
@@ -97,7 +106,7 @@ public class Repository : IEmbeddingRepository
 		return point is null ? null : ToExpression(point);
 	}
 
-	public async Task<String> GetOrCreateAsync(String id, String originalText, Single[] vector)
+	public async Task<String> GetOrCreateAsync(String id, String originalText, Single[] vector, LexicalCharacteristics? characteristics = null)
 	{
 		ArgumentException.ThrowIfNullOrWhiteSpace(id, nameof(id));
 		ArgumentException.ThrowIfNullOrWhiteSpace(originalText, nameof(originalText));
@@ -128,6 +137,18 @@ public class Repository : IEmbeddingRepository
 		point.Vectors.Vector.Dense.Data.Add(vector);
 		point.Payload.Add(OriginalTextPayloadKey, new Value { StringValue = originalText });
 		point.Payload.Add(NormalizedTextPayloadKey, new Value { StringValue = normalizedText });
+
+		if (characteristics is not null)
+		{
+			point.Payload.Add(CharPartOfSpeechKey, new Value { StringValue = characteristics.PartOfSpeech.ToString() });
+			point.Payload.Add(CharRegisterKey, new Value { StringValue = characteristics.Register.ToString() });
+			point.Payload.Add(CharScientificDisciplineKey, new Value { StringValue = characteristics.ScientificDiscipline.ToString() });
+			point.Payload.Add(CharMorphologyKey, new Value { StringValue = characteristics.Morphology.ToString() });
+			point.Payload.Add(CharAnimacyKey, new Value { StringValue = characteristics.Animacy.ToString() });
+			point.Payload.Add(CharPolarityKey, new Value { StringValue = characteristics.Polarity.ToString() });
+			point.Payload.Add(CharIdiomaticityKey, new Value { StringValue = characteristics.Idiomaticity.ToString() });
+			point.Payload.Add(CharConcretnessKey, new Value { StringValue = characteristics.Concreteness.ToString() });
+		}
 
 		await _client.UpsertAsync(
 			collectionName: CollectionName,
@@ -175,14 +196,37 @@ public class Repository : IEmbeddingRepository
 		var text = GetRequiredStringPayload(point, OriginalTextPayloadKey);
 		var id = ResolvePointId(point.Id);
 		var vector = ReadVector(point.Vectors);
+		var characteristics = TryReadCharacteristics(point);
 
-		var expression = new DomainExpression(text)
+		return new DomainExpression(text)
 		{
 			Id = id,
-			Vector = DomainVector.From(vector)
+			Vector = DomainVector.From(vector),
+			Characteristics = characteristics
 		};
+	}
 
-		return expression;
+	private static LexicalCharacteristics? TryReadCharacteristics(RetrievedPoint point)
+	{
+		if (!TryGetStringPayload(point, CharPartOfSpeechKey, out var partOfSpeech) ||
+			!TryGetStringPayload(point, CharRegisterKey, out var register) ||
+			!TryGetStringPayload(point, CharScientificDisciplineKey, out var scientificDiscipline) ||
+			!TryGetStringPayload(point, CharMorphologyKey, out var morphology) ||
+			!TryGetStringPayload(point, CharAnimacyKey, out var animacy) ||
+			!TryGetStringPayload(point, CharPolarityKey, out var polarity) ||
+			!TryGetStringPayload(point, CharIdiomaticityKey, out var idiomaticity) ||
+			!TryGetStringPayload(point, CharConcretnessKey, out var concreteness))
+			return null;
+
+		try
+		{
+			return new LexicalCharacteristics(partOfSpeech!, register!, scientificDiscipline!,
+				morphology!, animacy!, polarity!, idiomaticity!, concreteness!);
+		}
+		catch
+		{
+			return null;
+		}
 	}
 
 	private static string ResolvePointId(PointId? pointId)
@@ -204,6 +248,17 @@ public class Repository : IEmbeddingRepository
 			throw new InvalidOperationException($"Point payload is missing required string key '{payloadKey}'.");
 
 		return payloadValue.StringValue;
+	}
+
+	private static bool TryGetStringPayload(RetrievedPoint point, string payloadKey, out string? value)
+	{
+		if (point.Payload.TryGetValue(payloadKey, out var payloadValue) && payloadValue.HasStringValue)
+		{
+			value = payloadValue.StringValue;
+			return true;
+		}
+		value = null;
+		return false;
 	}
 
 	private static float[] ReadVector(VectorsOutput? vectors)

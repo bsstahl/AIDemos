@@ -341,7 +341,7 @@ public sealed class GeneticAlgorithmService
 
 			var embeddingVector = await _embeddingsClient.GetEmbeddingAsync(candidate);
 			var candidateId = Guid.NewGuid().ToString("D");
-			var persistedId = await _embeddingRepository.GetOrCreateAsync(candidateId, candidate, embeddingVector);
+			var persistedId = await _embeddingRepository.GetOrCreateAsync(candidateId, candidate, embeddingVector, characteristics);
 			var persistedExpression = await _embeddingRepository.GetByIdAsync(persistedId)
 				?? throw new InvalidOperationException($"Embedding '{persistedId}' was persisted but could not be loaded.");
 
