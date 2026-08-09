@@ -77,7 +77,7 @@ public class Model
         {
             var token = match.Value;
 
-            if (!_specialTokens.ContainsKey(token))
+            if (!_specialTokens.TryGetValue(token, out var tokenId))
                 continue; // Not a known special token — treat as regular text
 
             if (allowedSpecialTokens is null || !allowedSpecialTokens.Contains(token))
@@ -88,7 +88,7 @@ public class Model
             if (!string.IsNullOrEmpty(segment))
                 result.AddRange(segment.AsSegments(_regexPattern, this.TextValues).SelectMany(s => s.Encode()));
 
-            result.Add(_specialTokens[token]);
+            result.Add(tokenId);
             lastIndex = match.Index + match.Length;
         }
 
