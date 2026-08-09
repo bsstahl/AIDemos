@@ -13,6 +13,13 @@ try
     }).ToList();
 
     var model = new Model();
+
+    foreach (var id in tokenIds)
+    {
+        if (!model.Tokens.ContainsKey(id))
+            throw new ArgumentException($"Unknown token id: {id}");
+    }
+
     var text = model.Decode(tokenIds);
 
     Console.WriteLine(text);
