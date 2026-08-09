@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using Tokenizer.Extensions;
 
 namespace Tokenizer;
@@ -6,6 +7,17 @@ namespace Tokenizer;
 public class Model
 {
     const string _regexPattern = @"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?\p{L}+|\p{N}{1,3}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+";
+    const string _specialTokenPattern = @"<\|[^|]+\|>";
+
+    // cl100k_base special tokens (subset used here)
+    static readonly IDictionary<string, int> _specialTokens = new Dictionary<string, int>
+    {
+        { "<|endoftext|>",   100257 },
+        { "<|fim_prefix|>",  100258 },
+        { "<|fim_middle|>",  100259 },
+        { "<|fim_suffix|>",  100260 },
+        { "<|endofprompt|>", 100276 },
+    };
 
     IDictionary<int, byte[]>? _tokens;
     IDictionary<byte[], int>? _textValues;
@@ -45,11 +57,48 @@ public class Model
             : Encoding.UTF8.GetString(tokens.SelectMany(t => this.Tokens[t]).ToArray());
     }
 
-    public IEnumerable<int> Encode(string text, ISet<string>? _1 = null, ISet<string>? _2 = null)
+    public IEnumerable<int> Encode(string text, ISet<string>? allowedSpecialTokens = null, ISet<string>? disallowedSpecialTokens = null)
     {
-        return text
-            .AsSegments(_regexPattern, this.TextValues)
-            .SelectMany(s => s.Encode());
+        // Check for disallowed special tokens
+        if (disallowedSpecialTokens is not null)
+        {
+            foreach (var token in disallowedSpecialTokens)
+            {
+                if (text.Contains(token))
+                    throw new ArgumentException($"Disallowed special token found in input: {token}", nameof(text));
+            }
+        }
+
+        // Split text on allowed special tokens; throw on any unallowed special tokens
+        var result = new List<int>();
+        var specialRegex = new Regex(_specialTokenPattern);
+        int lastIndex = 0;
+
+        foreach (Match match in specialRegex.Matches(text))
+        {
+            var token = match.Value;
+
+            if (!_specialTokens.ContainsKey(token))
+                continue; // Not a known special token — treat as regular text
+
+            if (allowedSpecialTokens is null || !allowedSpecialTokens.Contains(token))
+                throw new ArgumentException($"Special token not allowed in input: {token}", nameof(text));
+
+            // Encode the text segment before this special token
+            var segment = text[lastIndex..match.Index];
+            if (!string.IsNullOrEmpty(segment))
+                result.AddRange(segment.AsSegments(_regexPattern, this.TextValues).SelectMany(s => s.Encode()));
+
+            result.Add(_specialTokens[token]);
+            lastIndex = match.Index + match.Length;
+        }
+
+        // Encode any remaining text after the last special token
+        var remainder = text[lastIndex..];
+        if (!string.IsNullOrEmpty(remainder))
+            result.AddRange(remainder.AsSegments(_regexPattern, this.TextValues).SelectMany(s => s.Encode()));
+
+        return result;
     }
 
 }
