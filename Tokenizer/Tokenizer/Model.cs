@@ -71,10 +71,9 @@ public class Model
 
         // Split text on allowed special tokens; throw on any unallowed special tokens
         var result = new List<int>();
-        var specialRegex = new Regex(_specialTokenPattern);
         int lastIndex = 0;
 
-        foreach (Match match in specialRegex.Matches(text))
+        foreach (Match match in Regex.Matches(text, _specialTokenPattern, RegexOptions.CultureInvariant))
         {
             var token = match.Value;
 
