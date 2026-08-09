@@ -64,7 +64,7 @@ public class Model
         {
             foreach (var token in disallowedSpecialTokens)
             {
-                if (text.Contains(token))
+                if (!string.IsNullOrEmpty(token) && text.Contains(token, StringComparison.Ordinal))
                     throw new ArgumentException($"Disallowed special token found in input: {token}", nameof(text));
             }
         }
