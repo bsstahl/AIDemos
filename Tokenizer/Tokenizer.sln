@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tokenizer", "Tokenizer\Toke
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tokenizer.Test", "Tokenizer.Test\Tokenizer.Test.csproj", "{42F4B688-7FEA-447B-BE10-7103C8256852}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tokenizer.Encode", "Tokenizer.Encode\Tokenizer.Encode.csproj", "{FE73EA88-3580-4517-95DB-057F8D62CC28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tokenizer.Encode", "Tokenizer.Encode\Tokenizer.Encode.csproj", "{FE73EA88-3580-4517-95DB-057F8D62CC28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tokenizer.Decode", "Tokenizer.Decode\Tokenizer.Decode.csproj", "{BE05126D-9084-4D1E-BEF1-82E8150B5E1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tokenizer.Decode", "Tokenizer.Decode\Tokenizer.Decode.csproj", "{BE05126D-9084-4D1E-BEF1-82E8150B5E1D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
