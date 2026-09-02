@@ -31,7 +31,7 @@ public class Model
         return result;
     }
 
-    public (double, IEnumerable<ScalarPrediction>) Test(IDictionary<double, double> testSet)
+    public (double Error, IEnumerable<ScalarPrediction> Predictions) Test(IDictionary<double, double> testSet)
     {
         // Make a prediction for each item in the set using the current model
         // The return value includes the input, the predicted value, and the expected value

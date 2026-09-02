@@ -18,11 +18,12 @@ internal class Program
 
         // We don't log the individual test results here because they would have little meaning
         // Each prediction would always be "off" a bit since this is not a classification problem
-        var testError = model.Test(testSet);
+        var testResults = model.Test(testSet);
 
         // The goal of this process is to minimize this error so we can
         // make good predictions for the future
-        Console.WriteLine($"Test Error: {testError}");
+        Console.WriteLine($"Test Error: {testResults.Error}");
+        Console.WriteLine($"Test Results: {string.Join("\r\n", testResults.Predictions.Select(p => $"Y({p.Input}) = {p.Predicted} (Expected: {p.Expected})"))}");
 
         if (isTrained)
         {
