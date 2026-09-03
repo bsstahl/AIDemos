@@ -97,12 +97,12 @@ public class Model
         return _outputLayer.Predict(inputLayerPrediction).Single();
     }
 
-    private IEnumerable<ScalarPrediction> Predict(IDictionary<double[], double> trainingSet)
+    private IEnumerable<ScalarPrediction> Predict(IDictionary<double[], double> dataSet)
     {
         // Make a prediction for each item in the set using the current model
         // The return value includes the input, the predicted value, and the expected value
         var result = new List<ScalarPrediction>();
-        foreach (var item in trainingSet)
+        foreach (var item in dataSet)
         {
             var prediction = Predict(item.Key);
             result.Add(new ScalarPrediction(item.Key.Length, item.Key, prediction, item.Value));

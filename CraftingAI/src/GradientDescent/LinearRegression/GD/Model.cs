@@ -17,13 +17,13 @@ public class Model
     public double Predict(double x) => M * x + B;
 
 
-    private IEnumerable<ScalarPrediction> Predict(IDictionary<double, double> trainingSet)
+    private IEnumerable<ScalarPrediction> Predict(IDictionary<double, double> dataSet)
     {
         // Make a prediction for each item in the set using the current model
         // The return value includes the input, the predicted value, and the expected value
 
         var result = new List<ScalarPrediction>();
-        foreach (var item in trainingSet)
+        foreach (var item in dataSet)
         {
             var prediction = Predict(item.Key);
             result.Add(new ScalarPrediction(item.Key, prediction, item.Value));
@@ -67,7 +67,7 @@ public class Model
             var deltaB = predictions.CalculateBiasErrorGradient();
 
             // Output intermediate results periodically
-            if (callback is not null && (this.TrainingIterations < 100 || this.TrainingIterations % 1000 == 0))
+            if (callback is not null && (this.TrainingIterations < 100 || this.TrainingIterations % 10000 == 0))
             {
                 // Calculate the error for the test set
                 var testError = predictions.CalculateMeanSquaredError();

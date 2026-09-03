@@ -15,6 +15,8 @@ internal class Program
 
         var model = new Model();
         bool isTrained = model.Train(trainingSet, callback: LogResult);
+        var trainingResults = model.Test(trainingSet);
+        Console.WriteLine($"Training Error: {trainingResults.Error}");
 
         // We don't log the individual test results here because they would have little meaning
         // Each prediction would always be "off" a bit since this is not a classification problem
@@ -23,7 +25,7 @@ internal class Program
         // The goal of this process is to minimize this error so we can
         // make good predictions for the future
         Console.WriteLine($"Test Error: {testResults.Error}");
-        Console.WriteLine($"Test Results: {string.Join("\r\n", testResults.Predictions.Select(p => $"Y({p.Input}) = {p.Predicted} (Expected: {p.Expected})"))}");
+        // Console.WriteLine($"Test Results: {string.Join("\r\n", testResults.Predictions.Select(p => $"Y({p.Input}) = {p.Predicted} (Expected: {p.Expected})"))}");
 
         if (isTrained)
         {
@@ -73,7 +75,7 @@ internal class Program
     static void LogResult(int iteration, Model model, double mse)
     {
         _trainingResults.Add((iteration, model, mse));
-        Console.WriteLine($"Iteration: {iteration} - M: {model.M:0.000000000} - Bias: {model.B:0.000000000} - MSE: {mse:0.000000000}");
+        Console.WriteLine($"Iteration: {iteration} - M: {model.M:0.0000000000} - Bias: {model.B:0.0000000000} - MSE: {mse:0.000000000000000}");
     }
 
     static IDictionary<double, double> GetData(string filePath)
